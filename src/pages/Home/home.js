@@ -2,7 +2,7 @@ import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../../components/colors/colors';
 
-export default function App() {
+export default function Home() {
   return (
     <View style={styles.screenContainer}>
       <View style={styles.appContent}>
