@@ -1,5 +1,6 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ButtonComponent from '../../components/ButtonComponent';
 import Colors from '../../components/colors/colors';
 
 export default function Home() {
@@ -17,13 +18,13 @@ export default function Home() {
       </View>
 
       <View style={styles.buttonGroup}>
-        <TouchableOpacity style={styles.button}>
+        <ButtonComponent>
           <Text style={styles.textLoginButton}>FAZER LOGIN</Text>
-        </TouchableOpacity>
+        </ButtonComponent>
 
-        <TouchableOpacity style={[styles.button, styles.createAccountButton]}>
+        <ButtonComponent newStyle={styles.createAccountButton}>
           <Text>CRIAR CONTA</Text>
-        </TouchableOpacity>
+        </ButtonComponent>
       </View>
 
       <View>
@@ -87,16 +88,6 @@ const styles = StyleSheet.create({
     width: '60%',
     maxWidth: '300px',
     margin: 5
-  },  
-
-  button: {
-    height: '42px',
-    marginBottom: 5,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: 'bold',
-    backgroundColor: Colors.PRIMARY_COLOR
   },
   
   textLoginButton: {
