@@ -1,11 +1,11 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Entypo } from '@expo/vector-icons'; 
-import Colors from "./colors/colors";
+import Colors from "../ColorPallete/Colors";
 
 export default function Header({ backArrow, children, navigation }) {
     function previousScreen() {
         navigation.goBack()
-    }
+    } 
 
     return (
         <View style={styles.header}>

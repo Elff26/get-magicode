@@ -1,8 +1,17 @@
 import { useState } from 'react';
 
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native-web";
-import Colors from "../../components/colors/colors";
-import Header from '../../components/HeaderComponent';
+import { 
+    FlatList, 
+    Image, 
+    SafeAreaView, 
+    ScrollView, 
+    StyleSheet, 
+    Text, 
+    TouchableOpacity, 
+    View 
+} from "react-native-web";
+import Colors from "../../components/ColorPallete/Colors";
+import Header from '../../components/Header/HeaderComponent';
 
 export default function ChooseTechnologias({ navigation }) {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -37,30 +46,31 @@ export default function ChooseTechnologias({ navigation }) {
 
     return (
         <SafeAreaView style={styles.screenContainer}>
-            
-            <Header backArrow={true} navigation={navigation} />
+            <View>
+                <Header backArrow={true} navigation={navigation} />
 
-            <Text style={styles.chooseTechnologieText}>
-                Selecione até 2 tecnologias para aprender.
-            </Text>
+                <Text style={styles.chooseTechnologieText}>
+                    Selecione até 2 tecnologias para aprender.
+                </Text>
 
-            <FlatList 
-                numColumns={2}
-                data={fakeData}
-                renderItem={({ item }) => (
-                        <TouchableOpacity 
-                            key={item.key} 
-                            style={[styles.languageItem, 
-                                selectedItems.indexOf(item.key) != -1 ? 
-                                { backgroundColor: 'rgba(0, 193, 59, 0.5);' } : 
-                                {}]} 
-                            onPress={() => selectedItems.indexOf(item.key) == -1 ? selectItem(item.key) : unselectItem(item.key)}>
-                            <Image source={item.image_url} style={styles.languageLogo} />
-                            <Text style={styles.languageName}>{item.name}</Text>
-                        </TouchableOpacity>
-                    )
-                }
-            />
+                <FlatList 
+                    numColumns={2}
+                    data={fakeData}
+                    renderItem={({ item }) => (
+                            <TouchableOpacity 
+                                key={item.key} 
+                                style={[styles.languageItem, 
+                                    selectedItems.indexOf(item.key) != -1 ? 
+                                    { backgroundColor: 'rgba(0, 193, 59, 0.5);' } : 
+                                    {}]} 
+                                onPress={() => selectedItems.indexOf(item.key) == -1 ? selectItem(item.key) : unselectItem(item.key)}>
+                                <Image source={item.image_url} style={styles.languageLogo} />
+                                <Text style={styles.languageName}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )
+                    }
+                />
+            </View>
         </SafeAreaView>
     )
 }
@@ -71,6 +81,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-evenly',
+        height: '10%'
     },
 
     languageItem: {

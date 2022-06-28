@@ -1,9 +1,9 @@
 import { StyleSheet, TouchableOpacity } from "react-native"
-import colors from "./colors/colors"
+import Colors from "../ColorPallete/Colors"
 
-export default function ButtonComponent({ newStyle, children }) {
+export default function ButtonComponent({ newStyle, onPress, children }) {
     return (
-        <TouchableOpacity style={[styles.button, newStyle]}>
+        <TouchableOpacity onPress={onPress} style={[styles.button, newStyle]}>
           {children}
         </TouchableOpacity>
     )
@@ -17,6 +17,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         fontWeight: 'bold',
-        backgroundColor: colors.PRIMARY_COLOR
+        backgroundColor: Colors.PRIMARY_COLOR
     },
 })
