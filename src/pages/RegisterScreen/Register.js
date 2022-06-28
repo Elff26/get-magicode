@@ -1,14 +1,14 @@
-import { useState } from "react"
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
-    Button,
-    ScrollView,
     StyleSheet, 
     Text, 
     TextInput,
     View,
     TouchableOpacity
 } from 'react-native'
+
+import ButtonComponent from '../../components/Buttons/ButtonComponent';
+import Header from '../../components/Header/HeaderComponent';
 import Colors from '../../components/ColorPallete/Colors'
 
 const Register = ({ navigation }) => {
@@ -18,8 +18,9 @@ const Register = ({ navigation }) => {
 
     return(
         <View style={styles.main}>
-            <Text style={styles.title}>Cadastre-se</Text>
+            <Header backArrow={true} navigation={navigation}/>
             <View style={styles.form}>
+                <Text style={styles.title}>Cadastre-se</Text>
                 <TextInput
                     placeholder='Nome Completo'
                     style={styles.textInput}
@@ -40,10 +41,12 @@ const Register = ({ navigation }) => {
                     placeholder='Senha'
                     style={styles.textInput}
                 />
-                <TouchableOpacity style={styles.button} onPress={goToChooseTechnologies}>
+
+                <ButtonComponent newStyle={styles.button} onPress={goToChooseTechnologies}>
                     <Text style={styles.buttonText}>Criar Conta</Text>
-                </TouchableOpacity>
-                <View>
+                </ButtonComponent>
+
+                <View style={styles.viewLoginOptions}>
                     <Text style={styles.simpleText}>Ou entre com: </Text>
                     <View style={styles.loginOptions}>
                         <TouchableOpacity>
@@ -57,6 +60,7 @@ const Register = ({ navigation }) => {
                 </View>
             </View>
         </View>
+
     )
 }
 
@@ -65,14 +69,15 @@ export default Register
 const styles = StyleSheet.create({
     main:{
         display: 'flex',
-        justifyContent: 'center',
         backgroundColor: '#FFFFFF',
         height: '100%',
         width: '100%'
     },
     form:{
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '10%'
     },
     title:{
         alignSelf: 'center',
@@ -110,5 +115,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center'
+    },
+    viewLoginOptions:{
+        marginTop: '10%'
     }
 })
