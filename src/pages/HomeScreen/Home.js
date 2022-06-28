@@ -1,8 +1,17 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Colors from '../../components/colors/colors';
+import ButtonComponent from '../../components/Buttons/ButtonComponent';
+import Colors from '../../components/ColorPallete/Colors';
 
-export default function Home() {
+export default function Home({ navigation }) {
+  function goToLogin() {
+    navigation.navigate('Login');
+  }
+
+  function goToRegister() {
+    navigation.navigate('Register')
+  }
+
   return (
     <View style={styles.screenContainer}>
       <View style={styles.appContent}>
@@ -17,13 +26,13 @@ export default function Home() {
       </View>
 
       <View style={styles.buttonGroup}>
-        <TouchableOpacity style={styles.button}>
+        <ButtonComponent onPress={goToLogin}>
           <Text style={styles.textLoginButton}>FAZER LOGIN</Text>
-        </TouchableOpacity>
+        </ButtonComponent>
 
-        <TouchableOpacity style={[styles.button, styles.createAccountButton]}>
+        <ButtonComponent newStyle={styles.createAccountButton} onPress={goToRegister}>
           <Text>CRIAR CONTA</Text>
-        </TouchableOpacity>
+        </ButtonComponent>
       </View>
 
       <View>
@@ -87,16 +96,6 @@ const styles = StyleSheet.create({
     width: '60%',
     maxWidth: '300px',
     margin: 5
-  },  
-
-  button: {
-    height: '42px',
-    marginBottom: 5,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: 'bold',
-    backgroundColor: Colors.PRIMARY_COLOR
   },
   
   textLoginButton: {
