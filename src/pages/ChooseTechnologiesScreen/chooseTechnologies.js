@@ -4,11 +4,9 @@ import {
     FlatList, 
     Image, 
     SafeAreaView, 
-    ScrollView, 
     StyleSheet, 
     Text, 
-    TouchableOpacity, 
-    View 
+    TouchableOpacity
 } from "react-native-web";
 import Colors from "../../components/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
@@ -46,7 +44,6 @@ export default function ChooseTechnologias({ navigation }) {
 
     return (
         <SafeAreaView style={styles.screenContainer}>
-            <View>
                 <Header backArrow={true} navigation={navigation} />
 
                 <Text style={styles.chooseTechnologieText}>
@@ -70,7 +67,6 @@ export default function ChooseTechnologias({ navigation }) {
                         )
                     }
                 />
-            </View>
         </SafeAreaView>
     )
 }
@@ -81,7 +77,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        height: '10%'
     },
 
     languageItem: {
