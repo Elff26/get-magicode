@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     },
     title:{
         alignSelf: 'center',
-        fontSize: 24,
+        fontSize: 34,
         color: Colors.PRIMARY_COLOR
     },
     textInput:{
