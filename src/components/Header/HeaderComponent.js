@@ -1,8 +1,8 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Entypo } from '@expo/vector-icons'; 
+import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons'; 
 import Colors from "../ColorPallete/Colors";
 
-export default function Header({ backArrow, children, navigation }) {
+export default function Header({ backArrow, children, navigation, title }) {
     function previousScreen() {
         navigation.goBack()
     } 
@@ -11,10 +11,11 @@ export default function Header({ backArrow, children, navigation }) {
         <View style={styles.header}>
             {backArrow && (
                 <TouchableOpacity style={styles.backArrouButton} onPress={previousScreen}>
-                    <Entypo name="chevron-left" size={32} color={Colors.PRIMARY_COLOR} />
+                    <MaterialIcons name="keyboard-arrow-left" size={42} color={Colors.PRIMARY_COLOR} />
                 </TouchableOpacity>
             )}
             {children}
+            <Text style={styles.textHeader}>{title}</Text>
         </View>
     )
 }
@@ -22,9 +23,9 @@ export default function Header({ backArrow, children, navigation }) {
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        maxWidth: '400px',
+        maxWidth: '500px',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     }, 
 
     backArrouButton: {
@@ -32,5 +33,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '50px',
         height: '50px'
+    },
+
+    textHeader: {
+        fontSize: 18,
+        color: Colors.PRIMARY_COLOR,
+        fontWeight: 'bold'
     }
 })

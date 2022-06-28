@@ -14,42 +14,19 @@ const Navigator = (
     <NavigationContainer>
         <Stack.Navigator 
             initialRouteName="Home"             
-            screenOptions={{ headerShown: true }}
+            screenOptions={{ headerShown: false }}
         >
             <Stack.Screen 
                 name='Home' 
                 component={Home}
-                options={{title:''}} 
             />
             <Stack.Screen 
                 name='Login' 
                 component={Login} 
-                options={(props) =>({
-                    title: '',
-                    headerLeft: () => 
-                        <HeaderButtons HeaderButtonComponent={ButtonReturn}>
-                            <Item 
-                                title='Voltar'
-                                iconName='chevron-back-outline'
-                                onPress={() => {props.navigation.navigate('Home')}}
-                            />
-                        </HeaderButtons>
-                })} 
             />
             <Stack.Screen 
                 name='Register' 
                 component={RegisterScreen}
-                options={(props) =>({
-                    title: '',
-                    headerLeft: () => 
-                        <HeaderButtons HeaderButtonComponent={ButtonReturn}>
-                            <Item 
-                                title='Voltar'
-                                iconName='chevron-back-outline'
-                                onPress={() => {props.navigation.navigate('Home')}}
-                            />
-                        </HeaderButtons>
-                })} 
             />
             <Stack.Screen name='ChooseTechnologies' component={ChooseTechnologias} />
         </Stack.Navigator>
