@@ -1,7 +1,13 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Colors from '../../components/ColorPallete/Colors';
 
-export default function Login() {
+import Colors from '../../components/ColorPallete/Colors';
+import ButtonComponent from '../../components/Buttons/ButtonComponent';
+
+export default function Login({navigation}) {
+    function goToForgotPasswordEmail() {
+        navigation.navigate('ForgotPasswordEmail');
+      }
+
     return (
         <View style={styles.principalView}>
             <Text style={styles.titleLogo}>Get MagiCode</Text>
@@ -16,13 +22,14 @@ export default function Login() {
                     placeholder='Password'
                 />
 
-                <TouchableOpacity style={styles.button}>
+                <ButtonComponent newStyle={styles.button}>
                     <Text style={styles.textButton}>Entrar</Text>
-                </TouchableOpacity>
+                </ButtonComponent>
 
-                <TouchableOpacity style={styles.buttonForgotPassword}>
+                <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
                     <Text style={styles.textForgotPassword}>Esqueci a senha</Text>
                 </TouchableOpacity>
+
             </View>
         </View>
     );
