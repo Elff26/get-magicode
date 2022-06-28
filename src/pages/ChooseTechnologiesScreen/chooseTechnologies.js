@@ -6,10 +6,16 @@ import {
     SafeAreaView, 
     StyleSheet, 
     Text, 
-    TouchableOpacity
-} from "react-native-web";
+    TouchableOpacity,
+    View
+} from "react-native";
+import BottomTabComponent from '../../components/BottomMenu/BottomMenu';
+import ButtonComponent from '../../components/Buttons/ButtonComponent';
+
+
 import Colors from "../../components/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
+import ToastComponent from '../../components/Toast/ToastComponent';
 
 export default function ChooseTechnologias({ navigation }) {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -35,7 +41,11 @@ export default function ChooseTechnologias({ navigation }) {
     ];
 
     function selectItem(key) {
-        setSelectedItems([...selectedItems, key]);
+        if(selectedItems.length < 2) {
+            setSelectedItems([...selectedItems, key]);
+        } else {
+            ToastComponent('Selecione no máximo 2 tecnologias!');
+        }
     }
 
     function unselectItem(key) {
@@ -43,14 +53,16 @@ export default function ChooseTechnologias({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={styles.screenContainer}>
-                <Header backArrow={true} navigation={navigation} />
+        <View style={styles.screenContainer}>
+                <Header backArrow={false} navigation={navigation} />
 
                 <Text style={styles.chooseTechnologieText}>
                     Selecione até 2 tecnologias para aprender.
                 </Text>
 
-                <FlatList 
+                <FlatList  
+                    contentContainerStyle={styles.techListItems}
+                    style={styles.techList}
                     numColumns={2}
                     data={fakeData}
                     renderItem={({ item }) => (
@@ -67,12 +79,23 @@ export default function ChooseTechnologias({ navigation }) {
                         )
                     }
                 />
-        </SafeAreaView>
+
+                <View style={styles.buttonGroup}>
+                    <ButtonComponent newStyle={styles.newStyleButton}>
+                        <Text style={styles.textButton}>Aprender</Text>
+                    </ButtonComponent>
+                    <ButtonComponent newStyle={styles.newStyleButton}>
+                        <Text style={styles.textButton}>Fazer teste</Text>
+                    </ButtonComponent>
+                </View>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     screenContainer: {
+        padding: 20,
+        width: '100%',
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
@@ -88,6 +111,15 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
 
+    techList: {
+        width: '100%'
+    },
+
+    techListItems: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
     languageLogo: {
         width: '150px',
         height: '150px'
@@ -100,6 +132,27 @@ const styles = StyleSheet.create({
 
     chooseTechnologieText: {
         color: Colors.PRIMARY_COLOR,
-        fontSize: '22px'
+        fontSize: '22px',
+        textAlign: 'center'
+    },
+
+    buttonGroup: {
+        width: '100%',
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: '100%',
+        backgroundColor: Colors
+    },
+
+    textButton: {
+        color: '#fff'
+    },
+
+    newStyleButton: {
+        maxWidth: '250px',
+        width: '50%',
+        marginHorizontal: 10
     }
 })
