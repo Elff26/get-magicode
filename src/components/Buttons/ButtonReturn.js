@@ -9,7 +9,7 @@ const ButtonReturn = (props) => {
     <HeaderButton
         {...props}
         IconComponent={Ionicons}
-        iconSize={23}
+        iconSize={30}
         color={Colors.PRIMARY_COLOR}
     />
   )
