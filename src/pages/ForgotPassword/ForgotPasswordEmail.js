@@ -7,8 +7,9 @@ export default function ForgotPasswordEmail() {
 
     return ( 
         <View>
+            <View style={styles.screenContainer}></View>
             <View>
-                <Text>Esqueci Minha Senha</Text>
+                <Text style={styles.homeTitle}>Esqueci Minha Senha</Text>
                 <Text>Informe um email para enviarmos um código de recuperação de senha</Text>
             </View>
             
@@ -34,5 +35,26 @@ export default function ForgotPasswordEmail() {
 }
 
 const styles = StyleSheet.create({
-   //css
+    screenContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+    },
+
+   main:{
+
+   },
+   form:{
+
+   },
+   textInput:{
+
+   },
+   button:{
+
+   },
+   simpleText:{
+
+   }
 });

@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 const Navigator = (
     <NavigationContainer>
         <Stack.Navigator
-        initialRouteName='ForgotPasswordCode'
+        initialRouteName='ForgotPasswordEmail'
             screenOptions={{
                 headerShown: false
             }}
