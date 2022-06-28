@@ -2,18 +2,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-<<<<<<< HEAD
-import Home from './pages/Home/home';
 import ForgotPasswordEmail from './pages/ForgotPassword/ForgotPasswordEmail';
 import ForgotPasswordCode from './pages/ForgotPassword/ForgotPasswordCode';
 import ForgotPasswordRecovery from './pages/ForgotPassword/ForgotPasswordRecovery';
-=======
 import Home from './pages/HomeScreen/home';
 import RegisterScreen from './pages/RegisterScreen/Register'
 import Login from './pages/LoginScreen/login'
 import ChooseTechnologias from './pages/ChooseTechnologiesScreen/chooseTechnologies';
 import ButtonReturn from './components/Buttons/ButtonReturn';
->>>>>>> ca996790ad5e6c6f4e83cf1d68f27a14fbaacf2e
 
 const Stack = createNativeStackNavigator();
 
