@@ -15,42 +15,38 @@ export default function ForgotPasswordEmail({navigation}) {
 
     return ( 
         <View style={styles.allPagesCode}>
-
-        <View style={styles.screenContainerCode}>
-            
-                <Header backArrow={true} navigation={navigation} />
-            
-            <View style={{marginTop:10}}>
-                <Text style={styles.titleCode}>Esqueci minha senha</Text>
-            </View>
-
+            <Header backArrow={true} navigation={navigation} />
+            <View style={styles.screenContainerCode}>
+                
+                <View style={{marginTop:10}}>
+                    <Text style={styles.titleCode}>Esqueci minha senha</Text>
+                </View>
                 <View style={styles.formCode}>
-                    <Text style={styles.descriptionCode}>Informe o código que foi enviado no email (email)tarararara</Text>
-
+                    <Text style={styles.descriptionCode}>Informe o código que foi enviado no email ****.****@gmail.com</Text>
                     <TextInput
                         value={code}
                         placeholder= "Código"
                         onChangeText= {setCode}
                         style={styles.textInputCode}
                     />
-                    <ButtonComponent style={styles.buttonCode} onPress={goToForgotPasswordRecovery}>
+                    <ButtonComponent newStyle={styles.buttonCode} onPress={goToForgotPasswordRecovery}>
                         <Text style={styles.textValidationButton}>Validar</Text>
                     </ButtonComponent>
                 </View>
             </View>
         </View>
-        
     );
 }
 
 const styles = StyleSheet.create({
+    allPagesCode:{
+        flex: 1,
+        backgroundColor: '#fff'
+   },
     screenContainerCode: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'flex-',
-        padding: '15px',
-        marginBottom: '10px'
+        alignItems: 'center'
     },
     titleCode: {
         color: '#33B9D4',
@@ -62,6 +58,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         alignItems: 'center',
+        padding: '5px'
    },
    textInputCode:{
         width: 304,
@@ -77,10 +74,10 @@ const styles = StyleSheet.create({
         marginTop: '30px',
    },
    textValidationButton:{
-     color:'#FFFFFF'
+        color: '#FFF'
    },
    buttonCode: {
-        width: 158,
+        width: 198,
         height: 49,
         borderRadius: 20,
    },
@@ -89,9 +86,5 @@ const styles = StyleSheet.create({
         marginTop:10, 
         color:Colors.TEXT_COLOR, 
         fontSize:24
-   },
-   allPagesCode:{
-        flex: 1,
-        backgroundColor: '#fff'
    }
 });
