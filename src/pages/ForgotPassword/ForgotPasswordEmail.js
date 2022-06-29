@@ -8,33 +8,37 @@ import Header from '../../components/Header/HeaderComponent';
 export default function ForgotPasswordEmail({navigation}) {
     const [email, setEmail] = useState("");
 
+    function goToForgotPasswordCode() {
+        navigation.navigate('ForgotPasswordCode');
+      }
+
     return ( 
         <View style={styles.allPages}>
             <Header backArrow={true} navigation={navigation} />
 
             <View style={styles.screenContainer}>
 
-            <View>
-                <Text style={styles.homeTitle}>Esqueci minha senha</Text>
-                <Text style={styles.description}>Informe um email para enviarmos um código de recuperação de senha</Text>
-            </View>
+                <View>
+                    <Text style={styles.homeTitle}>Esqueci minha senha</Text>
+                    <Text style={styles.description}>Informe um email para enviarmos um código de recuperação de senha</Text>
+                </View>
 
-            <View style={styles.form}>
-                <TextInput
-                    value={email}
-                    placeholder= "Email"
-                    onChangeText= {setEmail}
-                    style={styles.textInput}
-                />
-                <ButtonComponent newStyle={styles.buttonEmail}>
-                    <Text style={styles.textSendButton}>Enviar</Text>
-                </ButtonComponent>
-            
-            </View>
+                <View style={styles.form}>
+                    <TextInput
+                        value={email}
+                        placeholder= "Email"
+                        onChangeText= {setEmail}
+                        style={styles.textInput}
+                    />
+                    <ButtonComponent newStyle={styles.buttonEmail} onPress={goToForgotPasswordCode}>
+                        <Text style={styles.textSendButton}>Enviar</Text>
+                    </ButtonComponent>
+                </View>
 
                 <View>
                     <Text>Reenviar código - 15s</Text>
                 </View>
+
             </View>   
         </View>
     );
