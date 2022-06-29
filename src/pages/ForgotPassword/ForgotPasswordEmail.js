@@ -15,14 +15,11 @@ export default function ForgotPasswordEmail({navigation}) {
     return ( 
         <View style={styles.allPages}>
             <Header backArrow={true} navigation={navigation} />
-
             <View style={styles.screenContainer}>
-
                 <View>
                     <Text style={styles.homeTitle}>Esqueci minha senha</Text>
                     <Text style={styles.description}>Informe um email para enviarmos um código de recuperação de senha</Text>
                 </View>
-
                 <View style={styles.form}>
                     <TextInput
                         value={email}
@@ -34,11 +31,9 @@ export default function ForgotPasswordEmail({navigation}) {
                         <Text style={styles.textSendButton}>Enviar</Text>
                     </ButtonComponent>
                 </View>
-
                 <View>
                     <Text>Reenviar código - 15s</Text>
                 </View>
-
             </View>   
         </View>
     );
@@ -75,7 +70,7 @@ const styles = StyleSheet.create({
         marginBottom: '30px',
    },
    textSendButton:{
-     color:'#FFFFFF'
+        color:'#FFFFFF'
    },
    buttonEmail: {
         width: 198,
