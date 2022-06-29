@@ -8,7 +8,6 @@ import Header from '../../components/Header/HeaderComponent';
 export default function ForgotPasswordEmail() {
     const [PasswordRecovery, setPasswordRecovery] = useState("");
 
-    // TO DO
     function BackToLogin() {
         navigation.navigate('Login');
     }
@@ -47,7 +46,7 @@ export default function ForgotPasswordEmail() {
                                 style={styles.textInputRecovery}
                                 />
 
-                            <ButtonComponent>
+                            <ButtonComponent onPress={BackToLogin}>
                                 <Text style={styles.textAgreeButton}>Confirmar</Text>
                             </ButtonComponent>
 
