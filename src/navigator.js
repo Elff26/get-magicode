@@ -7,7 +7,7 @@ import ForgotPasswordRecovery from './pages/ForgotPassword/ForgotPasswordRecover
 import Home from './pages/HomeScreen/home';
 import RegisterScreen from './pages/RegisterScreen/Register'
 import Login from './pages/LoginScreen/login'
-import ChooseTechnologias from './pages/ChooseTechnologiesScreen/chooseTechnologies';
+import BottomTabComponent from './components/BottomMenu/BottomMenu';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +17,7 @@ const Navigator = (
             <Stack.Screen name='Home' component={Home}/>
             <Stack.Screen name='Login' component={Login}/>
             <Stack.Screen name='Register' component={RegisterScreen}/>
-            <Stack.Screen name='ChooseTechnologies' component={ChooseTechnologias}/>
+            <Stack.Screen name='ChooseTechnologies' component={BottomTabComponent}/>
             <Stack.Screen name='ForgotPasswordRecovery' component={ForgotPasswordRecovery} />
             <Stack.Screen name='ForgotPasswordCode' component={ForgotPasswordCode} />
             <Stack.Screen name='ForgotPasswordEmail' component={ForgotPasswordEmail} />
