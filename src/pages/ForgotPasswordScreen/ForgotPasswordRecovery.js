@@ -5,7 +5,7 @@ import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../components/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 
-export default function ForgotPasswordEmail({navigation}) {
+export default function ForgotPasswordRecovery({navigation}) {
     const [PasswordRecovery, setPasswordRecovery] = useState("");
 
     function BackToLogin() {

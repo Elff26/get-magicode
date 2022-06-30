@@ -1,9 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ForgotPasswordEmail from './pages/ForgotPassword/ForgotPasswordEmail';
-import ForgotPasswordCode from './pages/ForgotPassword/ForgotPasswordCode';
-import ForgotPasswordRecovery from './pages/ForgotPassword/ForgotPasswordRecovery';
+import ForgotPasswordEmail from './pages/ForgotPasswordScreen/ForgotPasswordEmail';
+import ForgotPasswordCode from './pages/ForgotPasswordScreen/ForgotPasswordCode';
+import ForgotPasswordRecovery from './pages/ForgotPasswordScreen/ForgotPasswordRecovery';
 import Home from './pages/HomeScreen/home';
 import RegisterScreen from './pages/RegisterScreen/Register'
 import Login from './pages/LoginScreen/login'

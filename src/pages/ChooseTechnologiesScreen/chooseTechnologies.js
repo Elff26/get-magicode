@@ -54,7 +54,7 @@ export default function ChooseTechnologias({ navigation }) {
 
     return (
         <View style={styles.screenContainer}>
-                <Header backArrow={false} navigation={navigation} />
+                <Header backArrow={true} navigation={navigation} />
 
                 <Text style={styles.chooseTechnologieText}>
                     Selecione até 2 tecnologias para aprender.
@@ -94,12 +94,8 @@ export default function ChooseTechnologias({ navigation }) {
 
 const styles = StyleSheet.create({
     screenContainer: {
-        padding: 20,
-        width: '100%',
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
+        backgroundColor: '#fff'
     },
 
     languageItem: {

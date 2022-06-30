@@ -6,7 +6,7 @@ import Colors from "../../components/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 
 
-export default function ForgotPasswordEmail({navigation}) {
+export default function ForgotPasswordCode({navigation}) {
     const [code, setCode] = useState("");
 
     function goToForgotPasswordRecovery() {
