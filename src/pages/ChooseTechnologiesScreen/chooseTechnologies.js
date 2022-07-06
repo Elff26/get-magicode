@@ -17,7 +17,7 @@ import Colors from "../../components/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import ToastComponent from '../../components/Toast/ToastComponent';
 
-export default function ChooseTechnologias({ navigation }) {
+export default function ChooseTechnologies({ navigation }) {
     const [selectedItems, setSelectedItems] = useState([]);
     const fakeData = [
         {
@@ -50,6 +50,10 @@ export default function ChooseTechnologias({ navigation }) {
 
     function unselectItem(key) {
         setSelectedItems(selectedItems.filter(item => item != key));
+    }
+
+    function goToKnowledgeTest() {
+        navigation.navigate('KnowledgeTest');
     }
 
     return (
@@ -86,7 +90,7 @@ export default function ChooseTechnologias({ navigation }) {
                             <Text style={styles.textButton}>Aprender</Text>
                         </ButtonComponent>
                         <ButtonComponent newStyle={styles.newStyleButton}>
-                            <Text style={styles.textButton}>Fazer teste</Text>
+                            <Text style={styles.textButton} onPress={goToKnowledgeTest}>Fazer teste</Text>
                         </ButtonComponent>
                     </View>
                 </View>

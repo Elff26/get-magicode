@@ -1,13 +1,15 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
-import ChooseTechnologies from '../../pages/ChooseTechnologiesScreen/chooseTechnologies';
 import Colors from '../ColorPallete/Colors';
+
+import { MainStackNavigator, ProfileStackNavigator, RankingStackNavigator } from '../Stacks/StacksNavigator';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabComponent() {
     return (
-        <Tab.Navigator initialRouteName="Home"             
+        <Tab.Navigator      
+            initialRouteName='Main'   
             screenOptions={{ 
                 headerShown: false,
                 tabBarStyle: { 
@@ -22,7 +24,7 @@ export default function BottomTabComponent() {
             }}>
             <Tab.Screen 
                 name='Profile' 
-                component={ChooseTechnologies}
+                component={ProfileStackNavigator}
                 options={{
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, size }) => (
@@ -31,8 +33,8 @@ export default function BottomTabComponent() {
                 }}
             />
             <Tab.Screen 
-                name='Home' 
-                component={ChooseTechnologies} 
+                name='Main' 
+                component={MainStackNavigator} 
                 options={{
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, size }) => (
@@ -42,7 +44,7 @@ export default function BottomTabComponent() {
             />
             <Tab.Screen 
                 name='Ranking' 
-                component={ChooseTechnologies} 
+                component={RankingStackNavigator} 
                 options={{
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, size }) => (
