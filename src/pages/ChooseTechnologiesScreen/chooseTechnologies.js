@@ -56,37 +56,39 @@ export default function ChooseTechnologias({ navigation }) {
         <View style={styles.screenContainer}>
                 <Header backArrow={true} navigation={navigation} />
 
-                <Text style={styles.chooseTechnologieText}>
-                    Selecione até 2 tecnologias para aprender.
-                </Text>
+                <View style={styles.content}>
+                    <Text style={styles.chooseTechnologieText}>
+                        Selecione até 2 tecnologias para aprender.
+                    </Text>
 
-                <FlatList  
-                    contentContainerStyle={styles.techListItems}
-                    style={styles.techList}
-                    numColumns={2}
-                    data={fakeData}
-                    renderItem={({ item }) => (
-                            <TouchableOpacity 
-                                key={item.key} 
-                                style={[styles.languageItem, 
-                                    selectedItems.indexOf(item.key) != -1 ? 
-                                    { backgroundColor: 'rgba(0, 193, 59, 0.5);' } : 
-                                    {}]} 
-                                onPress={() => selectedItems.indexOf(item.key) == -1 ? selectItem(item.key) : unselectItem(item.key)}>
-                                <Image source={item.image_url} style={styles.languageLogo} />
-                                <Text style={styles.languageName}>{item.name}</Text>
-                            </TouchableOpacity>
-                        )
-                    }
-                />
+                    <FlatList  
+                        contentContainerStyle={styles.techListItems}
+                        style={styles.techList}
+                        numColumns={2}
+                        data={fakeData}
+                        renderItem={({ item }) => (
+                                <TouchableOpacity 
+                                    key={item.key} 
+                                    style={[styles.languageItem, 
+                                        selectedItems.indexOf(item.key) != -1 ? 
+                                        { backgroundColor: 'rgba(0, 193, 59, 0.5);' } : 
+                                        {}]} 
+                                    onPress={() => selectedItems.indexOf(item.key) == -1 ? selectItem(item.key) : unselectItem(item.key)}>
+                                    <Image source={item.image_url} style={styles.languageLogo} />
+                                    <Text style={styles.languageName}>{item.name}</Text>
+                                </TouchableOpacity>
+                            )
+                        }
+                    />
 
-                <View style={styles.buttonGroup}>
-                    <ButtonComponent newStyle={styles.newStyleButton}>
-                        <Text style={styles.textButton}>Aprender</Text>
-                    </ButtonComponent>
-                    <ButtonComponent newStyle={styles.newStyleButton}>
-                        <Text style={styles.textButton}>Fazer teste</Text>
-                    </ButtonComponent>
+                    <View style={styles.buttonGroup}>
+                        <ButtonComponent newStyle={styles.newStyleButton}>
+                            <Text style={styles.textButton}>Aprender</Text>
+                        </ButtonComponent>
+                        <ButtonComponent newStyle={styles.newStyleButton}>
+                            <Text style={styles.textButton}>Fazer teste</Text>
+                        </ButtonComponent>
+                    </View>
                 </View>
         </View>
     )
@@ -98,13 +100,25 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
 
+    content: {
+        paddingHorizontal: 10
+    },
+
     languageItem: {
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 10,
         marginVertical: 20,
         padding: 10,
-        borderRadius: 20
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { 
+            width: 0, 
+            height: 2 
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+        elevation: 2,
     },
 
     techList: {
