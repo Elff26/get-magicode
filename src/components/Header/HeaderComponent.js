@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
+import { Platform, StatusBar, StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import Colors from "../ColorPallete/Colors";
 
@@ -23,16 +23,17 @@ export default function Header({ backArrow, children, navigation, title }) {
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        maxWidth: '500px',
+        maxWidth: 500,
         flexDirection: 'row',
         alignItems: 'center',
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     }, 
 
     backArrouButton: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '50px',
-        height: '50px'
+        width: 50,
+        height: 50
     },
 
     textHeader: {

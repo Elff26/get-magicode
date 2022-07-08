@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
         padding: 10,
         marginTop: 20,
         backgroundColor: '#E9E9E9',
-        border: '1px solid #33B9D4',
+        borderWidth: 1,
+        borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20
     },
     button: {
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     },
     simpleText: {
         color: Colors.TEXT_COLOR,
-        fontSize: '18px'
+        fontSize: 18
     },
     loginOptions: {
         flexDirection: 'row',

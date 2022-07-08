@@ -11,7 +11,7 @@ export default function ButtonComponent({ newStyle, onPress, children }) {
 
 const styles = StyleSheet.create({
     button: {
-        height: '42px',
+        height: 42,
         marginBottom: 5,
         borderRadius: 10,
         justifyContent: 'center',

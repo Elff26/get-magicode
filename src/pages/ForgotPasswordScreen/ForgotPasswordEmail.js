@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '15px',
-        marginBottom: '10px'
+        padding: 15,
+        marginBottom: 10
     },
     homeTitle: {
-        color: '#33B9D4',
-        fontSize: '30px',
+        color: Colors.PRIMARY_COLOR,
+        fontSize: 30,
         textAlign: 'center'
     },
    form:{
@@ -60,14 +60,13 @@ const styles = StyleSheet.create({
    textInput:{
         width: 304,
         height: 40,
-        left: 28,
-        top: 292,
         backgroundColor: '#E9E9E9',
-        border: '1px solid #33B9D4',
+        borderWidth: 1,
+        borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20,
         textAlign: 'center',
         justifyContent: 'center',
-        marginBottom: '30px',
+        marginBottom: 30,
    },
    textSendButton:{
         color:'#FFFFFF'
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
         textAlign:"center", 
         marginTop:10, 
         color:Colors.TEXT_COLOR, 
-        fontSize:24
+        fontSize: 24
    },
    allPages:{
         flex: 1,

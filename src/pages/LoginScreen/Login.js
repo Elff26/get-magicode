@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import Colors from '../../components/ColorPallete/Colors';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
@@ -10,7 +10,7 @@ export default function Login({navigation}) {
       }
 
     return (
-        <View style={styles.allPagesCode}> 
+        <SafeAreaView style={styles.allPagesCode}> 
             <Header backArrow={true} navigation={navigation} />
             <View style={styles.principalView}>
                 <Text style={styles.titleLogo}>Get MagiCode</Text>
@@ -24,6 +24,7 @@ export default function Login({navigation}) {
                         style={styles.textInput}
                         placeholder='Password'
                     />
+
                     <ButtonComponent newStyle={styles.button}>
                         <Text style={styles.textButton}>Entrar</Text>
                     </ButtonComponent>
@@ -32,7 +33,7 @@ export default function Login({navigation}) {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -45,18 +46,18 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-evenly'
+        justifyContent: 'center'
     },
     titleLogo: {
         fontSize: 48,
-        fontWeight: '400',
-        color: Colors.PRIMARY_COLOR
+        fontWeight: 'bold',
+        color: Colors.PRIMARY_COLOR,
+        marginBottom: 20
     },
     titlePage: {
         fontSize: 36,
-        fontWeight: 400,
         textAlign: 'center',
-        marginTop: -100
+        color: Colors.TEXT_COLOR
     },
     textInput: {
         width: 232,
@@ -88,6 +89,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     textForgotPassword: {
-        color: Colors.TEXT_COLOR
+        color: Colors.TEXT_COLOR,
+        textAlign: 'center'
     }
 })

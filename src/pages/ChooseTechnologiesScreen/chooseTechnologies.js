@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
-import BottomTabComponent from '../../components/BottomMenu/BottomMenu';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
 
@@ -60,39 +59,37 @@ export default function ChooseTechnologies({ navigation }) {
         <View style={styles.screenContainer}>
                 <Header backArrow={true} navigation={navigation} />
 
-                <View style={styles.content}>
-                    <Text style={styles.chooseTechnologieText}>
-                        Selecione até 2 tecnologias para aprender.
-                    </Text>
+                <Text style={styles.chooseTechnologieText}>
+                    Selecione até 2 tecnologias para aprender.
+                </Text>
 
-                    <FlatList  
-                        contentContainerStyle={styles.techListItems}
-                        style={styles.techList}
-                        numColumns={2}
-                        data={fakeData}
-                        renderItem={({ item }) => (
-                                <TouchableOpacity 
-                                    key={item.key} 
-                                    style={[styles.languageItem, 
-                                        selectedItems.indexOf(item.key) != -1 ? 
-                                        { backgroundColor: 'rgba(0, 193, 59, 0.5);' } : 
-                                        {}]} 
-                                    onPress={() => selectedItems.indexOf(item.key) == -1 ? selectItem(item.key) : unselectItem(item.key)}>
-                                    <Image source={item.image_url} style={styles.languageLogo} />
-                                    <Text style={styles.languageName}>{item.name}</Text>
-                                </TouchableOpacity>
-                            )
-                        }
-                    />
+                <FlatList  
+                    contentContainerStyle={styles.techListItems}
+                    style={styles.techList}
+                    numColumns={2}
+                    data={fakeData}
+                    renderItem={({ item }) => (
+                            <TouchableOpacity 
+                                key={item.key} 
+                                style={[styles.languageItem, 
+                                    selectedItems.indexOf(item.key) != -1 ? 
+                                    { backgroundColor: 'rgb(57, 254, 113);' } : 
+                                    {}]} 
+                                onPress={() => selectedItems.indexOf(item.key) == -1 ? selectItem(item.key) : unselectItem(item.key)}>
+                                <Image source={{ uri: item.image_url }} style={styles.languageLogo} />
+                                <Text style={styles.languageName}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )
+                    }
+                />
 
-                    <View style={styles.buttonGroup}>
-                        <ButtonComponent newStyle={styles.newStyleButton}>
-                            <Text style={styles.textButton}>Aprender</Text>
-                        </ButtonComponent>
-                        <ButtonComponent newStyle={styles.newStyleButton}>
-                            <Text style={styles.textButton} onPress={goToKnowledgeTest}>Fazer teste</Text>
-                        </ButtonComponent>
-                    </View>
+                <View style={styles.buttonGroup}>
+                    <ButtonComponent newStyle={styles.newStyleButton}>
+                        <Text style={styles.textButton}>Aprender</Text>
+                    </ButtonComponent>
+                    <ButtonComponent newStyle={styles.newStyleButton}>
+                        <Text style={styles.textButton} onPress={goToKnowledgeTest}>Fazer teste</Text>
+                    </ButtonComponent>
                 </View>
         </View>
     )
@@ -104,25 +101,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
 
-    content: {
-        paddingHorizontal: 10
-    },
-
     languageItem: {
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 10,
         marginVertical: 20,
-        padding: 10,
         borderRadius: 20,
-        shadowColor: '#000',
+        shadowColor: 'black',
+        shadowOpacity: 0.26,
         shadowOffset: { 
             width: 0, 
-            height: 2 
+            height: 2
         },
-        shadowOpacity: 0.5,
-        shadowRadius: 3,
+        shadowRadius: 10,
         elevation: 2,
+        backgroundColor: '#fff'
     },
 
     techList: {
@@ -135,18 +128,18 @@ const styles = StyleSheet.create({
     },
 
     languageLogo: {
-        width: '150px',
-        height: '150px'
+        width: 150,
+        height: 150
     },
 
     languageName: {
-        fontSize: '18px',
+        fontSize: 18,
         color: Colors.TEXT_COLOR
     },
 
     chooseTechnologieText: {
         color: Colors.PRIMARY_COLOR,
-        fontSize: '22px',
+        fontSize: 22,
         textAlign: 'center'
     },
 
@@ -156,8 +149,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        width: '100%',
-        backgroundColor: Colors
+        backgroundColor: Colors.FOOTER_BACKGROUND_COLOR
     },
 
     textButton: {
@@ -165,8 +157,7 @@ const styles = StyleSheet.create({
     },
 
     newStyleButton: {
-        maxWidth: '250px',
-        width: '50%',
+        width: '49%',
         marginHorizontal: 10
     }
 })

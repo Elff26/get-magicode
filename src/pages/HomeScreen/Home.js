@@ -61,40 +61,38 @@ const styles = StyleSheet.create({
 
   appContent: {
     width: '70%',
-    maxWidth: '340px',
+    maxWidth: 340,
   },
 
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: '240px',
+    height: 240,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#33B9D4'
   },
 
   logoText: {
-    fontSize: '85px',
+    fontSize: 85,
     color: '#CACACA'
-  },
-
-  homeText: {
-    textAlign: 'center'
   },
 
   homeTitle: {
     color: '#33B9D4',
-    fontSize: '34px'
+    fontSize: 34,
+    textAlign: 'center'
   },
 
   homeMessage: {
-    fontSize: '24px',
-    color: Colors.TEXT_COLOR
+    fontSize: 24,
+    color: Colors.TEXT_COLOR,
+    textAlign: 'center'
   },
 
   buttonGroup: {
     width: '60%',
-    maxWidth: '300px',
+    maxWidth: 300,
     margin: 5
   },
   
@@ -110,7 +108,7 @@ const styles = StyleSheet.create({
 
   simpleText: {
     color: Colors.TEXT_COLOR,
-    fontSize: '18px'
+    fontSize: 18
   },
 
   loginOptions: {

@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     titleCode: {
-        color: '#33B9D4',
-        fontSize: '30px',
+        color: Colors.PRIMARY_COLOR,
+        fontSize: 30,
         textAlign: 'center'
     },
    formCode:{
@@ -58,20 +58,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         alignItems: 'center',
-        padding: '5px'
+        padding: 5
    },
    textInputCode:{
         width: 304,
         height: 40,
-        left: 28,
-        top: 292,
         backgroundColor: '#E9E9E9',
-        border: '1px solid #33B9D4',
+        borderWidth: 1,
+        borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20,
         textAlign: 'center',
         justifyContent: 'center',
-        marginBottom: '30px',
-        marginTop: '30px',
+        marginBottom: 30,
+        marginTop: 30,
    },
    textValidationButton:{
         color: '#FFF'
@@ -85,6 +84,6 @@ const styles = StyleSheet.create({
         textAlign:"center", 
         marginTop:10, 
         color:Colors.TEXT_COLOR, 
-        fontSize:24
+        fontSize: 24
    }
 });

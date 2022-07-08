@@ -1,24 +1,65 @@
 import { useState } from 'react';
-
+import { Feather } from '@expo/vector-icons';
 import { 
     StyleSheet, 
+    ScrollView,
     Text,
     View
 } from "react-native";
+
 import Colors from '../../components/ColorPallete/Colors';
 
 import Header from '../../components/Header/HeaderComponent';
+import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
 export default function ChooseTechnologias({ navigation }) {
     const [questionNumber, setQuestionNumber] = useState(1);
+    const [code, setCode] = useState("");
+
+    function goToNextQuestion() {
+        console.log(JSON.stringify(code));
+    }
+
+    function quitTest() {
+        navigation.goBack();
+    }
 
     return (
         <View style={styles.screenContainer}>
-                <Header backArrow={true} navigation={navigation} />
+            <ScrollView>
+                    <Header backArrow={true} navigation={navigation} />
 
-                <View style={styles.content}>
-                    <Text style={styles.title}>Questão { questionNumber }</Text>
-                </View>
+                    <View style={styles.content}>
+                        <Text style={styles.title}>Questão { questionNumber }</Text>
+
+                        <View style={styles.questionText}>
+                            <Text style={styles.contentText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec magna a ex dictum venenatis. Etiam elit velit, pharetra in tempus sit amet, elementum ultrices ante. Nullam tempor nisi risus, ac sollicitudin neque scelerisque molestie. Curabitur interdum dapibus quam, imperdiet consectetur magna sodales et. Nullam dapibus mauris eget ante cursus rutrum. Ut lobortis quam non risus rhoncus semper. Proin consectetur odio vel tellus lobortis, in rhoncus tellus mollis.</Text>
+                            <Text style={styles.contentText}>In at libero sapien. Integer nec ullamcorper velit, quis maximus erat. Integer dignissim feugiat iaculis. Cras porta volutpat nisl quis pellentesque. Morbi pulvinar placerat quam, sed semper elit placerat vehicula. Nullam rutrum eget nunc at luctus. Suspendisse potenti. Vivamus mattis nec dolor eu finibus.</Text>
+                        </View>
+
+                        <View style={styles.editorStyle}>
+                           
+                        </View>
+                    </View>
+            </ScrollView>
+
+            <View style={styles.buttonGroup}>
+                <ButtonComponent newStyle={styles.newStyleButton}>
+                    <Text style={styles.textButton}>
+                        <Feather name="chevron-left" color="#FFF" size={32} />
+                    </Text>
+                </ButtonComponent>
+                <ButtonComponent newStyle={styles.newStyleButtonCancel} onPress={quitTest}>
+                    <Text style={styles.textButton}>
+                        <Feather name="x" color={Colors.ERROR_COLOR} size={32} />
+                    </Text>
+                </ButtonComponent>
+                <ButtonComponent newStyle={styles.newStyleButton} onPress={goToNextQuestion}>
+                    <Text style={styles.textButton}>
+                        <Feather name="chevron-right" color="#FFF" size={32} />
+                    </Text>
+                </ButtonComponent>
+            </View>
         </View>
     )
 }
@@ -35,13 +76,51 @@ const styles = StyleSheet.create({
 
     title: {
         color: Colors.PRIMARY_COLOR,
-        fontSize: '22px',
-        textAlign: 'center'
+        fontSize: 25,
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
 
     contentText: {
         color: Colors.TEXT_COLOR,
-        fontSize: '18px',
+        fontSize: 18,
         textAlign: 'center'
+    },
+
+    questionText: {
+        marginBottom: 25
+    },
+
+    editorStyle: {
+        marginBottom: 20,
+    },  
+
+    buttonGroup: {
+        width: '100%',
+        backgroundColor: "#2323",
+        padding: 10,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width: '100%',
+        backgroundColor: Colors.FOOTER_BACKGROUND_COLOR,
+        alignItems: 'flex-end'
+    },
+
+    textButton: {
+        color: '#fff'
+    },
+
+    newStyleButton: {
+        borderRadius: 50,
+        width: 50,
+        height: 50
+    },
+    
+    newStyleButtonCancel: {
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        backgroundColor: 'rgba(212, 51, 63, .5)'
     }
 })

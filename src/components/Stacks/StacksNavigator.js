@@ -1,22 +1,14 @@
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/chooseTechnologies";
+import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/ChooseTechnologies";
 import KnowledgeTest from '../../pages/KnowledgeTestScreen/KnowledgeTest';
 
 const Stack = createNativeStackNavigator();
 
-const screenOptionStyle = {
-  headerStyle: {
-    backgroundColor: "#9AC4F8",
-  },
-  headerTintColor: "white",
-  headerBackTitle: "Back",
-};
-
 const MainStackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ChooseTechnologies">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="KnowledgeTest">
       <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
       <Stack.Screen name="KnowledgeTest" component={KnowledgeTest} />
     </Stack.Navigator>
