@@ -1,4 +1,3 @@
-import { NavigationHelpersContext } from '@react-navigation/native';
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
@@ -48,7 +47,7 @@ const styles = StyleSheet.create({
     },
     titleTest: {
         fontSize: 26,
-        fontWeight: '400',
+        fontWeight: 'bold',
         color: Colors.PRIMARY_COLOR
     },
     imageLanguage: {
@@ -59,12 +58,12 @@ const styles = StyleSheet.create({
     textStyle: {
         marginTop: 20,
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 17,
         color: Colors.TEXT_COLOR,
     },
     buttonStyle: {
         width: 190,
-        height: 35,
+        height: 45,
         marginTop: 20,
         borderRadius: 15
     },
