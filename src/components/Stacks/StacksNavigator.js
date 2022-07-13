@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/ChooseTechnologies";
 import KnowledgeTest from '../../pages/KnowledgeTestScreen/KnowledgeTest';
+import SetAGoal from '../../pages/SetAGoalScreen/SetAGoal';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -18,7 +20,7 @@ const MainStackNavigator = () => {
 const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
+      <Stack.Screen name='SetAGoal' component={SetAGoal} />
     </Stack.Navigator>
   );
 }
