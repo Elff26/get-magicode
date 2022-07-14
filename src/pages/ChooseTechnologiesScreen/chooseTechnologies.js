@@ -52,7 +52,7 @@ export default function ChooseTechnologies({ navigation }) {
     }
 
     function goToKnowledgeTest() {
-        navigation.navigate('KnowledgeTest');
+        navigation.navigate('KnowledgeTestIntro');
     }
 
     return (
