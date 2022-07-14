@@ -4,17 +4,21 @@ import {
     StyleSheet, 
     ScrollView,
     Text,
+    TextInput,
     View
 } from "react-native";
+import SyntaxHighlighter from 'react-native-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/styles/prism';
 
 import Colors from '../../components/ColorPallete/Colors';
-
 import Header from '../../components/Header/HeaderComponent';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
+
 export default function ChooseTechnologias({ navigation }) {
     const [questionNumber, setQuestionNumber] = useState(1);
-    const [code, setCode] = useState("");
+    const [code, setCode] = useState("//Seu código vai aqui :)\n");
+    const [contador, setContador] = useState(0);
 
     function goToNextQuestion() {
         console.log(JSON.stringify(code));
@@ -22,6 +26,14 @@ export default function ChooseTechnologias({ navigation }) {
 
     function quitTest() {
         navigation.goBack();
+    }
+
+    function onChangeCode(newCode) {
+        newCode = newCode
+            .replace(/(.{25})([\r\n])/g, "$1")
+            .replace(/(.{25})/g, "$1\n");
+        
+        setCode(newCode);
     }
 
     return (
@@ -37,9 +49,29 @@ export default function ChooseTechnologias({ navigation }) {
                             <Text style={styles.contentText}>In at libero sapien. Integer nec ullamcorper velit, quis maximus erat. Integer dignissim feugiat iaculis. Cras porta volutpat nisl quis pellentesque. Morbi pulvinar placerat quam, sed semper elit placerat vehicula. Nullam rutrum eget nunc at luctus. Suspendisse potenti. Vivamus mattis nec dolor eu finibus.</Text>
                         </View>
 
-                        <View style={styles.editorStyle}>
-                           
+                        <View>
+                            <TextInput
+                                style={styles.codeEditor}
+                                multiline={true}
+                                value={code}
+                                onChangeText={onChangeCode}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                            />
+
+                            <SyntaxHighlighter 
+                                lineProps={{style: { whiteSpace: 'pre-wrap'}}}
+                                wrapLines={true} 
+                                language='javascript' 
+                                highlighter="prism"
+                                fontSize={20.2}
+                                fontFamily='Roboto'
+                                style={atomDark}
+                            >
+                                {code}
+                            </SyntaxHighlighter>
                         </View>
+                        
                     </View>
             </ScrollView>
 
@@ -122,5 +154,16 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         backgroundColor: 'rgba(212, 51, 63, .5)'
+    },
+
+    codeEditor: {
+        position: 'absolute',
+        letterSpacing: -0.5,
+        padding: 24,
+        zIndex: 2,
+        fontSize: 21,
+        fontFamily: 'Roboto',
+        width: '100%',
+        color: 'rgba(0, 0, 0, 0)'
     }
 })
