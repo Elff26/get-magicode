@@ -1,24 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { 
     StyleSheet, 
     ScrollView,
     Text,
-    TextInput,
     View
 } from "react-native";
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/styles/prism';
+import { dracula } from 'react-syntax-highlighter/styles/hljs';
 
+import CodeEditor from '../../components/CodeEditor/CodeEditor';
 import Colors from '../../components/ColorPallete/Colors';
 import Header from '../../components/Header/HeaderComponent';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
-
 export default function ChooseTechnologias({ navigation }) {
     const [questionNumber, setQuestionNumber] = useState(1);
-    const [code, setCode] = useState("//Seu código vai aqui :)\n");
-    const [contador, setContador] = useState(0);
+    const [code, setCode] = useState("//Seu código vai aqui :)");
+    const [exampleCode, setExampleCode] = useState('public class T {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Teste");\n\t}\n}');
+    const [language, setLanguage] = useState('java');
+    const [theme, setTheme] = useState('dracula');
+
 
     function goToNextQuestion() {
         console.log(JSON.stringify(code));
@@ -26,14 +28,6 @@ export default function ChooseTechnologias({ navigation }) {
 
     function quitTest() {
         navigation.goBack();
-    }
-
-    function onChangeCode(newCode) {
-        newCode = newCode
-            .replace(/(.{25})([\r\n])/g, "$1")
-            .replace(/(.{25})/g, "$1\n");
-        
-        setCode(newCode);
     }
 
     return (
@@ -47,30 +41,20 @@ export default function ChooseTechnologias({ navigation }) {
                         <View style={styles.questionText}>
                             <Text style={styles.contentText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec magna a ex dictum venenatis. Etiam elit velit, pharetra in tempus sit amet, elementum ultrices ante. Nullam tempor nisi risus, ac sollicitudin neque scelerisque molestie. Curabitur interdum dapibus quam, imperdiet consectetur magna sodales et. Nullam dapibus mauris eget ante cursus rutrum. Ut lobortis quam non risus rhoncus semper. Proin consectetur odio vel tellus lobortis, in rhoncus tellus mollis.</Text>
                             <Text style={styles.contentText}>In at libero sapien. Integer nec ullamcorper velit, quis maximus erat. Integer dignissim feugiat iaculis. Cras porta volutpat nisl quis pellentesque. Morbi pulvinar placerat quam, sed semper elit placerat vehicula. Nullam rutrum eget nunc at luctus. Suspendisse potenti. Vivamus mattis nec dolor eu finibus.</Text>
-                        </View>
-
-                        <View>
-                            <TextInput
-                                style={styles.codeEditor}
-                                multiline={true}
-                                value={code}
-                                onChangeText={onChangeCode}
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                            />
-
                             <SyntaxHighlighter 
-                                lineProps={{style: { whiteSpace: 'pre-wrap'}}}
-                                wrapLines={true} 
-                                language='javascript' 
-                                highlighter="prism"
-                                fontSize={20.2}
-                                fontFamily='Roboto'
-                                style={atomDark}
+                                language={language}
+                                style={dracula}
+                                highlighter={"hljs"}
                             >
-                                {code}
+                                {exampleCode}
                             </SyntaxHighlighter>
                         </View>
+
+                        <CodeEditor
+                            setCode={setCode}
+                            language={language}
+                            theme={theme}
+                        />
                         
                     </View>
             </ScrollView>
@@ -103,7 +87,8 @@ const styles = StyleSheet.create({
     },
 
     content: {
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        flex: 1
     },
 
     title: {
