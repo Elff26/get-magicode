@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet,Text, View} from "react-native";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
-import Colors from "../../components/ColorPallete/Colors";
+import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import { RadioButton } from 'react-native-paper';
 

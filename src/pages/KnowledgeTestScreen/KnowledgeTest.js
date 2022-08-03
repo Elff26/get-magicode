@@ -9,8 +9,8 @@ import {
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/styles/hljs';
 
-import CodeEditor from '../../components/CodeEditor/CodeEditor';
-import Colors from '../../components/ColorPallete/Colors';
+import CodeEditor from '../../components/CodeEditor/CodeEditorComponent';
+import Colors from '../../utils/ColorPallete/Colors';
 import Header from '../../components/Header/HeaderComponent';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 

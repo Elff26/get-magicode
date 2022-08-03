@@ -3,7 +3,9 @@ const Colors = {
     TEXT_COLOR: '#4B4B4B',
     FOOTER_BACKGROUND_COLOR: '#EAEAEA',
     ERROR_COLOR: '#B64242',
-    RADIO_TEXT: '#727272'
+    RADIO_TEXT: '#727272',
+    BUTTON_VERSUS_ICON: '#C33232',
+    BUTTON_VERSUS_BACKGROUND: '#E9989E'
 }
 
 module.exports = Colors;

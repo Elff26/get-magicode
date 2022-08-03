@@ -9,11 +9,11 @@ import {
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
-import Colors from '../../components/ColorPallete/Colors'
+import Colors from '../../utils/ColorPallete/Colors'
 
 const Register = ({ navigation }) => {
     function goToChooseTechnologies() {
-        navigation.navigate('ChooseTechnologies');
+        navigation.navigate('BottomTabComponent');
     }
 
     return(

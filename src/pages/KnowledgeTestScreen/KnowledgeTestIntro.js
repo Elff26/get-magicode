@@ -2,7 +2,7 @@ import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
-import Colors from '../../components/ColorPallete/Colors';
+import Colors from '../../utils/ColorPallete/Colors';
 import Header from '../../components/Header/HeaderComponent';
 
 const KnowledgeTestIntro = ({navigation}) => {

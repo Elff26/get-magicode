@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet,Text, TextInput, View} from "react-native";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
-import Colors from "../../components/ColorPallete/Colors";
+import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 
 export default function ForgotPasswordRecovery({navigation}) {

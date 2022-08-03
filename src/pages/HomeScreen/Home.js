@@ -1,7 +1,7 @@
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
-import Colors from '../../components/ColorPallete/Colors';
+import Colors from '../../utils/ColorPallete/Colors';
 
 export default function Home({ navigation }) {
   function goToLogin() {

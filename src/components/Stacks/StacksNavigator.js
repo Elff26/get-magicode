@@ -5,12 +5,14 @@ import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/ChooseTechn
 import KnowledgeTest from '../../pages/KnowledgeTestScreen/KnowledgeTest';
 import SetAGoal from '../../pages/SetAGoalScreen/SetAGoal';
 import KnowledgeTestIntro from "../../pages/KnowledgeTestScreen/KnowledgeTestIntro";
+import LearningTrail from "../../pages/LearningTrailScreen/LearningTrailScreen";
 
 const Stack = createNativeStackNavigator();
 
 const MainStackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ChooseTechnologies">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="LearningTrail">
+      <Stack.Screen name="LearningTrail" component={LearningTrail} />
       <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
       <Stack.Screen name="KnowledgeTestIntro" component={KnowledgeTestIntro} />
       <Stack.Screen name="KnowledgeTest" component={KnowledgeTest} />
@@ -18,18 +20,18 @@ const MainStackNavigator = () => {
   );
 }
 
-const ProfileStackNavigator = () => {
+const RankingStackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='SetAGoal' component={SetAGoal} />
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ChooseTechnologies">
+      <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
     </Stack.Navigator>
   );
 }
 
-const RankingStackNavigator = () => {
+const ProfileStackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="SetAGoal">
+      <Stack.Screen name='SetAGoal' component={SetAGoal} />
     </Stack.Navigator>
   );
 }

@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import Colors from '../../components/ColorPallete/Colors';
+import Colors from '../../utils/ColorPallete/Colors';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
 

@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
-import Colors from '../ColorPallete/Colors';
+import Colors from '../../utils/ColorPallete/Colors';
 
 import { MainStackNavigator, ProfileStackNavigator, RankingStackNavigator } from '../Stacks/StacksNavigator';
 
@@ -23,16 +23,6 @@ export default function BottomTabComponent() {
                 }
             }}>
             <Tab.Screen 
-                name='Profile' 
-                component={ProfileStackNavigator}
-                options={{
-                    tabBarShowLabel: false,
-                    tabBarIcon: ({ focused, size }) => (
-                        <Feather name="user" size={size} color={focused ? Colors.PRIMARY_COLOR : Colors.TEXT_COLOR} />
-                    ),
-                }}
-            />
-            <Tab.Screen 
                 name='Main' 
                 component={MainStackNavigator} 
                 options={{
@@ -49,6 +39,16 @@ export default function BottomTabComponent() {
                     tabBarShowLabel: false,
                     tabBarIcon: ({ focused, size }) => (
                         <Feather name="trending-up" size={size} color={focused ? Colors.PRIMARY_COLOR : Colors.TEXT_COLOR} />
+                    ),
+                }}
+            />
+            <Tab.Screen 
+                name='Profile' 
+                component={ProfileStackNavigator}
+                options={{
+                    tabBarShowLabel: false,
+                    tabBarIcon: ({ focused, size }) => (
+                        <Feather name="user" size={size} color={focused ? Colors.PRIMARY_COLOR : Colors.TEXT_COLOR} />
                     ),
                 }}
             />

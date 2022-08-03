@@ -12,7 +12,7 @@ import {
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
 
-import Colors from "../../components/ColorPallete/Colors";
+import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import ToastComponent from '../../components/Toast/ToastComponent';
 
