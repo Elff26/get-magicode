@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
     StyleSheet, 
@@ -10,10 +11,42 @@ import {
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
 import Colors from '../../utils/ColorPallete/Colors'
+import Axios from '../../api/api';
 
 const Register = ({ navigation }) => {
-    function goToChooseTechnologies() {
-        navigation.navigate('BottomTabComponent');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [birthday, setBirthday] = useState('');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    async function registerUser() {
+        setError('');
+
+        if(!name || !email || !birthday || !phone || !password) {
+            return setError('All fields are required!');
+        }
+
+        const user = {
+            nm_usuario: name,
+            ds_email: email,
+            dt_nascimento: birthday,
+            nr_telefone: phone,
+            ds_senha: password
+        }
+
+        try {
+            const response = await Axios.post('/CreateUser', {
+                user
+            });
+
+            if(response.data.user) {
+                navigation.navigate('Login');
+            }
+        } catch(e) {
+            setError(e.response.data.message);
+        }
     }
 
     return(
@@ -23,28 +56,40 @@ const Register = ({ navigation }) => {
                 <Text style={styles.title}>Cadastre-se</Text>
                 <TextInput
                     placeholder='Nome Completo'
+                    onChangeText={setName}
+                    value={name}
                     style={styles.textInput}
                 />
                 <TextInput
                     placeholder='Email'
+                    onChangeText={setEmail}
+                    value={email}
                     style={styles.textInput}
                 />
                 <TextInput
                     placeholder='Data de Nascimento'
+                    onChangeText={setBirthday}
+                    value={birthday}
                     style={styles.textInput}
                 />
                 <TextInput
                     placeholder='Telefone'
+                    onChangeText={setPhone}
+                    value={phone}
                     style={styles.textInput}
                 />
                 <TextInput
                     placeholder='Senha'
+                    onChangeText={setPassword}
+                    value={password}
                     style={styles.textInput}
                 />
 
-                <ButtonComponent newStyle={styles.button} onPress={goToChooseTechnologies}>
+                <ButtonComponent newStyle={styles.button} onPress={registerUser}>
                     <Text style={styles.buttonText}>Criar Conta</Text>
                 </ButtonComponent>
+
+                <Text>{error}</Text>
 
                 <View style={styles.viewLoginOptions}>
                     <Text style={styles.simpleText}>Ou entre com: </Text>
