@@ -3,8 +3,41 @@ import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } fro
 import Colors from '../../utils/ColorPallete/Colors';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
+import Axios from '../../api/api';
+
+//FOR BACK-END
 
 export default function Login({navigation}) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    async function loginUser() {
+        setError('');
+
+        if(!email || !password) {
+            return setError('All fields are required!');
+        }
+
+        const user = {
+            ds_email: email,
+            ds_senha: password
+        }
+        //TO DO AXIOS CONNECTION WITH GET + OBJECT
+        try {
+            const response = await Axios.get('/CreateUser', {
+                user
+            });
+
+            if(response.data.user) {
+                navigation.navigate('BottomTabComponent');
+            }
+        } catch(e) {
+            setError(e.response.data.message);
+        }
+    }
+
+//FOR FRONT-END
     function goToForgotPasswordEmail() {
         navigation.navigate('ForgotPasswordEmail');
       }
@@ -26,7 +59,7 @@ export default function Login({navigation}) {
                     />
 
                     <ButtonComponent newStyle={styles.button}>
-                        <Text style={styles.textButton}>Entrar</Text>
+                        <Text style={styles.textButton} onPress={loginUser}>Entrar</Text>
                     </ButtonComponent>
                     <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
                         <Text style={styles.textForgotPassword}>Esqueci a senha</Text>
