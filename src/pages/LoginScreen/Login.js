@@ -1,4 +1,12 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { 
+    SafeAreaView, 
+    StyleSheet, 
+    Text, 
+    TextInput, 
+    TouchableOpacity, 
+    View 
+} from 'react-native';
 
 import Colors from '../../utils/ColorPallete/Colors';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
@@ -61,7 +69,7 @@ export default function Login({navigation}) {
                     />
 
                     <ButtonComponent newStyle={styles.button}>
-                        <Text style={styles.textButton} onPress={loginUser}>Entrar</Text>
+                        <Text style={styles.textButton} onPress={goToHomeScreen}>Entrar</Text>
                     </ButtonComponent>
                     <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
                         <Text style={styles.textForgotPassword}>Esqueci a senha</Text>
