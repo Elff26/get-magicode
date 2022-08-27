@@ -6,6 +6,8 @@ import KnowledgeTest from '../../pages/KnowledgeTestScreen/KnowledgeTest';
 import SetAGoal from '../../pages/SetAGoalScreen/SetAGoal';
 import KnowledgeTestIntro from "../../pages/KnowledgeTestScreen/KnowledgeTestIntro";
 import LearningTrail from "../../pages/LearningTrailScreen/LearningTrailScreen";
+import ProfileOptions from "../../pages/ProfileOptions/ProfileOptionsScreen";
+import AccountScreen from "../../pages/ProfileOptions/AccountScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +32,9 @@ const RankingStackNavigator = () => {
 
 const ProfileStackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="SetAGoal">
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ProfileOptions">
+      <Stack.Screen name='ProfileOptions' component={ProfileOptions} />
+      <Stack.Screen name='AccountScreen' component={AccountScreen} />
       <Stack.Screen name='SetAGoal' component={SetAGoal} />
     </Stack.Navigator>
   );

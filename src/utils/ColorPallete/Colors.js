@@ -5,7 +5,9 @@ const Colors = {
     ERROR_COLOR: '#B64242',
     RADIO_TEXT: '#727272',
     BUTTON_VERSUS_ICON: '#C33232',
-    BUTTON_VERSUS_BACKGROUND: '#E9989E'
+    BUTTON_VERSUS_BACKGROUND: '#E9989E',
+    LINE_COLOR: '#e3e3e3',
+    TEXT_INPUT_BACKGROUND: '#f5f5f5'
 }
 
 module.exports = Colors;

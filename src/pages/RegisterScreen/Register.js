@@ -134,7 +134,8 @@ const styles = StyleSheet.create({
         height: 40,
         padding: 10,
         marginTop: 20,
-        backgroundColor: '#E9E9E9',
+        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
+        textAlign: 'center',
         borderWidth: 1,
         borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20

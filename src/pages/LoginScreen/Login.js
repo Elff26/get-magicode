@@ -7,7 +7,11 @@ import Header from '../../components/Header/HeaderComponent';
 export default function Login({navigation}) {
     function goToForgotPasswordEmail() {
         navigation.navigate('ForgotPasswordEmail');
-      }
+    }
+
+    function goToHomeScreen() {
+        navigation.navigate('BottomTabComponent')
+    }
 
     return (
         <SafeAreaView style={styles.allPagesCode}> 
@@ -25,7 +29,7 @@ export default function Login({navigation}) {
                         placeholder='Password'
                     />
 
-                    <ButtonComponent newStyle={styles.button}>
+                    <ButtonComponent newStyle={styles.button} onPress={goToHomeScreen}>
                         <Text style={styles.textButton}>Entrar</Text>
                     </ButtonComponent>
                     <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         textAlign: 'center',
         marginTop: 25,
-        backgroundColor: '#E9E9E9'
+        backgroundColor: Colors.TEXT_INPUT_BACKGROUND
     },
     button: {
         width: 198,
