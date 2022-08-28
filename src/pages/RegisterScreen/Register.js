@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import MaskInput from 'react-native-mask-input';
 import { 
     StyleSheet, 
     Text, 
     TextInput,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    ScrollView
 } from 'react-native'
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
@@ -20,12 +22,14 @@ const Register = ({ navigation }) => {
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [submited, setSubmited] = useState(false);
 
     async function registerUser() {
         setError('');
+        setSubmited(true);
 
         if(!name || !email || !birthday || !phone || !password) {
-            return setError('All fields are required!');
+            return;
         }
 
         const user = {
@@ -51,8 +55,8 @@ const Register = ({ navigation }) => {
 
     return(
         <View style={styles.main}>
+            <ScrollView contentContainerStyle={styles.form}>
             <Header backArrow={true} navigation={navigation}/>
-            <View style={styles.form}>
                 <Text style={styles.title}>Cadastre-se</Text>
                 <TextInput
                     placeholder='Nome Completo'
@@ -60,36 +64,74 @@ const Register = ({ navigation }) => {
                     value={name}
                     style={styles.textInput}
                 />
-                <TextInput
+                {
+                    (name.trim() === '' && submited) && (
+                        <Text style={styles.errorText}>Name is required</Text>
+                    )
+                }
+                
+
+                <MaskInput
                     placeholder='Email'
                     onChangeText={setEmail}
                     value={email}
                     style={styles.textInput}
+                    autoComplete="email"
+                    keyboardType="email-address"
+                    textContentType='emailAddress'
+                    
                 />
-                <TextInput
+                {
+                    (email.trim() === '' && submited) && (
+                        <Text style={styles.errorText}>Email is required</Text>
+                    )
+                }
+
+                <MaskInput
                     placeholder='Data de Nascimento'
-                    onChangeText={setBirthday}
+                    onChangeText={(masked, unmasked) => setBirthday(unmasked)}
                     value={birthday}
                     style={styles.textInput}
+                    mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
                 />
-                <TextInput
+                {
+                    (birthday.trim() === '' && submited) && (
+                        <Text style={styles.errorText}>Birthday is required</Text>
+                    )
+                }
+
+                <MaskInput
                     placeholder='Telefone'
-                    onChangeText={setPhone}
+                    onChangeText={(masked, unmasked) => setPhone(unmasked)}
                     value={phone}
                     style={styles.textInput}
+                    mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                    keyboardType="phone-pad"
                 />
+                {
+                    (phone.trim() === '' && submited) && (
+                        <Text style={styles.errorText}>Phone is required</Text>
+                    )
+                }
+
                 <TextInput
                     placeholder='Senha'
+                    secureTextEntry={true}
                     onChangeText={setPassword}
                     value={password}
                     style={styles.textInput}
                 />
+                {
+                    (password.trim() === '' && submited) && (
+                        <Text style={styles.errorText}>Password is required</Text>
+                    )
+                }
 
                 <ButtonComponent newStyle={styles.button} onPress={registerUser}>
                     <Text style={styles.buttonText}>Criar Conta</Text>
                 </ButtonComponent>
 
-                <Text>{error}</Text>
+                <Text style={styles.errorText}>{error}</Text>
 
                 <View style={styles.viewLoginOptions}>
                     <Text style={styles.simpleText}>Ou entre com: </Text>
@@ -103,7 +145,7 @@ const Register = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </View>
 
     )
@@ -113,22 +155,22 @@ export default Register
 
 const styles = StyleSheet.create({
     main:{
-        display: 'flex',
-        backgroundColor: '#FFFFFF',
-        height: '100%',
-        width: '100%'
+        flex: 1,       
+        backgroundColor: '#FFFFFF'
     },
+
     form:{
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: '10%'
+        paddingBottom: 30
     },
+
     title:{
         alignSelf: 'center',
         fontSize: 34,
         color: Colors.PRIMARY_COLOR
     },
+
     textInput:{
         width: 251.93,
         height: 40,
@@ -140,6 +182,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20
     },
+
     button: {
         width: 198,
         height: 49,
@@ -149,21 +192,30 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontWeight: 'bold',
         backgroundColor: Colors.PRIMARY_COLOR
-      },
+    },
+
     buttonText:{
         color: '#FFFFFF',
         fontSize: 18
     },
+
     simpleText: {
         color: Colors.TEXT_COLOR,
         fontSize: 18
     },
+
     loginOptions: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center'
     },
+
     viewLoginOptions:{
         marginTop: '10%'
+    },
+    
+    errorText: {
+        color: Colors.ERROR_COLOR,
+        textAlign: 'center'
     }
 })

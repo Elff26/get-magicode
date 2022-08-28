@@ -17,13 +17,14 @@ export default function Login({navigation}) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [submited, setSubmited] = useState(false);
 
     async function loginUser() {
         setError('');
+        setSubmited(true);
 
-        const user = {
-            email,
-            password
+        if(!email || !password) {
+            return;
         }
 
         try {
@@ -36,17 +37,13 @@ export default function Login({navigation}) {
                 navigation.navigate('BottomTabComponent');
             }
         } catch(e) {
-            
             setError(e.response.data.message);
+            throw e;
         }
     }
 
     function goToForgotPasswordEmail() {
         navigation.navigate('ForgotPasswordEmail');
-    }
-
-    function goToHomeScreen() {
-        navigation.navigate('BottomTabComponent')
     }
 
     return (
@@ -62,14 +59,26 @@ export default function Login({navigation}) {
                         value={email}
                         placeholder='E-mail'
                     />
+                    {
+                        (email.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Email is required</Text>
+                        )
+                    }
+
                     <TextInput
                         style={styles.textInput}
                         onChangeText={setPassword}
                         value={password}
+                        secureTextEntry={true}
                         placeholder='Password'
                     />
+                    {
+                        (password.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Password is required</Text>
+                        )
+                    }
 
-                    <Text>{error}</Text>
+                    <Text style={styles.errorText}>{error}</Text>
 
                     <ButtonComponent newStyle={styles.button}>
                         <Text style={styles.textButton} onPress={loginUser}>Entrar</Text>
@@ -88,23 +97,27 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff'
    },
+
     principalView: {
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center'
     },
+
     titleLogo: {
         fontSize: 48,
         fontWeight: 'bold',
         color: Colors.PRIMARY_COLOR,
         marginBottom: 20
     },
+
     titlePage: {
         fontSize: 36,
         textAlign: 'center',
         color: Colors.TEXT_COLOR
     },
+
     textInput: {
         width: 232,
         height: 35,
@@ -115,6 +128,7 @@ const styles = StyleSheet.create({
         marginTop: 25,
         backgroundColor: Colors.TEXT_INPUT_BACKGROUND
     },
+
     button: {
         width: 198,
         height: 46,
@@ -125,17 +139,25 @@ const styles = StyleSheet.create({
         marginTop: 50,
         marginLeft: 16
     },
+
     textButton: {
         color: '#FFFFFF'
     },
+
     buttonForgotPassword: {
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 10,
         fontSize: 18
     },
+
     textForgotPassword: {
         color: Colors.TEXT_COLOR,
+        textAlign: 'center'
+    },
+
+    errorText: {
+        color: Colors.ERROR_COLOR,
         textAlign: 'center'
     }
 })
