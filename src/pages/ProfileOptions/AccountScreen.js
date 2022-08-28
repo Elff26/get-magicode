@@ -41,10 +41,10 @@ export default function AccountScreen({navigation}) {
     async function editAccount() {
         if(editData) {
             const user = {
-                nm_usuario: name,
-                ds_email: email,
-                dt_nascimento: birthday,
-                nr_telefone: phone
+                name,
+                email,
+                birthday,
+                phone
             }
 
             try {
@@ -54,10 +54,10 @@ export default function AccountScreen({navigation}) {
 
                 if(response.data.user) {
                     let user = response.data.user;
-                    setName(user.nm_usuario);
-                    setEmail(user.ds_email);
-                    setPhone(user.nr_phone);
-                    setBirthday(user.dt_nascimento);
+                    setName(user.name);
+                    setEmail(user.email);
+                    setPhone(user.phone);
+                    setBirthday(user.birthday);
 
                     ToastComponent('Dados atualizados com sucesso!');
                 }

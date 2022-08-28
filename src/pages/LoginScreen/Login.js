@@ -26,8 +26,8 @@ export default function Login({navigation}) {
         }
 
         const user = {
-            ds_email: email,
-            ds_senha: password
+            email,
+            password
         }
         //TO DO AXIOS CONNECTION WITH GET + OBJECT
         try {

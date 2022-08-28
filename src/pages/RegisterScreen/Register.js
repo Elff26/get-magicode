@@ -29,11 +29,11 @@ const Register = ({ navigation }) => {
         }
 
         const user = {
-            nm_usuario: name,
-            ds_email: email,
-            dt_nascimento: birthday,
-            nr_telefone: phone,
-            ds_senha: password
+            name,
+            email,
+            birthday,
+            phone,
+            password
         }
 
         try {
