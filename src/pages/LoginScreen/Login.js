@@ -31,7 +31,7 @@ export default function Login({navigation}) {
         }
         //TO DO AXIOS CONNECTION WITH GET + OBJECT
         try {
-            const response = await Axios.get('/CreateUser', {
+            const response = await Axios.post('/Login', {
                 user
             });
 
