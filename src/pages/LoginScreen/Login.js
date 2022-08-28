@@ -21,29 +21,26 @@ export default function Login({navigation}) {
     async function loginUser() {
         setError('');
 
-        if(!email || !password) {
-            return setError('All fields are required!');
-        }
-
         const user = {
             email,
             password
         }
-        //TO DO AXIOS CONNECTION WITH GET + OBJECT
+
         try {
             const response = await Axios.post('/Login', {
-                user
+                email,
+                password
             });
 
             if(response.data.user) {
                 navigation.navigate('BottomTabComponent');
             }
         } catch(e) {
+            
             setError(e.response.data.message);
         }
     }
 
-//FOR FRONT-END
     function goToForgotPasswordEmail() {
         navigation.navigate('ForgotPasswordEmail');
     }
@@ -61,15 +58,21 @@ export default function Login({navigation}) {
                     <Text style={styles.titlePage}>Login</Text>
                     <TextInput
                         style={styles.textInput}
+                        onChangeText={setEmail}
+                        value={email}
                         placeholder='E-mail'
                     />
                     <TextInput
                         style={styles.textInput}
+                        onChangeText={setPassword}
+                        value={password}
                         placeholder='Password'
                     />
 
+                    <Text>{error}</Text>
+
                     <ButtonComponent newStyle={styles.button}>
-                        <Text style={styles.textButton} onPress={goToHomeScreen}>Entrar</Text>
+                        <Text style={styles.textButton} onPress={loginUser}>Entrar</Text>
                     </ButtonComponent>
                     <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
                         <Text style={styles.textForgotPassword}>Esqueci a senha</Text>
