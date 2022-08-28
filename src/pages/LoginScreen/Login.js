@@ -12,6 +12,7 @@ import Colors from '../../utils/ColorPallete/Colors';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
 import Axios from '../../api/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login({navigation}) {
     const [email, setEmail] = useState('');
@@ -34,6 +35,7 @@ export default function Login({navigation}) {
             });
 
             if(response.data.user) {
+                await AsyncStorage.setItem('@User', JSON.stringify(response.data.user));
                 navigation.navigate('BottomTabComponent');
             }
         } catch(e) {
@@ -80,8 +82,8 @@ export default function Login({navigation}) {
 
                     <Text style={styles.errorText}>{error}</Text>
 
-                    <ButtonComponent newStyle={styles.button}>
-                        <Text style={styles.textButton} onPress={loginUser}>Entrar</Text>
+                    <ButtonComponent newStyle={styles.button} onPress={loginUser}>
+                        <Text style={styles.textButton}>Entrar</Text>
                     </ButtonComponent>
                     <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
                         <Text style={styles.textForgotPassword}>Esqueci a senha</Text>
