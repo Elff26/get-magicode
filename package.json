@@ -31,7 +31,8 @@
     "react-native-syntax-highlighter": "^2.1.0",
     "react-native-web": "0.17.7",
     "react-native-webview": "^11.22.7",
-    "react-navigation-header-buttons": "^9.0.1"
+    "react-navigation-header-buttons": "^9.0.1",
+    "@react-native-async-storage/async-storage": "~1.17.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

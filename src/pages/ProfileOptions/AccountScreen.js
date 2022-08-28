@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
     SafeAreaView, 
     StyleSheet, 
@@ -15,6 +15,7 @@ import { Dimensions } from "react-native";
 
 import Axios from '../../api/api';
 import ToastComponent from '../../components/Toast/ToastComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 var width = Dimensions.get('window').width; 
 
@@ -25,13 +26,29 @@ export default function AccountScreen({navigation}) {
     const [birthday, setBirthday] = useState('');
     const [editData, setEditData] = useState(false);
     const [error, setError] = useState(false);
+    const [user, setUser] = useState('');
 
+    useEffect(() => {
+        async function getData() {
+            let user = JSON.parse(await AsyncStorage.getItem('@User'))
+            setUser(user);
+            setName(user.name);
+            setEmail(user.email);
+            setPhone(user.phone);
+            setBirthday(user.birthday);
+        }
+        getData();
+    }, [])
+    
     async function deleteAccount() {
         try {
-            const response = await Axios.delete('/DeleteUser/' + '1');
-
-            if(response.data.message) {
-                navigation.navigate('Login');
+            if (user != null) {
+                
+                const response = await Axios.delete('/DeleteUser/' + user.userID);
+                
+                if(response.data.message) {
+                    navigation.navigate('Login');
+                }
             }
         } catch(e) {
             setError(e.response.data.message);
@@ -40,7 +57,8 @@ export default function AccountScreen({navigation}) {
 
     async function editAccount() {
         if(editData) {
-            const user = {
+            const dataUser = {
+                ...user,
                 name,
                 email,
                 birthday,
@@ -48,18 +66,22 @@ export default function AccountScreen({navigation}) {
             }
 
             try {
-                const response = await Axios.put('/UpdateUser/' + '1', {
-                    user
-                });
+                if (user != null) {
 
-                if(response.data.user) {
-                    let user = response.data.user;
-                    setName(user.name);
-                    setEmail(user.email);
-                    setPhone(user.phone);
-                    setBirthday(user.birthday);
-
-                    ToastComponent('Dados atualizados com sucesso!');
+                    const response = await Axios.put('/UpdateUser/' + user.userID, {
+                        user:dataUser
+                    });
+    
+                    if(response.data.user) {
+                        setUser(response.data.user);
+                        let user = response.data.user;
+                        setName(user.name);
+                        setEmail(user.email);
+                        setPhone(user.phone);
+                        setBirthday(user.birthday);
+    
+                        ToastComponent('Dados atualizados com sucesso!');
+                    }
                 }
             } catch(e) {
                 console.log(e);
