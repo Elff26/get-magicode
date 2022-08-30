@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
+    ActivityIndicator,
     SafeAreaView, 
     StyleSheet, 
     Text, 
@@ -13,15 +14,29 @@ import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
 import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastComponent from '../../components/Toast/ToastComponent';
 
-export default function Login({navigation}) {
+export default function Login({ route, navigation }) {
+    const routeParams = route;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [submited, setSubmited] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if(routeParams.params && routeParams.params.userRegistered) {
+            ToastComponent('Usuário criado com sucesso!');
+        }
+
+        if(routeParams.params && routeParams.params.deletedUser) {
+            ToastComponent('Usuário deletado com sucesso!');
+        }
+    });
 
     async function loginUser() {
         setError('');
+        setIsLoading(true);
         setSubmited(true);
 
         if(!email || !password) {
@@ -36,11 +51,13 @@ export default function Login({navigation}) {
 
             if(response.data.user) {
                 await AsyncStorage.setItem('@User', JSON.stringify(response.data.user));
+                setIsLoading(false);
                 navigation.navigate('BottomTabComponent');
             }
+            setIsLoading(false);
         } catch(e) {
+            setIsLoading(false);
             setError(e.response.data.message);
-            throw e;
         }
     }
 
@@ -60,6 +77,9 @@ export default function Login({navigation}) {
                         onChangeText={setEmail}
                         value={email}
                         placeholder='E-mail'
+                        autoComplete="email"
+                        keyboardType="email-address"
+                        textContentType='emailAddress'
                     />
                     {
                         (email.trim() === '' && submited) && (
@@ -82,8 +102,17 @@ export default function Login({navigation}) {
 
                     <Text style={styles.errorText}>{error}</Text>
 
-                    <ButtonComponent newStyle={styles.button} onPress={loginUser}>
-                        <Text style={styles.textButton}>Entrar</Text>
+                    <ButtonComponent newStyle={styles.button} onPress={loginUser} disabled={isLoading}>
+                        {
+                            isLoading && (
+                                <ActivityIndicator />
+                            )
+                        }
+                        {
+                            !isLoading && (
+                                <Text style={styles.textButton}>Entrar</Text>
+                            )
+                        }
                     </ButtonComponent>
                     <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
                         <Text style={styles.textForgotPassword}>Esqueci a senha</Text>

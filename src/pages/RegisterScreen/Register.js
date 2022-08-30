@@ -7,7 +7,8 @@ import {
     TextInput,
     View,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    ActivityIndicator
 } from 'react-native'
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
@@ -23,12 +24,16 @@ const Register = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [submited, setSubmited] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     async function registerUser() {
         setError('');
+        setIsLoading(true);
         setSubmited(true);
+        let reg = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
-        if(!name || !email || !birthday || !phone || !password) {
+        if(!name || !email || !birthday || !phone || !password || !reg.test(email)) {
+            setIsLoading(false);
             return;
         }
 
@@ -46,9 +51,14 @@ const Register = ({ navigation }) => {
             });
 
             if(response.data.user) {
-                navigation.navigate('Login');
+                setIsLoading(false);
+                navigation.navigate('Login', {
+                    userRegistered: true
+                });
             }
+            setIsLoading(false);
         } catch(e) {
+            setIsLoading(false);
             setError(e.response.data.message);
         }
     }
@@ -71,7 +81,7 @@ const Register = ({ navigation }) => {
                 }
                 
 
-                <MaskInput
+                <TextInput
                     placeholder='Email'
                     onChangeText={setEmail}
                     value={email}
@@ -86,10 +96,15 @@ const Register = ({ navigation }) => {
                         <Text style={styles.errorText}>Email is required</Text>
                     )
                 }
+                {
+                    (email.trim() !== '' && !(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i.test(email)) && submited) && (
+                        <Text style={styles.errorText}>Invalid email</Text>
+                    )
+                }
 
                 <MaskInput
                     placeholder='Data de Nascimento'
-                    onChangeText={(masked, unmasked) => setBirthday(unmasked)}
+                    onChangeText={(masked, unmasked) => setBirthday(masked)}
                     value={birthday}
                     style={styles.textInput}
                     mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
@@ -127,8 +142,17 @@ const Register = ({ navigation }) => {
                     )
                 }
 
-                <ButtonComponent newStyle={styles.button} onPress={registerUser}>
-                    <Text style={styles.buttonText}>Criar Conta</Text>
+                <ButtonComponent newStyle={styles.button} onPress={registerUser} disabled={isLoading}>
+                    {
+                        isLoading && (
+                            <ActivityIndicator />
+                        )
+                    }
+                    {
+                        !isLoading && (
+                            <Text style={styles.buttonText}>Criar Conta</Text>
+                        )
+                    }
                 </ButtonComponent>
 
                 <Text style={styles.errorText}>{error}</Text>

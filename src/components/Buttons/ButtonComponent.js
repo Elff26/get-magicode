@@ -1,9 +1,9 @@
 import { StyleSheet, TouchableOpacity } from "react-native"
 import Colors from "../../utils/ColorPallete/Colors"
 
-export default function ButtonComponent({ newStyle, onPress, children }) {
+export default function ButtonComponent({ newStyle, onPress, children, disabled = false }) {
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, newStyle]}>
+        <TouchableOpacity onPress={onPress} style={[styles.button, newStyle]} disabled={disabled}>
           {children}
         </TouchableOpacity>
     )

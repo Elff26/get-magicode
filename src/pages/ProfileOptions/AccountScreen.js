@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { 
+    ActivityIndicator,
     SafeAreaView, 
     StyleSheet, 
     Text, 
     TextInput, 
     View 
 } from 'react-native';
+import MaskInput from 'react-native-mask-input';
 
 import Colors from '../../utils/ColorPallete/Colors';
 import Header from '../../components/Header/HeaderComponent';
@@ -14,8 +16,8 @@ import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import { Dimensions } from "react-native";
 
 import Axios from '../../api/api';
-import ToastComponent from '../../components/Toast/ToastComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ToastComponent from '../../components/Toast/ToastComponent';
 
 var width = Dimensions.get('window').width; 
 
@@ -27,6 +29,7 @@ export default function AccountScreen({navigation}) {
     const [editData, setEditData] = useState(false);
     const [error, setError] = useState(false);
     const [user, setUser] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         async function getData() {
@@ -47,7 +50,9 @@ export default function AccountScreen({navigation}) {
                 const response = await Axios.delete('/DeleteUser/' + user.userID);
                 
                 if(response.data.message) {
-                    navigation.navigate('Login');
+                    navigation.navigate('Login', {
+                        deletedUser: true
+                    });
                 }
             }
         } catch(e) {
@@ -57,6 +62,7 @@ export default function AccountScreen({navigation}) {
 
     async function editAccount() {
         if(editData) {
+            setIsLoading(true);
             const dataUser = {
                 ...user,
                 name,
@@ -67,24 +73,28 @@ export default function AccountScreen({navigation}) {
 
             try {
                 if (user != null) {
-
                     const response = await Axios.put('/UpdateUser/' + user.userID, {
                         user:dataUser
                     });
     
                     if(response.data.user) {
-                        setUser(response.data.user);
                         let user = response.data.user;
+
+                        setUser(user);
                         setName(user.name);
                         setEmail(user.email);
                         setPhone(user.phone);
                         setBirthday(user.birthday);
-    
+
+                        await AsyncStorage.mergeItem('@User', JSON.stringify(user));
+
+                        setIsLoading(false);
                         ToastComponent('Dados atualizados com sucesso!');
                     }
+                    setIsLoading(false);
                 }
             } catch(e) {
-                console.log(e);
+                setIsLoading(false);
                 setError(e.response.data.message);
             }
         }
@@ -113,24 +123,32 @@ export default function AccountScreen({navigation}) {
                         editable={editData}
                         style={styles.textInput}
                         placeholder="E-mail"
+                        autoComplete="email"
+                        keyboardType="email-address"
+                        textContentType='emailAddress'
                     />
 
-                    <TextInput
+                    <MaskInput
+                        placeholder='Telefone'
+                        onChangeText={(masked, unmasked) => setPhone(unmasked)}
                         value={phone}
-                        onChangeText={setPhone}
-                        editable={editData}
                         style={styles.textInput}
-                        placeholder="Telefone"
+                        mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                        keyboardType="phone-pad"
+                        editable={editData}
                     />
 
-                <TextInput
+                    <MaskInput
+                        placeholder='Data de Nascimento'
+                        onChangeText={(masked, unmasked) => setBirthday(masked)}
                         value={birthday}
-                        onChangeText={setBirthday}
-                        editable={editData}
                         style={styles.textInput}
-                        placeholder="Data Nascimento"
+                        mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+                        editable={editData}
                     />
                 </View>
+
+                <Text style={styles.errorText}>{error}</Text>
             
                 <View>
                     <ButtonComponent 
@@ -139,8 +157,18 @@ export default function AccountScreen({navigation}) {
                             backgroundColor: Colors.PRIMARY_COLOR, 
                             marginBottom: 20 
                         }}
-                        onPress={editAccount}>
-                        <Text style={[styles.bottonText, { color: '#fff' }]}>{ editData ? 'Salvar' : 'Editar dados'}</Text>
+                        onPress={editAccount}
+                        disabled={isLoading}>
+                        {
+                            isLoading && (
+                                <ActivityIndicator />
+                            )
+                        }
+                        {
+                            !isLoading && (
+                                <Text style={[styles.bottonText, { color: '#fff' }]}>{ editData ? 'Salvar' : 'Editar dados'}</Text>
+                            )
+                        }
                     </ButtonComponent>
                     <ButtonComponent 
                         newStyle={{ 
@@ -193,4 +221,9 @@ const styles = StyleSheet.create({
         borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20
     },
+
+    errorText: {
+        color: Colors.ERROR_COLOR,
+        textAlign: 'center'
+    }
 })
