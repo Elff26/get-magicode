@@ -32,7 +32,7 @@ export default function Login({ route, navigation }) {
         if(routeParams.params && routeParams.params.deletedUser) {
             ToastComponent('Usuário deletado com sucesso!');
         }
-    });
+    }, []);
 
     async function loginUser() {
         setError('');
@@ -102,17 +102,8 @@ export default function Login({ route, navigation }) {
 
                     <Text style={styles.errorText}>{error}</Text>
 
-                    <ButtonComponent newStyle={styles.button} onPress={loginUser} disabled={isLoading}>
-                        {
-                            isLoading && (
-                                <ActivityIndicator />
-                            )
-                        }
-                        {
-                            !isLoading && (
-                                <Text style={styles.textButton}>Entrar</Text>
-                            )
-                        }
+                    <ButtonComponent newStyle={styles.button} onPress={loginUser} isLoading={isLoading}>
+                        <Text style={styles.textButton}>Entrar</Text>
                     </ButtonComponent>
                     <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
                         <Text style={styles.textForgotPassword}>Esqueci a senha</Text>

@@ -142,17 +142,8 @@ const Register = ({ navigation }) => {
                     )
                 }
 
-                <ButtonComponent newStyle={styles.button} onPress={registerUser} disabled={isLoading}>
-                    {
-                        isLoading && (
-                            <ActivityIndicator />
-                        )
-                    }
-                    {
-                        !isLoading && (
-                            <Text style={styles.buttonText}>Criar Conta</Text>
-                        )
-                    }
+                <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
+                    <Text style={styles.buttonText}>Criar Conta</Text>
                 </ButtonComponent>
 
                 <Text style={styles.errorText}>{error}</Text>

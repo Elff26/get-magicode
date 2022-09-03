@@ -9,13 +9,9 @@ import { Dimensions } from "react-native";
 
 var width = Dimensions.get('window').width; 
 
-export default function ProfileOptions({navigation}) {
-    function goToAccountScreen() {
-        navigation.navigate('AccountScreen');
-    }
-
-    function logout() {
-        navigation.navigate('Login');
+export default function PrivacyAndSecurityOptions({navigation}) {
+    function goToChangePassword() {
+        navigation.navigate('ChangePassword');
     }
 
     return (
@@ -23,31 +19,13 @@ export default function ProfileOptions({navigation}) {
             <Header backArrow={true} navigation={navigation} />
             <View style={styles.principalView}>
                 <View>
-                    <Text style={styles.titleLogo}>Configurações</Text> 
+                    <Text style={styles.titleLogo}>Privacidade e Segurança</Text> 
 
-                    <TouchableOpacity style={styles.optionButton}>
-                        <Text style={styles.bottonText}>Notificações</Text>
-                        <Feather name='chevron-right' color={Colors.TEXT_COLOR} size={32} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.optionButton}>
-                        <Text style={styles.bottonText}>Privacidade e Segurança</Text>
-                        <Feather name='chevron-right' color={Colors.TEXT_COLOR} size={32} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.optionButton} onPress={goToAccountScreen}>
-                        <Text style={styles.bottonText}>Conta</Text>
+                    <TouchableOpacity style={styles.optionButton} onPress={goToChangePassword}>
+                        <Text style={styles.bottonText}>Alteração de senha</Text>
                         <Feather name='chevron-right' color={Colors.TEXT_COLOR} size={32} />
                     </TouchableOpacity>
                 </View>
-            
-                <ButtonComponent 
-                    newStyle={{ 
-                        flexDirection: 'row', 
-                        width: width - 20, 
-                        backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND 
-                    }}
-                    onPress={logout}>
-                    <Text style={styles.bottonText}>Sair</Text>
-                </ButtonComponent>
             </View>
         </SafeAreaView>
     );
@@ -63,7 +41,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-between'
     },
 
     titleLogo: {

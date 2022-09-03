@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { 
-    ActivityIndicator,
     SafeAreaView, 
     StyleSheet, 
     Text, 
@@ -21,7 +20,7 @@ import ToastComponent from '../../components/Toast/ToastComponent';
 
 var width = Dimensions.get('window').width; 
 
-export default function AccountScreen({navigation}) {
+export default function Account({navigation}) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -46,10 +45,12 @@ export default function AccountScreen({navigation}) {
     async function deleteAccount() {
         try {
             if (user != null) {
+                setIsLoading(true);
                 
                 const response = await Axios.delete('/DeleteUser/' + user.userID);
                 
                 if(response.data.message) {
+                    setIsLoading(false);
                     navigation.navigate('Login', {
                         deletedUser: true
                     });
@@ -146,9 +147,9 @@ export default function AccountScreen({navigation}) {
                         mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
                         editable={editData}
                     />
-                </View>
 
-                <Text style={styles.errorText}>{error}</Text>
+                    <Text style={styles.errorText}>{error}</Text>
+                </View>
             
                 <View>
                     <ButtonComponent 
@@ -158,23 +159,15 @@ export default function AccountScreen({navigation}) {
                             marginBottom: 20 
                         }}
                         onPress={editAccount}
-                        disabled={isLoading}>
-                        {
-                            isLoading && (
-                                <ActivityIndicator />
-                            )
-                        }
-                        {
-                            !isLoading && (
-                                <Text style={[styles.bottonText, { color: '#fff' }]}>{ editData ? 'Salvar' : 'Editar dados'}</Text>
-                            )
-                        }
+                        isLoading={isLoading}>
+                        <Text style={[styles.bottonText, { color: '#fff' }]}>{ editData ? 'Salvar' : 'Editar dados'}</Text>
                     </ButtonComponent>
                     <ButtonComponent 
                         newStyle={{ 
                             width: width - 20, 
                             backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND 
-                        }}>
+                        }}
+                    isLoading={isLoading}>
                         <Text style={styles.bottonText} onPress={deleteAccount}>Excluir conta</Text>
                     </ButtonComponent>
                 </View>
@@ -194,7 +187,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-between'
     },
 
     titleLogo: {
