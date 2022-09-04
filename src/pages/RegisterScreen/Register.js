@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import MaskInput from 'react-native-mask-input';
 import { 
+    KeyboardAvoidingView,
     StyleSheet, 
     Text, 
     TextInput,
     View,
     TouchableOpacity,
-    ScrollView,
-    ActivityIndicator
+    ScrollView
 } from 'react-native'
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
@@ -64,10 +64,12 @@ const Register = ({ navigation }) => {
     }
 
     return(
-        <View style={styles.main}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.main}>
             <ScrollView contentContainerStyle={styles.form}>
-            <Header backArrow={true} navigation={navigation}/>
+                <Header backArrow={true} navigation={navigation} />
+
                 <Text style={styles.title}>Cadastre-se</Text>
+
                 <TextInput
                     placeholder='Nome Completo'
                     onChangeText={setName}
@@ -80,7 +82,6 @@ const Register = ({ navigation }) => {
                     )
                 }
                 
-
                 <TextInput
                     placeholder='Email'
                     onChangeText={setEmail}
@@ -161,8 +162,7 @@ const Register = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
-        </View>
-
+        </KeyboardAvoidingView>
     )
 }
 

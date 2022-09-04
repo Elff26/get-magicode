@@ -5,7 +5,7 @@ import Animated, { Easing, useSharedValue, withDelay, withRepeat, withTiming, us
 import Colors from '../../utils/ColorPallete/Colors';
 
 
-export default function AnimatedButtonComponent({ isBoss, delay, style, from, to, duration, easingType, reverse, repeat }) {
+export default function AnimatedButtonComponent({ isBoss, delay, style, from, to, duration, easingType }) {
     const buttonValue = useSharedValue(from);
     const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -17,8 +17,8 @@ export default function AnimatedButtonComponent({ isBoss, delay, style, from, to
                 duration: duration,
                 easing: easingType
               }),
-              repeat,
-              reverse
+              2,
+              true
             )
         )
     }, []);

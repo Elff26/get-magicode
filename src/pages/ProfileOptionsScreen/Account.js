@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { 
-    SafeAreaView, 
+    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
     StyleSheet, 
     Text, 
     TextInput, 
@@ -106,6 +108,7 @@ export default function Account({navigation}) {
     return (
         <SafeAreaView style={styles.allPagesCode}> 
             <Header backArrow={true} navigation={navigation} />
+
             <View style={styles.principalView}>
                 <View>
                     <Text style={styles.titleLogo}>Dados da conta</Text> 
@@ -167,7 +170,7 @@ export default function Account({navigation}) {
                             width: width - 20, 
                             backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND 
                         }}
-                    isLoading={isLoading}>
+                        isLoading={isLoading}>
                         <Text style={styles.bottonText} onPress={deleteAccount}>Excluir conta</Text>
                     </ButtonComponent>
                 </View>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { 
     ActivityIndicator,
+    KeyboardAvoidingView,
     SafeAreaView, 
     StyleSheet, 
     Text, 
@@ -72,8 +73,9 @@ export default function Login({ route, navigation }) {
     }
 
     return (
-        <SafeAreaView style={styles.allPagesCode}> 
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.allPagesCode}> 
             <Header backArrow={true} navigation={navigation} />
+            
             <View style={styles.principalView}>
                 <Text style={styles.titleLogo}>Get MagiCode</Text>
                 <View>
@@ -116,7 +118,7 @@ export default function Login({ route, navigation }) {
                     </TouchableOpacity>
                 </View>
             </View>
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }
 

@@ -19,8 +19,10 @@ export default function BottomTabComponent() {
                         width: 0, 
                         height: 0
                     },
-                    border: 'none'
-                }
+                    border: 'none',
+
+                },
+                tabBarHideOnKeyboard: true
             }}>
             <Tab.Screen 
                 name='Main' 
