@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { 
     FlatList, 
@@ -11,44 +11,64 @@ import {
 } from "react-native";
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
-
+import Axios from '../../api/api';
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import ToastComponent from '../../components/Toast/ToastComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ChooseTechnologies({ navigation }) {
     const [selectedItems, setSelectedItems] = useState([]);
-    const fakeData = [
-        {
-            name: 'Java', image_url: 'https://www.monetbil.com/support/wp-content/uploads/2021/01/java-logo-vector.png', key: 1
-        },
-        {
-            name: 'JavaScript', image_url: 'https://camo.githubusercontent.com/5e4e512a9fba4d33300fa431e2c5fb07d476d5f15194bc75dfbf3da545f73e43/68747470733a2f2f63646e2e69636f6e73636f75742e636f6d2f69636f6e2f667265652f706e672d3235362f6a6176617363726970742d323735323134382d323238343936352e706e67', key: 2
-        },
-        {
-            name: 'C', image_url: 'https://raw.githubusercontent.com/github/explore/f3e22f0dca2be955676bc70d6214b95b13354ee8/topics/c/c.png', key: 3
-        },
-        {
-            name: 'C#', image_url: 'https://seeklogo.com/images/C/c-sharp-c-logo-02F17714BA-seeklogo.com.png', key: 4
-        },
-        {
-            name: 'Clojure', image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Clojure_logo.svg/1024px-Clojure_logo.svg.png', key: 5
-        },
-        {
-            name: 'Ruby', image_url: 'https://cdn-icons-png.flaticon.com/512/919/919842.png', key: 6
-        }
-    ];
+    const [technologies, setTechnologies] = useState([]);
+    const [user, setUser] = useState({});
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    function selectItem(key) {
+    useEffect(() => {
+        async function getData() {
+            const response = await Axios.get("/ListAllTechnologies");
+            if(response.data.technologies) {
+                setTechnologies(response.data.technologies);
+                setUser(JSON.parse(await AsyncStorage.getItem('@User')));
+            }
+        }
+        getData();
+    }, []);
+
+    async function associateUserToTechnology () {
+        if(selectedItems.length > 0) {
+            try {
+                if (user != null) {
+                    setIsLoading(true);
+                    
+                    console.log(selectedItems);
+                    const response = await Axios.post('/AssociateToTechnology/' + user.userID, {
+                        technologies: selectedItems
+                    });
+                    
+                    if(response.data.user) {
+                        await AsyncStorage.mergeItem('@User', JSON.stringify(response.data.user));
+                        setUser(response.data.user);
+                        setIsLoading(false);
+                        navigation.navigate('LearningTrail');
+                    }
+                }
+            } catch(e) {
+                setError(e.response.data.message);
+            }
+        }
+    }
+    
+    function selectItem(technology) {
         if(selectedItems.length < 2) {
-            setSelectedItems([...selectedItems, key]);
+            setSelectedItems([...selectedItems, technology]);
         } else {
             ToastComponent('Selecione no máximo 2 tecnologias!');
         }
     }
 
-    function unselectItem(key) {
-        setSelectedItems(selectedItems.filter(item => item != key));
+    function unselectItem(technology) {
+        setSelectedItems(selectedItems.filter(item => item != technology));
     }
 
     function goToKnowledgeTest() {
@@ -67,16 +87,16 @@ export default function ChooseTechnologies({ navigation }) {
                     contentContainerStyle={styles.techListItems}
                     style={styles.techList}
                     numColumns={2}
-                    data={fakeData}
+                    data={technologies}
                     renderItem={({ item }) => (
                             <TouchableOpacity 
-                                key={item.key} 
+                                key={item.technologyID} 
                                 style={[styles.languageItem, 
-                                    selectedItems.indexOf(item.key) != -1 ? 
+                                    selectedItems.indexOf(item) != -1 ? 
                                     { backgroundColor: 'rgb(57, 254, 113);' } : 
                                     {}]} 
-                                onPress={() => selectedItems.indexOf(item.key) == -1 ? selectItem(item.key) : unselectItem(item.key)}>
-                                <Image source={{ uri: item.image_url }} style={styles.languageLogo} />
+                                onPress={() => selectedItems.indexOf(item.technologyID) == -1 ? selectItem(item) : unselectItem(item)}>
+                                <Image source={{ uri: item.imageUrl }} style={styles.languageLogo} />
                                 <Text style={styles.languageName}>{item.name}</Text>
                             </TouchableOpacity>
                         )
@@ -84,7 +104,9 @@ export default function ChooseTechnologies({ navigation }) {
                 />
 
                 <View style={styles.buttonGroup}>
-                    <ButtonComponent newStyle={styles.newStyleButton}>
+                    <ButtonComponent newStyle={styles.newStyleButton} 
+                        onPress={associateUserToTechnology}
+                        isLoading={isLoading}>
                         <Text style={styles.textButton}>Aprender</Text>
                     </ButtonComponent>
                     <ButtonComponent newStyle={styles.newStyleButton}>

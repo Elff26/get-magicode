@@ -8,7 +8,7 @@ import {
 import { AntDesign } from '@expo/vector-icons'; 
 import Colors from '../../utils/ColorPallete/Colors';
 
-export default function ChooseTechnologieComponent({ navigation }) {
+export default function ChooseTechnologieComponent({ navigation }) { 
     function goToChooseTechnologies() {
         navigation.navigate('ChooseTechnologies');
     }
