@@ -25,12 +25,18 @@ export default function Login({ route, navigation }) {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if(routeParams.params && routeParams.params.userRegistered) {
-            ToastComponent('Usuário criado com sucesso!');
-        }
+        if(routeParams.params) {
+            if(routeParams.params.userRegistered) {
+                ToastComponent('Usuário criado com sucesso!');
+            }
+    
+            if(routeParams.params.deletedUser) {
+                ToastComponent('Usuário deletado com sucesso!');
+            }
 
-        if(routeParams.params && routeParams.params.deletedUser) {
-            ToastComponent('Usuário deletado com sucesso!');
+            if(routeParams.params.passwordRecovered) {
+                ToastComponent('Senha atualizada com sucesso!');
+            }
         }
     }, []);
 

@@ -1,16 +1,43 @@
 import { useState } from "react";
 import { StyleSheet,Text, TextInput, View} from "react-native";
+import Axios from "../../api/api";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export default function ForgotPasswordEmail({navigation}) {
     const [email, setEmail] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [submited, setSubmited] = useState(false);
+    const [error, setError] = useState(false);
 
-    function goToForgotPasswordCode() {
-        navigation.navigate('ForgotPasswordCode');
-      }
+    async function goToForgotPasswordCode() {
+        setSubmited(true);
+        setIsLoading(true);
+
+        if(email) {
+            try {
+                const response = await Axios.put('/CodeAndDateGenerator', {
+                    email
+                });
+
+                if(response.data) {
+                    let id = response.data.userID;
+
+                    await AsyncStorage.setItem('@UserID', JSON.stringify(id));
+                }
+
+                navigation.navigate('ForgotPasswordCode');
+            } catch(e) {
+                setError(e.response.data.message);
+            }
+        }
+
+        setIsLoading(false);
+    }
 
     return ( 
         <View style={styles.allPages}>
@@ -27,7 +54,15 @@ export default function ForgotPasswordEmail({navigation}) {
                         onChangeText= {setEmail}
                         style={styles.textInput}
                     />
-                    <ButtonComponent newStyle={styles.buttonEmail} onPress={goToForgotPasswordCode}>
+                    {
+                        (email.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Email is required</Text>
+                        )
+                    }
+
+                    <Text style={styles.errorText}>{error}</Text>
+
+                    <ButtonComponent newStyle={styles.buttonEmail} onPress={goToForgotPasswordCode} isLoading={isLoading}>
                         <Text style={styles.textSendButton}>Enviar</Text>
                     </ButtonComponent>
                 </View>
@@ -48,16 +83,19 @@ const styles = StyleSheet.create({
         padding: 15,
         marginBottom: 10
     },
+
     homeTitle: {
         color: Colors.PRIMARY_COLOR,
         fontSize: 30,
         textAlign: 'center'
     },
-   form:{
+
+    form:{
         justifyContent: 'center',
         alignItems: 'center',
-   },
-   textInput:{
+    },
+
+    textInput:{
         width: 304,
         height: 40,
         backgroundColor: '#E9E9E9',
@@ -65,25 +103,33 @@ const styles = StyleSheet.create({
         borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20,
         textAlign: 'center',
-        justifyContent: 'center',
-        marginBottom: 30,
-   },
-   textSendButton:{
+        justifyContent: 'center'
+    },
+
+    textSendButton:{
         color:'#FFFFFF'
-   },
-   buttonEmail: {
+    },
+    buttonEmail: {
         width: 198,
         height: 49,
         borderRadius: 20,
-   },
-   description:{
+        marginTop: 15
+    },
+
+    description:{
         textAlign:"center", 
         marginTop:10, 
         color:Colors.TEXT_COLOR, 
         fontSize: 24
-   },
-   allPages:{
+    },
+
+    allPages:{
         flex: 1,
         backgroundColor: '#fff'
-   }
+    },
+
+    errorText: {
+        color: Colors.ERROR_COLOR,
+        textAlign: 'center'
+    }
 });
