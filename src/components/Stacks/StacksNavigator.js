@@ -9,6 +9,7 @@ import ProfileOptions from "../../pages/ProfileOptionsScreen/ProfileOptions";
 import Account from "../../pages/ProfileOptionsScreen/Account";
 import PrivacyAndSecurityOptions from "../../pages/ProfileOptionsScreen/PrivacyAndSecutityOptions";
 import ChangePassword from "../../pages/ProfileOptionsScreen/ChangePassword";
+import ChooseTechnologias from "../../pages/KnowledgeTestScreen/KnowledgeTest";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +26,7 @@ const MainStackNavigator = () => {
 const RankingStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ChooseTechnologies">
-      <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
+      <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologias} />
     </Stack.Navigator>
   );
 }
