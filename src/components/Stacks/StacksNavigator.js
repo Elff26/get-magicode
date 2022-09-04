@@ -9,7 +9,7 @@ import ProfileOptions from "../../pages/ProfileOptionsScreen/ProfileOptions";
 import Account from "../../pages/ProfileOptionsScreen/Account";
 import PrivacyAndSecurityOptions from "../../pages/ProfileOptionsScreen/PrivacyAndSecutityOptions";
 import ChangePassword from "../../pages/ProfileOptionsScreen/ChangePassword";
-import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/ChooseTechnologies";
+import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/chooseTechnologies";
 
 const Stack = createNativeStackNavigator();
 

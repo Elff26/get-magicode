@@ -95,7 +95,7 @@ export default function ChooseTechnologies({ navigation }) {
                                     selectedItems.indexOf(item) != -1 ? 
                                     { backgroundColor: 'rgb(57, 254, 113);' } : 
                                     {}]} 
-                                onPress={() => selectedItems.indexOf(item.technologyID) == -1 ? selectItem(item) : unselectItem(item)}>
+                                onPress={() => selectedItems.indexOf(item) == -1 ? selectItem(item) : unselectItem(item)}>
                                 <Image source={{ uri: item.imageUrl }} style={styles.languageLogo} />
                                 <Text style={styles.languageName}>{item.name}</Text>
                             </TouchableOpacity>
