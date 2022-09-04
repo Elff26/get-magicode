@@ -14,7 +14,7 @@ import Colors from '../../utils/ColorPallete/Colors';
 import Header from '../../components/Header/HeaderComponent';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
-export default function ChooseTechnologias({ navigation }) {
+export default function KnowledgeTest({ navigation }) {
     const [questionNumber, setQuestionNumber] = useState(1);
     const [code, setCode] = useState("//Seu código vai aqui :)");
     const [exampleCode, setExampleCode] = useState('public class T {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Teste");\n\t}\n}');
