@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons'; 
+import Colors from '../../utils/ColorPallete/Colors';
 
 export default function LifeCompoenent() {
     const [lifeArray, setLifeArray] = useState([]);
@@ -38,8 +39,8 @@ export default function LifeCompoenent() {
                 lifeArray.map((value, index) => {
                     return (
                         value === 1 ? 
-                            <AntDesign onPress={showLifeDetails} key={index} style={styles.lifeComponent} name="heart" size={24} color="#D4333F" /> : 
-                            <FontAwesome5 onPress={showLifeDetails} style={styles.lifeComponent} key={index} name="heart-broken" size={24} color="#D4333F" />
+                            <AntDesign onPress={showLifeDetails} key={index} style={styles.lifeComponent} name="heart" size={24} color={Colors.RED_COLOR_DEFAULT} /> : 
+                            <FontAwesome5 onPress={showLifeDetails} style={styles.lifeComponent} key={index} name="heart-broken" size={24} color={Colors.RED_COLOR_DEFAULT} />
                     )
                 })
             }

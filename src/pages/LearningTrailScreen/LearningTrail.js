@@ -85,11 +85,16 @@ const LearningTrail = ({ route, navigation }) => {
     }, [route]);
 
     return (
-        <View style={[styles.screenContainer, openBottomSheet ? { backgroundColor: '#bbb' } : {}]}>
+        <View style={[styles.screenContainer, openBottomSheet ? styles.backgroundWhenBottomSheetIsOpen : {}]}>
             {
                 currentTechnology && (
                     <>
-                        <LearningTrailHeaderComponent navigation={navigation} openBottomSheet={openBottomSheet} setOpenBottomSheet={setOpenBottomSheet} currentTechnology={currentTechnology} />
+                        <LearningTrailHeaderComponent 
+                            navigation={navigation} 
+                            openBottomSheet={openBottomSheet} 
+                            setOpenBottomSheet={setOpenBottomSheet} 
+                            currentTechnology={currentTechnology}
+                        />
 
 
                         <FlatList 
@@ -102,7 +107,7 @@ const LearningTrail = ({ route, navigation }) => {
                                         <TouchableOpacity style={styles.classItem}>
                                             <AnimatedButtonClassComponent item={item} />
                                             
-                                            <Text style={styles.classTitle}>{item.title}</Text>
+                                            <Text>{item.title}</Text>
                                         </TouchableOpacity>   
                                     </PathSide>
                                 </View>
@@ -110,12 +115,19 @@ const LearningTrail = ({ route, navigation }) => {
                         />
 
                         <TouchableOpacity style={styles.versusButton}>
-                            <MaterialCommunityIcons name="sword-cross" size={28} color={Colors.BUTTON_VERSUS_ICON} />
+                            <MaterialCommunityIcons name="sword-cross" size={28} color={Colors.RED_COLOR_DEFAULT} />
                         </TouchableOpacity>
 
                         {
                             (user && user.technologies && user.technologies.length > 0) && (
-                                <BottomSheetTechnologiesComponent setCurrentTechnology={setCurrentTechnology} setUser={setUser} user={user} navigation={navigation} open={openBottomSheet} setOpenBottomSheet={setOpenBottomSheet} />
+                                <BottomSheetTechnologiesComponent 
+                                    setCurrentTechnology={setCurrentTechnology} 
+                                    setUser={setUser} 
+                                    user={user} 
+                                    navigation={navigation} 
+                                    open={openBottomSheet} 
+                                    setOpenBottomSheet={setOpenBottomSheet} 
+                                />
                             )
                         }
                     </>
@@ -130,8 +142,12 @@ export default gestureHandlerRootHOC(LearningTrail);
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SAFE_COLOR,
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    },
+
+    backgroundWhenBottomSheetIsOpen: {
+        backgroundColor: Colors.BOTTOM_SHEET_SCREEN_BACKGROUND
     },
     
     learningTrail: {

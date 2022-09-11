@@ -102,10 +102,15 @@ export default function ChooseTechnologies({ navigation }) {
                                 key={item.technologyID} 
                                 style={[styles.languageItem, 
                                     selectedItems.indexOf(item) != -1 ? 
-                                    { backgroundColor: 'rgb(57, 254, 113);' } : 
-                                    {}]} 
+                                    styles.selectedItem : 
+                                    {}
+                                ]} 
                                 onPress={() => selectedItems.indexOf(item) == -1 ? selectItem(item) : unselectItem(item)}>
-                                <Image source={{ uri: item.imageUrl }} style={styles.languageLogo} />
+                                <Image source={{ 
+                                        uri: item.imageUrl 
+                                    }} 
+                                    style={styles.languageLogo} 
+                                />
                                 <Text style={styles.languageName}>{item.name}</Text>
                             </TouchableOpacity>
                         )
@@ -129,7 +134,7 @@ export default function ChooseTechnologies({ navigation }) {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
     },
 
     languageItem: {
@@ -146,7 +151,11 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 10,
         elevation: 2,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
+    },
+
+    selectedItem: {
+        backgroundColor: Colors.SELECT_ITEM_BACKGROUND
     },
 
     techList: {
@@ -184,7 +193,7 @@ const styles = StyleSheet.create({
     },
 
     textButton: {
-        color: '#fff'
+        color: Colors.WHITE_SAFE_COLOR
     },
 
     newStyleButton: {

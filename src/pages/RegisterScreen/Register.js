@@ -153,11 +153,11 @@ const Register = ({ navigation }) => {
                     <Text style={styles.simpleText}>Ou entre com: </Text>
                     <View style={styles.loginOptions}>
                         <TouchableOpacity>
-                            <FontAwesome5 name='facebook' size={24} color="#3b5998" />
+                            <FontAwesome5 name='facebook' size={24} color={Colors.BLUE_FACEBOOK_ICON} />
                         </TouchableOpacity>
 
                         <TouchableOpacity>
-                            <MaterialCommunityIcons name='gmail' size={24} color="#c71610" />
+                            <MaterialCommunityIcons name='gmail' size={24} color={Colors.RED_GMAIL_ICON} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -171,7 +171,7 @@ export default Register
 const styles = StyleSheet.create({
     main:{
         flex: 1,       
-        backgroundColor: '#FFFFFF'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
     },
 
     form:{
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     },
 
     buttonText:{
-        color: '#FFFFFF',
+        color: Colors.WHITE_SAFE_COLOR,
         fontSize: 18
     },
 

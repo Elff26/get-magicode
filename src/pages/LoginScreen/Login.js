@@ -128,12 +128,12 @@ export default function Login({ route, navigation }) {
 const styles = StyleSheet.create({
     allPagesCode:{
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor:  Colors.WHITE_SAFE_COLOR
    },
 
     principalView: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SAFE_COLOR,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     },
 
     textButton: {
-        color: '#FFFFFF'
+        color:  Colors.WHITE_SAFE_COLOR
     },
 
     buttonForgotPassword: {

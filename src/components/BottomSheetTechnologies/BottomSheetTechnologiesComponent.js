@@ -50,7 +50,7 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
             ref={bottomSheetRef}
             snapPoints={['60%']}
             index={-1}
-            backgroundStyle={{ backgroundColor: '#f5f5f5' }}
+            backgroundStyle={{ backgroundColor: Colors.TEXT_INPUT_BACKGROUND }}
             enablePanDownToClose={true}
             onClose={() => setOpenBottomSheet(false)}
         >
@@ -66,7 +66,7 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
                             renderItem={({ item }) => (
                                     <TouchableOpacity 
                                         key={item.technologyID} 
-                                        style={[styles.languageItem, item.learning ? { backgroundColor: 'rgb(57, 254, 113);' } : {}]} 
+                                        style={[styles.languageItem, item.learning ? styles.selectedItem : {}]} 
                                         onPress={() => selectItem(item)}>
                                         <Image source={{ uri: item.technology.imageUrl }} style={styles.languageLogo} />
                                         <Text style={styles.languageName}>{item.technology.name}</Text>
@@ -113,9 +113,13 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 10,
         elevation: 2,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
     },
-
+    
+    selectedItem: {
+        backgroundColor: Colors.SELECT_ITEM_BACKGROUND
+    },
+    
     techList: {
         width: '100%'
     },
@@ -136,7 +140,7 @@ const styles = StyleSheet.create({
     },
 
     changeTechnologiesText: {
-        color: "#FFF"
+        color: Colors.WHITE_SAFE_COLOR
     },
 
     errorText: {

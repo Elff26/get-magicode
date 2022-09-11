@@ -99,7 +99,7 @@ export default function ForgotPasswordRecovery({navigation}) {
 const styles = StyleSheet.create({
     allPagesRecovery:{
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
    },
 
    formRecovery:{
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     textInputRecovery:{
         width: 304,
         height: 40,
-        backgroundColor: '#E9E9E9',
+        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
         borderWidth: 1,
         borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     },
 
     textAgreeButton:{
-        color:'#FFFFFF'
+        color: Colors.WHITE_SAFE_COLOR
     },
 
     buttonRecovery: {

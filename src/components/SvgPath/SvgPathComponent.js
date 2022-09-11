@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Svg, { Path } from 'react-native-svg';
 import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
 import { View } from 'react-native';
+import Colors from '../../utils/ColorPallete/Colors';
 
 export default function SvgPathComponent({ paths, width, height, from, to, isDone }) {
     const [length, setLength] = useState(0);
@@ -48,7 +49,7 @@ export default function SvgPathComponent({ paths, width, height, from, to, isDon
                                 onLayout={() => setLength(ref.current.getTotalLength())}
                                 ref={ref}
                                 d={d} 
-                                stroke="#ddd" 
+                                stroke={Colors.WHITE_SAFE_COLOR}
                                 strokeWidth={3}
                                 strokeDasharray={length}
                             />

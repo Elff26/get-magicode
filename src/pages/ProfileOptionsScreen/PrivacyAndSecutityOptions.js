@@ -34,12 +34,12 @@ export default function PrivacyAndSecurityOptions({navigation}) {
 const styles = StyleSheet.create({
     allPagesCode:{
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
    },
 
     principalView: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SAFE_COLOR,
         alignItems: 'center',
         justifyContent: 'space-between'
     },

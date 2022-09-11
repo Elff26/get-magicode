@@ -122,7 +122,7 @@ export default function SetAGoal({navigation}) {
 const styles = StyleSheet.create({
     screenContainerSetGoal: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SAFE_COLOR,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         padding: 15,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
    },
    textSetGoalButton:{
-        color:'#FFFFFF'
+        color: Colors.WHITE_SAFE_COLOR
    },
    buttonSetGoal: {
         width: 198,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
    },
    allPagesSetGoal:{
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
    },
    goalItem: {
         width: '100%',

@@ -3,8 +3,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from '../../utils/ColorPallete/Colors';
 
-import { useCallback, useRef } from 'react';
-
 const Home = ({ navigation }) => {
   function goToLogin() {
     navigation.navigate('Login');
@@ -41,11 +39,11 @@ const Home = ({ navigation }) => {
         <Text style={styles.simpleText}>Ou entre com: </Text>
         <View style={styles.loginOptions}>
           <TouchableOpacity>
-            <FontAwesome5 name='facebook' size={24} color="#3b5998" />
+            <FontAwesome5 name='facebook' size={24} color={Colors.BLUE_FACEBOOK_ICON} />
           </TouchableOpacity>
 
           <TouchableOpacity>
-            <MaterialCommunityIcons name='gmail' size={24} color="#c71610" />
+            <MaterialCommunityIcons name='gmail' size={24} color={Colors.RED_GMAIL_ICON} />
           </TouchableOpacity>
         </View>
       </View>
@@ -58,7 +56,7 @@ export default Home;
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.WHITE_SAFE_COLOR,
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
@@ -74,16 +72,16 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#33B9D4'
+    borderColor: Colors.PRIMARY_COLOR
   },
 
   logoText: {
     fontSize: 85,
-    color: '#CACACA'
+    color: Colors.LOGO_TEXT_COLOR
   },
 
   homeTitle: {
-    color: '#33B9D4',
+    color: Colors.PRIMARY_COLOR,
     fontSize: 34,
     textAlign: 'center'
   },
@@ -101,11 +99,11 @@ const styles = StyleSheet.create({
   },
   
   textLoginButton: {
-    color: '#FFFFFF'
+    color: Colors.WHITE_SAFE_COLOR
   },
 
   createAccountButton: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.WHITE_SAFE_COLOR,
     borderWidth: 1,
     borderColor: Colors.PRIMARY_COLOR
   }, 

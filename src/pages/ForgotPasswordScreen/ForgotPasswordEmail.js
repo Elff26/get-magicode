@@ -77,7 +77,7 @@ export default function ForgotPasswordEmail({navigation}) {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SAFE_COLOR,
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 15,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     textInput:{
         width: 304,
         height: 40,
-        backgroundColor: '#E9E9E9',
+        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
         borderWidth: 1,
         borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
 
     textSendButton:{
-        color:'#FFFFFF'
+        color: Colors.WHITE_SAFE_COLOR
     },
     buttonEmail: {
         width: 198,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
 
     allPages:{
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
     },
 
     errorText: {

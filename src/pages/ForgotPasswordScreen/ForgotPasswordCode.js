@@ -75,12 +75,12 @@ export default function ForgotPasswordCode({navigation}) {
 const styles = StyleSheet.create({
     allPagesCode:{
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor:  Colors.WHITE_SAFE_COLOR
     },
 
     screenContainerCode: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor:  Colors.WHITE_SAFE_COLOR,
         alignItems: 'center'
     },
 
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     textInputCode:{
         width: 304,
         height: 40,
-        backgroundColor: '#E9E9E9',
+        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
         borderWidth: 1,
         borderColor: Colors.PRIMARY_COLOR,
         borderRadius: 20,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     },
 
     textValidationButton:{
-        color: '#FFF'
+        color: Colors.WHITE_SAFE_COLOR
     },
 
     buttonCode: {

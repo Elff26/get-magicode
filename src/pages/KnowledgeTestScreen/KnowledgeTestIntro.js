@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     allPagesCode: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#FFF'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
     },
     titleTest: {
         fontSize: 26,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         borderRadius: 15
     },
     textButton: {
-        color: '#FFF',
+        color: Colors.WHITE_SAFE_COLOR,
         fontSize: 15,
         padding: 10
     }

@@ -114,7 +114,7 @@ export default function ChangePassword({navigation}) {
                         onPress={changeUserPassword}
                         disabled={isLoading}
                         isLoading={isLoading}>
-                        <Text style={[styles.bottonText, { color: '#fff' }]}>Atualizar Senha</Text>
+                        <Text style={styles.buttonText}>Atualizar Senha</Text>
                     </ButtonComponent>
                 </View>
                 
@@ -126,12 +126,12 @@ export default function ChangePassword({navigation}) {
 const styles = StyleSheet.create({
     allPagesCode:{
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
    },
 
     principalView: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.WHITE_SAFE_COLOR,
         alignItems: 'center',
         justifyContent: 'space-between'
     },
@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
 
-    bottonText: {
-        color: Colors.TEXT_COLOR,
+    buttonText: {
+        color: Colors.WHITE_SAFE_COLOR,
         fontSize: 20
     },
 

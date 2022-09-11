@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { 
     StyleSheet, 
@@ -13,13 +13,11 @@ import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import { RadioButton } from 'react-native-paper';
 import { Dimensions } from 'react-native';
 
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 export default function KnowledgeTest({ navigation }) {
     const [questionNumber, setQuestionNumber] = useState(1);
     const [code, setCode] = useState("//Seu código vai aqui :)");
-    const [language, setLanguage] = useState('java');
     const [checked, setChecked] = useState("first");
 
     function goToNextQuestion() {
@@ -92,7 +90,7 @@ export default function KnowledgeTest({ navigation }) {
             <View style={styles.buttonGroup}>
                 <ButtonComponent newStyle={styles.newStyleButton}>
                     <Text style={styles.textButton}>
-                        <Feather name="chevron-left" color="#FFF" size={32} />
+                        <Feather name="chevron-left" color={Colors.WHITE_SAFE_COLOR} size={32} />
                     </Text>
                 </ButtonComponent>
                 <ButtonComponent newStyle={styles.newStyleButtonCancel} onPress={quitTest}>
@@ -102,7 +100,7 @@ export default function KnowledgeTest({ navigation }) {
                 </ButtonComponent>
                 <ButtonComponent newStyle={styles.newStyleButton} onPress={goToNextQuestion}>
                     <Text style={styles.textButton}>
-                        <Feather name="chevron-right" color="#FFF" size={32} />
+                        <Feather name="chevron-right" color={Colors.WHITE_SAFE_COLOR} size={32} />
                     </Text>
                 </ButtonComponent>
             </View>
@@ -113,12 +111,13 @@ export default function KnowledgeTest({ navigation }) {
 const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: Colors.WHITE_SAFE_COLOR
     },
 
     content: {
-        paddingHorizontal: 10,
-        flex: 1
+        flex: 1,
+        maxWidth: windowWidth,
+        padding: 10
     },
 
     title: {
@@ -144,7 +143,6 @@ const styles = StyleSheet.create({
 
     buttonGroup: {
         width: '100%',
-        backgroundColor: "#2323",
         padding: 10,
         justifyContent: 'space-evenly',
         alignItems: 'center',
@@ -155,7 +153,7 @@ const styles = StyleSheet.create({
     },
 
     textButton: {
-        color: '#fff'
+        color: Colors.WHITE_SAFE_COLOR
     },
 
     newStyleButton: {
@@ -168,7 +166,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: 50,
         height: 50,
-        backgroundColor: 'rgba(212, 51, 63, .5)'
+        backgroundColor: Colors.CANCEL_BUTTON
     },
 
     goalItem: {
@@ -182,12 +180,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color:Colors.TEXT_COLOR,
         textAlign: 'auto',
-        marginVertical: 5
+        flexWrap: 'wrap',
+        maxWidth: '90%'
    },
 
     goalRadio: {
         flexDirection: 'row',
-        witdh: windowWidth-50,
-        
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginVertical: 5
     }   
 })
