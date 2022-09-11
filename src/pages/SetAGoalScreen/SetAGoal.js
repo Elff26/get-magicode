@@ -1,13 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet,Text, View} from "react-native";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import { RadioButton } from 'react-native-paper';
+import Axios from "../../api/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ToastComponent from "../../components/Toast/ToastComponent";
 
 export default function SetAGoal({navigation}) {
     const [checked, setChecked] = useState("first");
+    const [user, setUser] = useState({});
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        async function getData() {
+            let user = JSON.parse(await AsyncStorage.getItem('@User'))
+            setUser(user);
+        }
+        getData();
+    }, []);
+
+    async function associateUserToGoal(){
+        if(checked.length > 0){
+            try {
+                if(user != null) {
+                    setIsLoading(true);
+
+                    const response = await Axios.post('/AssociateToGoal/' + user.userID, {
+                        goal: checked
+                    });
+                    
+                    if(response.data) {
+                        setIsLoading(false);
+                        ToastComponent('Meta autalizada com sucesso!');
+                        navigation.navigate('ProfileOptions');
+                    }
+                }
+            } catch(e) {
+                setError(e.response.data.message);
+            }
+        }
+    }
 
     return ( 
         <View style={styles.allPagesSetGoal}>
@@ -23,10 +59,10 @@ export default function SetAGoal({navigation}) {
                     <View style={styles.goalItem}>
                         <View style={styles.goalRadio}>
                             <RadioButton
-                                value="first"
+                                value="1"
                                 label="Casual"
-                                status={checked === 'first' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("first")}
+                                status={checked === '1' ? 'checked' : 'unchecked'}
+                                onPress={() => setChecked("1")}
                             />
                             <Text style={styles.goalText}>Casual</Text>
                         </View>
@@ -36,9 +72,9 @@ export default function SetAGoal({navigation}) {
                     <View style={styles.goalItem}>
                         <View style={styles.goalRadio}>
                             <RadioButton
-                                value="second"
-                                status={checked === 'second' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("second")}
+                                value="2"
+                                status={checked === '2' ? 'checked' : 'unchecked'}
+                                onPress={() => setChecked("2")}
                             />
                             <Text style={styles.goalText}>Regular</Text>
                         </View>
@@ -48,9 +84,9 @@ export default function SetAGoal({navigation}) {
                     <View style={styles.goalItem}>
                         <View style={styles.goalRadio}>
                             <RadioButton
-                                value="third"
-                                status={checked === 'third' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("third")}
+                                value="3"
+                                status={checked === '3' ? 'checked' : 'unchecked'}
+                                onPress={() => setChecked("3")}
                             />
                             <Text style={styles.goalText}>Forte</Text>
                         </View>
@@ -60,9 +96,9 @@ export default function SetAGoal({navigation}) {
                     <View style={styles.goalItem}>
                         <View style={styles.goalRadio}>
                             <RadioButton
-                                value="fourth"
-                                status={checked === 'fourth' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("fourth")}
+                                value="4"
+                                status={checked === '4' ? 'checked' : 'unchecked'}
+                                onPress={() => setChecked("4")}
                             />
                             <Text style={styles.goalText}>Insano</Text>
                         </View>
@@ -72,7 +108,9 @@ export default function SetAGoal({navigation}) {
 
 
                 <View style={styles.formSetGoal}>
-                    <ButtonComponent newStyle={styles.buttonSetGoal}>
+                    <ButtonComponent newStyle={styles.buttonSetGoal} 
+                        onPress={associateUserToGoal}
+                        isLoading={isLoading}>
                         <Text style={styles.textSetGoalButton}>Estabelecer meta</Text>
                     </ButtonComponent>
                 </View>
