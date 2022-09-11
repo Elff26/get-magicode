@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { 
     ActivityIndicator,
     KeyboardAvoidingView,
+    Platform,
     SafeAreaView, 
     StyleSheet, 
     Text, 
@@ -16,6 +17,7 @@ import Header from '../../components/Header/HeaderComponent';
 import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
+
 
 export default function Login({ route, navigation }) {
     const routeParams = route;

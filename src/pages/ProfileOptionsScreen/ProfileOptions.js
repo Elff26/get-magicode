@@ -22,6 +22,10 @@ export default function ProfileOptions({navigation}) {
         navigation.navigate('Login');
     }
 
+    function goToSetAGoal() {
+        navigation.navigate('SetAGoal');
+    }
+
     return (
         <SafeAreaView style={styles.allPagesCode}> 
             <Header backArrow={true} navigation={navigation} />
@@ -29,7 +33,7 @@ export default function ProfileOptions({navigation}) {
                 <View>
                     <Text style={styles.titleLogo}>Configurações</Text> 
 
-                    <TouchableOpacity style={styles.optionButton}>
+                    <TouchableOpacity style={styles.optionButton} onPress={goToSetAGoal}>
                         <Text style={styles.bottonText}>Notificações</Text>
                         <Feather name='chevron-right' color={Colors.TEXT_COLOR} size={32} />
                     </TouchableOpacity>
