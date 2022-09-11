@@ -48,12 +48,13 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
     return (
         <BottomSheet
             ref={bottomSheetRef}
-            snapPoints={['50%']}
+            snapPoints={['60%']}
             index={-1}
             backgroundStyle={{ backgroundColor: '#f5f5f5' }}
             enablePanDownToClose={true}
             onClose={() => setOpenBottomSheet(false)}
         >
+            <Text style={styles.bottomSheetTitle}>Selecione a trilha que deseja</Text>
             <BottomSheetView style={styles.sheetView}>
                 {
                     user.technologies && (
@@ -90,6 +91,12 @@ export default BottomSheetComponent
 const styles = StyleSheet.create({
     sheetView: {
         padding: 15
+    },
+
+    bottomSheetTitle: {
+        color: Colors.PRIMARY_COLOR,
+        fontSize: 22,
+        textAlign: 'center'
     },
 
     languageItem: {
