@@ -66,6 +66,7 @@ export default function Login({ route, navigation }) {
             setIsLoading(false);
             setError(e.response.data.message);
         }
+        setIsLoading(false);
     }
 
     function goToForgotPasswordEmail() {

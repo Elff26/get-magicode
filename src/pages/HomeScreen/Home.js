@@ -3,7 +3,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from '../../utils/ColorPallete/Colors';
 
-export default function Home({ navigation }) {
+import { useCallback, useRef } from 'react';
+
+const Home = ({ navigation }) => {
   function goToLogin() {
     navigation.navigate('Login');
   }
@@ -50,6 +52,8 @@ export default function Home({ navigation }) {
     </View>
   );
 }
+
+export default Home;
 
 const styles = StyleSheet.create({
   screenContainer: {

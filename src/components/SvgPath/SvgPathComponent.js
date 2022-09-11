@@ -5,6 +5,7 @@ import { View } from 'react-native';
 
 export default function SvgPathComponent({ paths, width, height, from, to, isDone }) {
     const [length, setLength] = useState(0);
+    const [animated, setAnimated] = useState(false);
     const progress = useSharedValue(from);
 
     useEffect(() => {
@@ -13,6 +14,10 @@ export default function SvgPathComponent({ paths, width, height, from, to, isDon
                 duration: 4000,
                 easing: Easing.linear
             })
+
+            setTimeout(() => {
+                setAnimated(true);
+            }, 4000)
         }
     }, [progress]);
 
@@ -35,14 +40,15 @@ export default function SvgPathComponent({ paths, width, height, from, to, isDon
                             strokeDasharray={10}
                         />
                         
+                        
                         {
-                            !isDone && (
+                            (!isDone && !animated) && (
                             <AnimatedPath  
                                 animatedProps={pathAnimation}
                                 onLayout={() => setLength(ref.current.getTotalLength())}
                                 ref={ref}
                                 d={d} 
-                                stroke="white" 
+                                stroke="#ddd" 
                                 strokeWidth={3}
                                 strokeDasharray={length}
                             />

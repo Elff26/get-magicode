@@ -40,17 +40,26 @@ export default function ChooseTechnologies({ navigation }) {
             try {
                 if (user != null) {
                     setIsLoading(true);
-                    
-                    console.log(selectedItems);
+
+                    let userTecnologies = selectedItems.map(tech => {
+                        return {
+                            technology: tech.technologyID,
+                            user: user.userID
+                        }
+                    })
+
                     const response = await Axios.post('/AssociateToTechnology/' + user.userID, {
-                        technologies: selectedItems
+                        technologies: userTecnologies
                     });
                     
                     if(response.data.user) {
                         await AsyncStorage.mergeItem('@User', JSON.stringify(response.data.user));
                         setUser(response.data.user);
                         setIsLoading(false);
-                        navigation.navigate('LearningTrail');
+                        navigation.navigate('LearningTrail', {
+                            screen: 'ChooseTechnologies',
+                            user: response.data.user
+                        });
                     }
                 }
             } catch(e) {

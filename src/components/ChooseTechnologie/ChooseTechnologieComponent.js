@@ -8,16 +8,16 @@ import {
 import { AntDesign } from '@expo/vector-icons'; 
 import Colors from '../../utils/ColorPallete/Colors';
 
-export default function ChooseTechnologieComponent({ navigation }) { 
-    function goToChooseTechnologies() {
-        navigation.navigate('ChooseTechnologies');
+export default function ChooseTechnologieComponent({ openBottomSheet, setOpenBottomSheet, currentTechnology }) { 
+    const openChooseTech = () => {
+        setOpenBottomSheet(!openBottomSheet);
     }
 
     return (
         <View>
-            <TouchableOpacity style={styles.chooseTechnologieButton} onPress={goToChooseTechnologies}>
+            <TouchableOpacity style={styles.chooseTechnologieButton} onPress={openChooseTech}>
                 <AntDesign name="edit" size={32} color={Colors.TEXT_COLOR} />
-                <Text style={styles.languageName}>JavaScript</Text>
+                <Text style={styles.languageName}>{currentTechnology.technology.name}</Text>
             </TouchableOpacity>
         </View>
     )
