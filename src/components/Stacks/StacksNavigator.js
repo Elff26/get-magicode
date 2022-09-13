@@ -10,6 +10,7 @@ import Account from "../../pages/ProfileOptionsScreen/Account";
 import PrivacyAndSecurityOptions from "../../pages/ProfileOptionsScreen/PrivacyAndSecutityOptions";
 import ChangePassword from "../../pages/ProfileOptionsScreen/ChangePassword";
 import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/chooseTechnologies";
+import Classroom from "../../pages/ClassroomScreen/Classroom";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ const MainStackNavigator = () => {
       <Stack.Screen name="KnowledgeTestIntro" component={KnowledgeTestIntro} />
       <Stack.Screen name="KnowledgeTest" component={KnowledgeTest} />
       <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
+      <Stack.Screen name="Classroom" component={Classroom} />
     </Stack.Navigator>
   );
 }

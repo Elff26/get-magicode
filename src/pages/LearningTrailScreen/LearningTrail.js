@@ -84,6 +84,12 @@ const LearningTrail = ({ route, navigation }) => {
         getData();
     }, [route]);
 
+    function goToClassroomScreen() {
+        navigation.navigate('Classroom', {
+            classroomID: 1
+        });
+    }
+
     return (
         <View style={[styles.screenContainer, openBottomSheet ? styles.backgroundWhenBottomSheetIsOpen : {}]}>
             {
@@ -104,7 +110,7 @@ const LearningTrail = ({ route, navigation }) => {
                             renderItem={({ item, index }) => (
                                 <View key={index} style={styles.classesGroup}>
                                     <PathSide index={index} item={item} classesLength={classes.length}>
-                                        <TouchableOpacity style={styles.classItem}>
+                                        <TouchableOpacity style={styles.classItem} onPress={goToClassroomScreen}>
                                             <AnimatedButtonClassComponent item={item} />
                                             
                                             <Text>{item.title}</Text>

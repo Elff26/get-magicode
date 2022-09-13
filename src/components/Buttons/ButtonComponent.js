@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     button: {
         height: 42,
         marginBottom: 5,
-        borderRadius: 10,
+        borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
         fontWeight: 'bold',
