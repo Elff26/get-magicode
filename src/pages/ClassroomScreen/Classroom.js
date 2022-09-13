@@ -11,34 +11,6 @@ export default function Classroom({ navigation, route }) {
   const classroomID = route.params.classroomID;
   const [error, setError] = useState('');
   const [classroomContent, setClassroomContent] = useState();
-  const [json, setJson] = useState({
-    'paragraph_1': 'Nessa aula veremos o uso de condicionais. Um exemplo de bloco de código que utiliza condicionais é esse:',
-    'code_1': `
-    let idade = 18;
-
-    if(idade < 18) {
-        console.log('Você não é maior de idade!');
-    } else {
-        console.log('Você é maior de idade!');
-    }
-    `,
-    'paragraph_2': 'Esse é um exemplo bem simples de uso de condicionais. Sua utilizadade é verificar se uma proposição é veradeira, caso seja, entra no IF, se não ela passa para o ELSE.',
-    'paragraph_3': 'Temos ainda como concatenar IFs:',
-    'image_1': 'https://wiki.ifsc.edu.br/mediawiki/images/5/56/TabOpsmatem.png',
-    'code_2': `
-    let idade = 18;
-
-    if(idade < 18) {
-        console.log('Você tem menos de 18 anos!!');
-    } else {
-        if(idade === 18) {
-          console.log('Você tem 18 anos!')
-        } else {
-          console.log('Você tem mais de 18 anos!!');
-        }
-    }
-    `
-  });
 
   useEffect(() => {
     async function getData() {
@@ -70,25 +42,25 @@ export default function Classroom({ navigation, route }) {
 
               <View>
                 {
-                  Object.keys(JSON.parse(classroomContent.description)).map((key, index) => (
+                  Object.entries(JSON.parse(classroomContent.description)).map((item, index) => (
                     <View key={index}>
                         {
-                          key.includes("image")  && (
-                            <Image source={{ uri: json[key] }} resizeMode="contain" style={styles.imageStyle} />
+                          item[0].includes("image")  && (
+                            <Image source={{ uri: item[1] }} resizeMode="contain" style={styles.imageStyle} />
                           )
                         }
                         {
-                          key.includes("code")  && (
+                          item[0].includes("code")  && (
                             <SyntaxHighlighter 
                               language='javascript' 
                               style={docco}
                               highlighter={"hljs"}
-                            >{json[key]}</SyntaxHighlighter>
+                            >{item[1]}</SyntaxHighlighter>
                           )
                         }
                         {                
-                          key.includes("paragraph")  && (
-                            <Text>{json[key]}</Text>
+                          item[0].includes("paragraph")  && (
+                            <Text>{item[1]}</Text>
                           )
                         }
                     </View>
