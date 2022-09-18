@@ -43,8 +43,9 @@ export default function ChooseTechnologies({ navigation }) {
 
                     let userTecnologies = selectedItems.map(tech => {
                         return {
-                            technology: tech.technologyID,
-                            user: user.userID
+                            technology: {
+                                technologyID: tech.technologyID,
+                            }
                         }
                     })
 
@@ -54,11 +55,14 @@ export default function ChooseTechnologies({ navigation }) {
                     
                     if(response.data.user) {
                         await AsyncStorage.mergeItem('@User', JSON.stringify(response.data.user));
+
                         setUser(response.data.user);
                         setIsLoading(false);
-                        navigation.navigate('LearningTrail', {
-                            screen: 'ChooseTechnologies',
-                            user: response.data.user
+
+                        navigation.navigate('ListChallenges', {
+                            params: {
+                                user: response.data.user
+                            }
                         });
                     }
                 }

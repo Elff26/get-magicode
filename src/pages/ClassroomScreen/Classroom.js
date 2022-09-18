@@ -8,18 +8,18 @@ import Header from '../../components/Header/HeaderComponent';
 import Colors from '../../utils/ColorPallete/Colors';
 
 export default function Classroom({ navigation, route }) {
-  const classroomID = route.params.classroomID;
+  const challengeID = route.params.challengeID;
   const [error, setError] = useState('');
   const [classroomContent, setClassroomContent] = useState();
 
   useEffect(() => {
     async function getData() {
       try {
-        if(classroomID) {
-          const response = await Axios.get(`FindClassroomById/${classroomID}`);
-
-          if(response.data.classroom) {
-            setClassroomContent(response.data.classroom);
+        if(challengeID) {
+          const response = await Axios.get(`FindClassroomByChallenge/${challengeID}`);
+          
+          if(response.data.classrooms) {
+            setClassroomContent(response.data.classrooms[0]);
           }
         }
       } catch(e) {

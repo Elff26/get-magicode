@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import KnowledgeTest from '../../pages/KnowledgeTestScreen/KnowledgeTest';
 import SetAGoal from '../../pages/SetAGoalScreen/SetAGoal';
 import KnowledgeTestIntro from "../../pages/KnowledgeTestScreen/KnowledgeTestIntro";
-import LearningTrail from "../../pages/LearningTrailScreen/LearningTrail";
+import ListChallenges from "../../pages/ListChallengesScreen/ListChallenges";
 import ProfileOptions from "../../pages/ProfileOptionsScreen/ProfileOptions";
 import Account from "../../pages/ProfileOptionsScreen/Account";
 import PrivacyAndSecurityOptions from "../../pages/ProfileOptionsScreen/PrivacyAndSecutityOptions";
@@ -16,8 +16,8 @@ const Stack = createNativeStackNavigator();
 
 const MainStackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="LearningTrail">
-      <Stack.Screen name="LearningTrail" component={LearningTrail} />
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ListChallenges">
+      <Stack.Screen name="ListChallenges" component={ListChallenges} />
       <Stack.Screen name="KnowledgeTestIntro" component={KnowledgeTestIntro} />
       <Stack.Screen name="KnowledgeTest" component={KnowledgeTest} />
       <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />

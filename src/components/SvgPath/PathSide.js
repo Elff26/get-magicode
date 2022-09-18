@@ -6,17 +6,18 @@ import {
     View
 } from 'react-native';
 
-export default function PathSide({ index, item, classesLength, children }) {
+export default function PathSide({ index, children, animated, completed }) {
     return (
         <>
-            { index % 2 == 0 &&
+            { index % 2 == 1 &&
                 <SvgPathComponent
                     paths={PathObjects.evenPath}
                     width={150}
                     height={110}
                     from={1}
                     to={2}
-                    isDone={item.isDone}
+                    completed={completed}
+                    animatedPath={animated}
                 />
             }
 
@@ -24,18 +25,19 @@ export default function PathSide({ index, item, classesLength, children }) {
                 children
             }
 
-            { index !== classesLength - 1 && index % 2 == 1 &&
+            { index !== 0 && index % 2 == 0 &&
                 <SvgPathComponent
                     paths={PathObjects.oddPath}
                     width={150}
                     height={110}
                     from={1}
                     to={2}
-                    isDone={item.isDone}
+                    completed={completed}
+                    animatedPath={animated}
                 />
             }
 
-            { index === classesLength - 1 &&
+            { index === 0 &&
                 <View style={styles.initialPath}>
                     <Ionicons style={styles.initialIcon} name="md-home" size={24} color="black" />
                     <SvgPathComponent
@@ -44,7 +46,8 @@ export default function PathSide({ index, item, classesLength, children }) {
                         height={85}
                         from={1}
                         to={0}
-                        isDone={item.isDone}
+                        completed={completed}
+                        animatedPath={animated}
                     />
                 </View>
             }

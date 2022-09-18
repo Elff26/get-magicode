@@ -10,47 +10,24 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import LearningTrailHeaderComponent from '../../components/LearningTrailHeader/LearningTrailHeaderComponent';
+import ChallengesHeaderComponent from '../../components/ChallengesHeader/ChallengesHeaderComponent';
 import Colors from '../../utils/ColorPallete/Colors';
-import AnimatedButtonClassComponent from '../../components/AnimatedButton/AnimatedButtonClassComponent';
+import AnimatedButtonGroupComponent from '../../components/AnimatedButton/AnimatedButtonGroupComponent';
 import PathSide from '../../components/SvgPath/PathSide';
 import BottomSheetTechnologiesComponent from '../../components/BottomSheetTechnologies/BottomSheetTechnologiesComponent';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Axios from '../../api/api';
 
-const LearningTrail = ({ route, navigation }) => {
+const ListChallenges = ({ route, navigation }) => {
     const routeParams = route;
     const [user, setUser] = useState();
-    const [classes, setClasses] = useState([
+    const [challengeToDo, setChallengeToDo] = useState(null);
+    const [challenges, setChallenges] = useState([
         {
             title: 'Outra aula 2',
             isBoss: false,
             isDone: false
-        },
-        {
-            title: 'Outra aula',
-            isBoss: false,
-            isDone: true
-        },
-        {
-            title: 'Exercício',
-            isBoss: true,
-            isDone: true
-        },
-        {
-            title: 'Tipos de Dados',
-            isBoss: false,
-            isDone: true
-        },
-        {
-            title: 'Variáveis',
-            isBoss: false,
-            isDone: true
-        },
-        {
-            title: 'Hello World!',
-            isBoss: false,
-            isDone: true
         }
     ]);
     const [openBottomSheet, setOpenBottomSheet] = useState(false);
@@ -69,6 +46,10 @@ const LearningTrail = ({ route, navigation }) => {
             if(userData) {
                 setUser(userData);
 
+                if(userData.technologies.length == 0) {
+                    return navigation.navigate('ChooseTechnologies');
+                } 
+
                 let currentTech = userData.technologies.filter(tech => tech.learning);
 
                 if(currentTech.length === 0) {
@@ -84,9 +65,24 @@ const LearningTrail = ({ route, navigation }) => {
         getData();
     }, [route]);
 
-    function goToClassroomScreen() {
+    useEffect(() => {
+        async function getChallenges() {
+            if(currentTechnology && currentTechnology.technology) {
+                const response = await Axios.get(`/FindChallengeByTechnology/${currentTechnology.technology.technologyID}`);
+                
+                if(response.data.challenges) {
+                    setChallenges(response.data.challenges);
+                    setChallengeToDo(response.data.challenges.findIndex((item) => !item.completed));
+                }
+            }
+        }
+
+        getChallenges();
+    }, [currentTechnology]);
+
+    function goToClassroomScreen(challenge) {
         navigation.navigate('Classroom', {
-            classroomID: 1
+            challengeID: challenge.challengeID
         });
     }
 
@@ -95,30 +91,34 @@ const LearningTrail = ({ route, navigation }) => {
             {
                 currentTechnology && (
                     <>
-                        <LearningTrailHeaderComponent 
+                        <ChallengesHeaderComponent 
                             navigation={navigation} 
                             openBottomSheet={openBottomSheet} 
                             setOpenBottomSheet={setOpenBottomSheet} 
                             currentTechnology={currentTechnology}
                         />
 
-
-                        <FlatList 
-                            style={styles.learningTrail}
-                            data={classes}
-                            initialScrollIndex={classes.findIndex((item) => !item.isDone)}
-                            renderItem={({ item, index }) => (
-                                <View key={index} style={styles.classesGroup}>
-                                    <PathSide index={index} item={item} classesLength={classes.length}>
-                                        <TouchableOpacity style={styles.classItem} onPress={goToClassroomScreen}>
-                                            <AnimatedButtonClassComponent item={item} />
-                                            
-                                            <Text>{item.title}</Text>
-                                        </TouchableOpacity>   
-                                    </PathSide>
-                                </View>
-                            )}
-                        />
+                        {
+                            challengeToDo != null && (
+                                <FlatList 
+                                    style={styles.challenges}
+                                    data={challenges}
+                                    initialScrollIndex={challengeToDo}
+                                    inverted={true}
+                                    renderItem={({ item, index }) => (
+                                        <View key={index} style={styles.challengesGroup}>
+                                            <PathSide index={index} completed={item.completed} animated={challengeToDo === index ? true : false}>
+                                                <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(item.completed || challengeToDo === index)}>
+                                                    <AnimatedButtonGroupComponent item={item} animated={challengeToDo === index ? true : false} />
+                                                    
+                                                    <Text>{item.name}</Text>
+                                                </TouchableOpacity>   
+                                            </PathSide>
+                                        </View>
+                                    )}
+                                />  
+                            )
+                        }
 
                         <TouchableOpacity style={styles.versusButton}>
                             <MaterialCommunityIcons name="sword-cross" size={28} color={Colors.RED_COLOR_DEFAULT} />
@@ -143,7 +143,7 @@ const LearningTrail = ({ route, navigation }) => {
     )
 }
 
-export default gestureHandlerRootHOC(LearningTrail);
+export default gestureHandlerRootHOC(ListChallenges);
 
 const styles = StyleSheet.create({
     screenContainer: {
@@ -156,18 +156,18 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.BOTTOM_SHEET_SCREEN_BACKGROUND
     },
     
-    learningTrail: {
+    challenges: {
         height: '100%',
         width: '100%'
     },
 
-    classesGroup: {
+    challengesGroup: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
     },
 
-    classItem: {
+    challengeItem: {
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 25

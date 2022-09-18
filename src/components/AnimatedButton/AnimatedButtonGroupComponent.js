@@ -6,11 +6,11 @@ import { Easing } from "react-native-reanimated";
 import Colors from '../../utils/ColorPallete/Colors';
 import AnimatedButtonComponent from "./AnimatedButtonComponent";
 
-export default function AnimatedButtonGroupComponent({ item }) {
+export default function AnimatedButtonGroupComponent({ item, animated }) {
     return (
         <>
             {
-                (item && !item.isDone) && (
+                animated && (
                     <>
                         <AnimatedButtonComponent 
                             isBoss={item.isBoss}
@@ -35,7 +35,7 @@ export default function AnimatedButtonGroupComponent({ item }) {
             }
 
             {
-                item.isDone && (
+                !animated && (
                     <View style={[styles.classImage, item.isBoss ? { backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND } : {}]} />
                 )
             }

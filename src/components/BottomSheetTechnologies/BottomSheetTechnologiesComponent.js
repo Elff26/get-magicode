@@ -21,10 +21,13 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
         
     async function selectItem(userTechnology) {
         try {
-            const result = await Axios.post('/ChangeLearningTrail', {
-                userTecnology: {
+            const result = await Axios.post('/ChangeTechnology', {
+                userTechnology: {
                     ...userTechnology,
-                    learning: true
+                    learning: true,
+                    user: {
+                        userID: user.userID
+                    }
                 }
             })
 

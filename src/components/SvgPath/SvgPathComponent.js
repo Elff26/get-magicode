@@ -4,21 +4,16 @@ import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from '
 import { View } from 'react-native';
 import Colors from '../../utils/ColorPallete/Colors';
 
-export default function SvgPathComponent({ paths, width, height, from, to, isDone }) {
+export default function SvgPathComponent({ paths, width, height, from, to, completed, animatedPath }) {
     const [length, setLength] = useState(0);
-    const [animated, setAnimated] = useState(false);
     const progress = useSharedValue(from);
 
     useEffect(() => {
-        if(!isDone) {
+        if(animatedPath) {
             progress.value = withTiming(to, {
                 duration: 4000,
                 easing: Easing.linear
             })
-
-            setTimeout(() => {
-                setAnimated(true);
-            }, 4000)
         }
     }, [progress]);
 
@@ -35,24 +30,23 @@ export default function SvgPathComponent({ paths, width, height, from, to, isDon
                     <View key={key}>
                         <Path 
                             d={d} 
-                            stroke="black" 
+                            stroke={!completed && !animatedPath ? Colors.BOTTOM_SHEET_SCREEN_BACKGROUND : "black"} 
                             strokeWidth={2} 
                             key={key} 
                             strokeDasharray={10}
                         />
                         
-                        
                         {
-                            (!isDone && !animated) && (
-                            <AnimatedPath  
-                                animatedProps={pathAnimation}
-                                onLayout={() => setLength(ref.current.getTotalLength())}
-                                ref={ref}
-                                d={d} 
-                                stroke={Colors.WHITE_SAFE_COLOR}
-                                strokeWidth={3}
-                                strokeDasharray={length}
-                            />
+                            animatedPath && (
+                                <AnimatedPath  
+                                    animatedProps={pathAnimation}
+                                    onLayout={() => setLength(ref.current.getTotalLength())}
+                                    ref={ref}
+                                    d={d} 
+                                    stroke={Colors.WHITE_SAFE_COLOR}
+                                    strokeWidth={3}
+                                    strokeDasharray={length}
+                                />
                             )
                         }
                     </View>
