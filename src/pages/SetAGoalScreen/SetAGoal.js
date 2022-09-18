@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet,Text, View} from "react-native";
+import { FlatList, StyleSheet,Text, View} from "react-native";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../utils/ColorPallete/Colors";
@@ -10,21 +10,25 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ToastComponent from "../../components/Toast/ToastComponent";
 
 export default function SetAGoal({navigation}) {
-    const [checked, setChecked] = useState("first");
+    const [checked, setChecked] = useState(0);
+    const [goal, setGoal] = useState([]);
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         async function getData() {
-            let user = JSON.parse(await AsyncStorage.getItem('@User'))
-            setUser(user);
+            const response = await Axios.get('/ListAllGoals');
+            if(response.data.goals) {
+                setGoal(response.data.goals);
+                setUser(JSON.parse(await AsyncStorage.getItem('@User')));
+            }
         }
         getData();
     }, []);
 
     async function associateUserToGoal(){
-        if(checked.length > 0){
+        if(checked > 0){
             try {
                 if(user != null) {
                     setIsLoading(true);
@@ -33,9 +37,11 @@ export default function SetAGoal({navigation}) {
                         goal: checked
                     });
                     
-                    if(response.data) {
-                        setIsLoading(false);
+                    if(response.data.user) {
+                        await AsyncStorage.mergeItem('@User', JSON.stringify(response.data.user));
+                        setUser(response.data.user);
                         ToastComponent('Meta autalizada com sucesso!');
+                        setIsLoading(false);
                         navigation.navigate('ProfileOptions');
                     }
                 }
@@ -54,58 +60,25 @@ export default function SetAGoal({navigation}) {
                     <Text style={styles.homeTitleSetGoal}>Estabeleça uma meta</Text>
                 </View>
 
-                <View style={styles.viewRadio}>
-                    
-                    <View style={styles.goalItem}>
-                        <View style={styles.goalRadio}>
-                            <RadioButton
-                                value="1"
-                                label="Casual"
-                                status={checked === '1' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("1")}
-                            />
-                            <Text style={styles.goalText}>Casual</Text>
+                <FlatList 
+                    contentContainerStyle={styles.viewRadio}
+                    data={goal}
+                    renderItem={({ item }) =>(
+                        <View style={styles.goalItem}>
+                            <View style={styles.goalRadio}>
+                                <RadioButton
+                                    key={item.goalID}
+                                    value={item.goalID}
+                                    status={checked === item.goalID ? 'checked' : 'unchecked'}
+                                    onPress={() => setChecked(item.goalID)}
+                                />
+                                <Text style={styles.goalText}>{item.name}</Text>
+                            </View>
+                                <Text style={styles.goalXP}>{item.value}XP por dia</Text>
                         </View>
-                        <Text style={styles.goalXP}>10XP por dia</Text>
-                    </View>
-
-                    <View style={styles.goalItem}>
-                        <View style={styles.goalRadio}>
-                            <RadioButton
-                                value="2"
-                                status={checked === '2' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("2")}
-                            />
-                            <Text style={styles.goalText}>Regular</Text>
-                        </View>
-                        <Text style={styles.goalXP}>20XP por dia</Text>
-                    </View>
-
-                    <View style={styles.goalItem}>
-                        <View style={styles.goalRadio}>
-                            <RadioButton
-                                value="3"
-                                status={checked === '3' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("3")}
-                            />
-                            <Text style={styles.goalText}>Forte</Text>
-                        </View>
-                        <Text style={styles.goalXP}>30XP por dia</Text>                 
-                    </View>
-
-                    <View style={styles.goalItem}>
-                        <View style={styles.goalRadio}>
-                            <RadioButton
-                                value="4"
-                                status={checked === '4' ? 'checked' : 'unchecked'}
-                                onPress={() => setChecked("4")}
-                            />
-                            <Text style={styles.goalText}>Insano</Text>
-                        </View>
-                        <Text style={styles.goalXP}>50XP por dia</Text>
-                    </View>
-                </View>
-
+                        )
+                    }
+                />
 
                 <View style={styles.formSetGoal}>
                     <ButtonComponent newStyle={styles.buttonSetGoal} 
@@ -157,18 +130,23 @@ const styles = StyleSheet.create({
         alignItems: 'center'
    },
    goalText: {
-        fontSize: 18,
+        fontSize: 19,
+        marginBottom: 15,
         color:Colors.TEXT_COLOR,
         textAlignVertical: 'center'
    },
    goalXP: {
         color: Colors.RADIO_TEXT,
-        fontSize: 18,
-        textAlignVertical: 'center'
+        fontSize: 19,
+        marginRight: 110,
+        marginBottom: 15,
+        textAlignVertical: 'center',    
    },
    viewRadio: {
+        flex: 1,
         width: '100%',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignContent: "center"
    },
    goalRadio: {
         flexDirection: 'row',
