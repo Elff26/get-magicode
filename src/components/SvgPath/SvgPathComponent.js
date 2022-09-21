@@ -3,8 +3,9 @@ import Svg, { Path } from 'react-native-svg';
 import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
 import { View } from 'react-native';
 import Colors from '../../utils/ColorPallete/Colors';
+import { useIsFocused } from '@react-navigation/native';
 
-export default function SvgPathComponent({ paths, width, height, from, to, completed, animatedPath }) {
+export default function SvgPathComponent({ paths, width, height, from, to, completed, animatedPath, todo }) {
     const [length, setLength] = useState(0);
     const progress = useSharedValue(from);
 
@@ -15,7 +16,7 @@ export default function SvgPathComponent({ paths, width, height, from, to, compl
                 easing: Easing.linear
             })
         }
-    }, [progress]);
+    }, [progress, todo]);
 
     const AnimatedPath = Animated.createAnimatedComponent(Path);
     const ref = useRef(null);

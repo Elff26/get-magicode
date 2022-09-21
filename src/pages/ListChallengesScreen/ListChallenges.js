@@ -18,20 +18,17 @@ import BottomSheetTechnologiesComponent from '../../components/BottomSheetTechno
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../../api/api';
+import { useIsFocused } from '@react-navigation/native';
 
 const ListChallenges = ({ route, navigation }) => {
     const routeParams = route;
+    const isFocused = useIsFocused();
     const [user, setUser] = useState();
     const [challengeToDo, setChallengeToDo] = useState(null);
-    const [challenges, setChallenges] = useState([
-        {
-            title: 'Outra aula 2',
-            isBoss: false,
-            isDone: false
-        }
-    ]);
+    const [challenges, setChallenges] = useState();
     const [openBottomSheet, setOpenBottomSheet] = useState(false);
     const [currentTechnology, setCurrentTechnology] = useState(null);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         async function getData() {
@@ -66,24 +63,58 @@ const ListChallenges = ({ route, navigation }) => {
     }, [route]);
 
     useEffect(() => {
+        if(routeParams.user) {
+            setUser(routeParams.user);
+        }
+    }, [isFocused]);
+
+    useEffect(() => {
         async function getChallenges() {
             if(currentTechnology && currentTechnology.technology) {
-                const response = await Axios.get(`/FindChallengeByTechnology/${currentTechnology.technology.technologyID}`);
+                try {
+                    const response = await Axios.get(`/FindChallengeByTechnology/${currentTechnology.technology.technologyID}`);
                 
-                if(response.data.challenges) {
-                    setChallenges(response.data.challenges);
-                    setChallengeToDo(response.data.challenges.findIndex((item) => !item.completed));
-                }
+                    if(response.data.challenges) {
+                        setChallenges(response.data.challenges);
+    
+                        const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnology/${user.userID}/${currentTechnology.technology.technologyID}`);
+                        
+                        if(responseUserChallenges.data.userChallenges) {
+                            let userChallenges = responseUserChallenges.data.userChallenges;
+                            let userChallengesLength = userChallenges.length;
+    
+                            let challengeToDoTemp = userChallenges.findIndex((item) => !item.completed);
+    
+                            if(challengeToDoTemp !== -1) { 
+                                setChallengeToDo(challengeToDoTemp);
+                            } else if(userChallengesLength < response.data.challenges.length) {
+                                setChallengeToDo(userChallengesLength);
+                            } else {
+                                setChallengeToDo(userChallengesLength - 1);
+                            }
+                        }
+                    }
+                } catch(e) {
+                    setError(e.response.data.message);
+                } 
             }
         }
 
         getChallenges();
     }, [currentTechnology]);
 
-    function goToClassroomScreen(challenge) {
-        navigation.navigate('Classroom', {
-            challengeID: challenge.challengeID
-        });
+    async function goToClassroomScreen(challenge) {
+        try {
+            const response = await Axios.post(`InitChallenge/${user.userID}/${challenge.challengeID}`)
+
+            if(response.data.userChallenge) {
+                navigation.navigate('Classroom', {
+                    challengeID: challenge.challengeID
+                });
+            }
+        } catch(e) {
+            setError(e.response.data.message);
+        } 
     }
 
     return (
@@ -101,14 +132,15 @@ const ListChallenges = ({ route, navigation }) => {
                         {
                             challengeToDo != null && (
                                 <FlatList 
+                                    extraData={user}
                                     style={styles.challenges}
                                     data={challenges}
                                     initialScrollIndex={challengeToDo}
                                     inverted={true}
                                     renderItem={({ item, index }) => (
                                         <View key={index} style={styles.challengesGroup}>
-                                            <PathSide index={index} completed={item.completed} animated={challengeToDo === index ? true : false}>
-                                                <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(item.completed || challengeToDo === index)}>
+                                            <PathSide index={index} completed={index < challengeToDo} animated={challengeToDo === index ? true : false} todo={challengeToDo}>
+                                                <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index)}>
                                                     <AnimatedButtonGroupComponent item={item} animated={challengeToDo === index ? true : false} />
                                                     
                                                     <Text>{item.name}</Text>

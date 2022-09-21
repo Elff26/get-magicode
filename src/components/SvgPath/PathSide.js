@@ -6,7 +6,7 @@ import {
     View
 } from 'react-native';
 
-export default function PathSide({ index, children, animated, completed }) {
+export default function PathSide({ index, children, animated, completed, todo }) {
     return (
         <>
             { index % 2 == 1 &&
@@ -18,6 +18,7 @@ export default function PathSide({ index, children, animated, completed }) {
                     to={2}
                     completed={completed}
                     animatedPath={animated}
+                    todo={todo}
                 />
             }
 
@@ -34,6 +35,7 @@ export default function PathSide({ index, children, animated, completed }) {
                     to={2}
                     completed={completed}
                     animatedPath={animated}
+                    todo={todo}
                 />
             }
 
@@ -48,6 +50,7 @@ export default function PathSide({ index, children, animated, completed }) {
                         to={0}
                         completed={completed}
                         animatedPath={animated}
+                        todo={todo}
                     />
                 </View>
             }

@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, { Easing, useSharedValue, withDelay, withRepeat, withTiming, useAnimatedStyle, interpolate } from 'react-native-reanimated';
+import Animated, { Easing, useSharedValue, withDelay, withRepeat, withTiming, useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
 
 import Colors from '../../utils/ColorPallete/Colors';
 
 
-export default function AnimatedButtonComponent({ isBoss, delay, style, from, to, duration, easingType }) {
+export default function AnimatedButtonComponent({ isBoss, delay, style, from, to, duration, easingType, repeat, opacity }) {
     const buttonValue = useSharedValue(from);
     const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -17,7 +17,7 @@ export default function AnimatedButtonComponent({ isBoss, delay, style, from, to
                 duration: duration,
                 easing: easingType
               }),
-              2,
+              repeat,
               true
             )
         )
@@ -25,7 +25,7 @@ export default function AnimatedButtonComponent({ isBoss, delay, style, from, to
 
     const buttonAnimation = useAnimatedStyle(() => {
         return {
-            opacity: 0.9 - buttonValue.value,
+            opacity: opacity - buttonValue.value,
             transform: [
                 {
                     scale: interpolate(buttonValue.value, [0, 1], [1, 2])
@@ -42,7 +42,3 @@ export default function AnimatedButtonComponent({ isBoss, delay, style, from, to
         </>
     )   
 }
-
-const styles = StyleSheet.create({
-    
-})

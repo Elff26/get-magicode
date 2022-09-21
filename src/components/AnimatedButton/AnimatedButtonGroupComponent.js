@@ -16,9 +16,11 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
                             isBoss={item.isBoss}
                             delay={3600}
                             style={styles.classImageAbsolute}
-                            from={2}
+                            from={1}
                             to={-0.5}
                             duration={1500}
+                            repeat={2}
+                            opacity={0.6}
                             easingType={Easing.bounce}
                         />
                         <AnimatedButtonComponent 
@@ -28,6 +30,8 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
                             from={0}
                             to={-0.5}
                             duration={750}
+                            repeat={2}
+                            opacity={0.9}
                             easingType={Easing.circle}
                         />
                     </>

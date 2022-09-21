@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
@@ -9,6 +10,7 @@ import Colors from '../../utils/ColorPallete/Colors';
 
 export default function Classroom({ navigation, route }) {
   const challengeID = route.params.challengeID;
+  const [user, setUser] = useState();
   const [error, setError] = useState('');
   const [classroomContent, setClassroomContent] = useState();
 
@@ -21,6 +23,8 @@ export default function Classroom({ navigation, route }) {
           if(response.data.classrooms) {
             setClassroomContent(response.data.classrooms[0]);
           }
+
+          setUser(JSON.parse(await AsyncStorage.getItem('@User')))
         }
       } catch(e) {
         setError(e.response.data.message);
@@ -29,6 +33,35 @@ export default function Classroom({ navigation, route }) {
     
     getData();
   }, []);
+
+  async function finishChallenge() {
+    try {
+      const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
+
+      if(result.data.userChallenge) {
+        let userChallenge = result.data.userChallenge;
+        let newUser = user;
+
+        newUser.challenges = user.challenges.map(item => {
+          if(item.userChallengeID === userChallenge.userChallengeID) {
+            item.completed = true;
+          }
+
+          return item;
+        })
+
+        await AsyncStorage.mergeItem('@User', JSON.stringify(newUser));
+
+        navigation.navigate('ListChallenges', {
+          params: {
+            user: newUser
+          }
+        });
+      }
+    } catch(e) {
+      setError(e.response.data.message);
+    } 
+  } 
 
   return (
     <View style={styles.container}>
@@ -71,8 +104,8 @@ export default function Classroom({ navigation, route }) {
 
             <View style={styles.buttonGroup}>
                 <ButtonComponent newStyle={styles.newStyleButton} 
-                    onPress={() => {}}>
-                    <Text style={styles.textButton}>Ir para aula prática</Text>
+                    onPress={finishChallenge}>
+                    <Text style={styles.textButton}>Finalizar aula</Text>
                 </ButtonComponent>
             </View>
           </>
