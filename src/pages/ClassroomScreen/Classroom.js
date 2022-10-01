@@ -1,27 +1,27 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import SyntaxHighlighter from 'react-native-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/styles/hljs';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Axios from '../../api/api';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
+import RenderJsonContent from '../../components/RenderJsonContent/RenderJsonContent';
 import Colors from '../../utils/ColorPallete/Colors';
 
 export default function Classroom({ navigation, route }) {
   const challengeID = route.params.challengeID;
   const [user, setUser] = useState();
   const [error, setError] = useState('');
-  const [classroomContent, setClassroomContent] = useState();
+  const [challenge, setChallenge] = useState([]);
+  const [currentClassIndex, setCurrentClassIndex] = useState(0);
 
   useEffect(() => {
     async function getData() {
       try {
         if(challengeID) {
-          const response = await Axios.get(`FindClassroomByChallenge/${challengeID}`);
+          const response = await Axios.get(`FindChallengeById/${challengeID}`);
           
-          if(response.data.classrooms) {
-            setClassroomContent(response.data.classrooms[0]);
+          if(response.data.challenge) {
+            setChallenge(response.data.challenge);
           }
 
           setUser(JSON.parse(await AsyncStorage.getItem('@User')))
@@ -33,6 +33,20 @@ export default function Classroom({ navigation, route }) {
     
     getData();
   }, []);
+
+  function nextClass() {
+    setCurrentClassIndex(currentClassIndex + 1);
+  }
+
+  function returnClass() {
+    setCurrentClassIndex(currentClassIndex - 1);
+  }
+
+  function startExercise() {
+    navigation.navigate('ClassroomExercise', {
+      challengeID
+    })
+  }
 
   async function finishChallenge() {
     try {
@@ -68,45 +82,45 @@ export default function Classroom({ navigation, route }) {
       <Header backArrow={true} navigation={navigation} />
 
       {
-        classroomContent && (
+        (challenge.classes && challenge.classes.length > 0) && (
           <>
             <ScrollView style={styles.classroomContentStyle}>
-              <Text style={styles.title}>{classroomContent.name}</Text>
+              <Text style={styles.title}>{challenge.classes[currentClassIndex].name}</Text>
 
               <View>
-                {
-                  Object.entries(JSON.parse(classroomContent.description)).map((item, index) => (
-                    <View key={index}>
-                        {
-                          item[0].includes("image")  && (
-                            <Image source={{ uri: item[1] }} resizeMode="contain" style={styles.imageStyle} />
-                          )
-                        }
-                        {
-                          item[0].includes("code")  && (
-                            <SyntaxHighlighter 
-                              language='javascript' 
-                              style={docco}
-                              highlighter={"hljs"}
-                            >{item[1]}</SyntaxHighlighter>
-                          )
-                        }
-                        {                
-                          item[0].includes("paragraph")  && (
-                            <Text>{item[1]}</Text>
-                          )
-                        }
-                    </View>
-                  ))
-                }
+                  <RenderJsonContent content={challenge.classes[currentClassIndex].description} />
               </View>
             </ScrollView>
 
             <View style={styles.buttonGroup}>
-                <ButtonComponent newStyle={styles.newStyleButton} 
-                    onPress={finishChallenge}>
+              {
+                currentClassIndex > 0 && (
+                  <ButtonComponent newStyle={styles.newStyleButton} onPress={returnClass}>
+                    <Text style={styles.textButton}>Voltar</Text>
+                  </ButtonComponent>
+                )
+              }
+              {
+                (currentClassIndex === challenge.classes.length - 1 && challenge.exercises.length > 0) && (
+                  <ButtonComponent newStyle={styles.newStyleButton} onPress={startExercise}>
+                    <Text style={styles.textButton}>Ir para exercício</Text>
+                  </ButtonComponent>
+                )
+              }
+              {
+                currentClassIndex < challenge.classes.length - 1 && (
+                  <ButtonComponent newStyle={styles.newStyleButton} onPress={nextClass}>
+                    <Text style={styles.textButton}>Avançar</Text>
+                  </ButtonComponent>
+                )
+              }
+              {
+                (currentClassIndex === challenge.classes.length - 1 && challenge.exercises.length === 0) && (
+                  <ButtonComponent newStyle={styles.newStyleButton} onPress={finishChallenge}>
                     <Text style={styles.textButton}>Finalizar aula</Text>
-                </ButtonComponent>
+                  </ButtonComponent>
+                )
+              }
             </View>
           </>
         )
@@ -132,12 +146,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5
   },
 
-  imageStyle: {
-    width: 350, 
-    height: 200,
-    alignSelf: 'center'
-  },
-
   buttonGroup: {
     width: '100%',
     padding: 10,
@@ -147,12 +155,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.FOOTER_BACKGROUND_COLOR
   },
 
+  buttonSubgroup: {
+    width: '100%',
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: Colors.FOOTER_BACKGROUND_COLOR
+  },  
+
+
   textButton: {
     color: Colors.WHITE_SAFE_COLOR
   },
 
   newStyleButton: {
-      width: '70%',
+      width: '49%',
       marginHorizontal: 10
   }
 });

@@ -1,5 +1,7 @@
 const Colors = {
     PRIMARY_COLOR: '#33B9D4',
+    PRIMARY_COLOR_DISABLED: '#80d7e8',
+    GREEN_BUTTON_CONFIRM: '#75D592',
     TEXT_COLOR: '#4B4B4B',
     FOOTER_BACKGROUND_COLOR: '#EAEAEA',
     ERROR_COLOR: '#B64242',
@@ -14,7 +16,9 @@ const Colors = {
     WHITE_SAFE_COLOR: '#FFF',
     LOGO_TEXT_COLOR: '#CACACA',
     CANCEL_BUTTON: 'rgba(212, 51, 63, .5)',
-    BOTTOM_SHEET_SCREEN_BACKGROUND: '#bbb'
+    BOTTOM_SHEET_SCREEN_BACKGROUND: '#bbb',
+    GREEN_TEXT: "#44952A",
+    BLACK: "#000"
 }
 
 module.exports = Colors;
