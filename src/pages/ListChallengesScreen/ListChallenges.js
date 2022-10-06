@@ -32,6 +32,7 @@ const ListChallenges = ({ route, navigation }) => {
 
     useEffect(() => {
         async function getData() {
+            
             var userData;
 
             if(routeParams.screen === 'ChooseTechnologies') {
@@ -43,7 +44,7 @@ const ListChallenges = ({ route, navigation }) => {
             if(userData) {
                 setUser(userData);
 
-                if(userData.technologies.length == 0) {
+                if(!userData.technologies || userData.technologies.length == 0) {
                     return navigation.navigate('ChooseTechnologies');
                 } 
 

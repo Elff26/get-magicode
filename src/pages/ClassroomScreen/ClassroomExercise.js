@@ -136,19 +136,29 @@ export default function ClassroomExercise({ navigation, route }) {
 
     function saveQuizAnswers(isCorrect) {
         let allAnswers = answers;
-    
-        allAnswers.push({
-            alternativeID: checked,
-            exerciseID: challenge.exercises[questionNumber].exerciseID,
-            isCorrect: isCorrect,
-            answered: true 
-        });
+        let alreadyAnswered = -1;
+
+        if(allAnswers.length > 0) {
+            alreadyAnswered = allAnswers.findIndex(answer => answer.exerciseID === challenge.exercises[questionNumber].exerciseID);
+        }
+
+        if(alreadyAnswered !== -1) {
+            allAnswers[alreadyAnswered].alternativeID = checked;
+            allAnswers[alreadyAnswered].isCorrect = isCorrect;
+        } else {
+            allAnswers.push({
+                alternativeID: checked,
+                exerciseID: challenge.exercises[questionNumber].exerciseID,
+                isCorrect: isCorrect,
+                answered: true 
+            });
+        }
 
         setAnswers(allAnswers);
     }
 
     async function runCode() {
-        if(answered) {
+        if(answered && questionNumber === challenge.exercises.length - 1) {
             return returnToChallengeList();
         }
 
@@ -227,7 +237,7 @@ export default function ClassroomExercise({ navigation, route }) {
                                 <Header backArrow={true} navigation={navigation} />
                                     <View style={styles.content}>
                                         <Text style={styles.title}>Questão {questionNumber + 1}</Text>
-                                        <Text style={styles.subtitle}>{challenge.exercises[questionNumber].name}</Text>
+                                        {/* <Text style={styles.subtitle}>{challenge.exercises[questionNumber].name}</Text> */}
 
                                         <RenderJsonContent content={challenge.exercises[questionNumber].description} />
 
@@ -337,7 +347,8 @@ const styles = StyleSheet.create({
         color: Colors.PRIMARY_COLOR,
         fontSize: 25,
         textAlign: 'center',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: 15
     },
 
     subtitle: {

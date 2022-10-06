@@ -8,6 +8,7 @@ import Home from './pages/HomeScreen/Home.js';
 import RegisterScreen from './pages/RegisterScreen/Register'
 import Login from './pages/LoginScreen/Login'
 import BottomTabComponent from './components/BottomMenu/BottomMenuComponent';
+import ThirdRegisterMoreInfo from './pages/RegisterScreen/ThirdRegisterMoreInfo';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ const Navigator = (
             <Stack.Screen name='Home' component={Home}/>
             <Stack.Screen name='Login' component={Login}/>
             <Stack.Screen name='Register' component={RegisterScreen}/>
+            <Stack.Screen name='ThirdRegisterMorInfo' component={ThirdRegisterMoreInfo} />
             <Stack.Screen name='BottomTabComponent' component={BottomTabComponent}/>
             <Stack.Screen name='ForgotPasswordRecovery' component={ForgotPasswordRecovery} />
             <Stack.Screen name='ForgotPasswordCode' component={ForgotPasswordCode} />

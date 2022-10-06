@@ -6,6 +6,13 @@ import Header from '../../components/Header/HeaderComponent';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
 import { Dimensions } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+import ToastComponent from '../../components/Toast/ToastComponent';
+
+import { 
+    SECURE_STORE_KEY
+  } from '@env';
 
 var width = Dimensions.get('window').width; 
 
@@ -18,8 +25,19 @@ export default function ProfileOptions({navigation}) {
         navigation.navigate('Account');
     }
 
-    function logout() {
-        navigation.navigate('Login');
+    async function logout() {
+        await AsyncStorage.clear();
+        await SecureStore.deleteItemAsync(SECURE_STORE_KEY).then(() => {
+            navigation.reset({
+                index: 0,
+                routes: [{
+                    name: 'Home'
+                }]
+            });
+        })
+        .catch(e => {
+            ToastComponent('Erro ao deslogar da aplicação. Tente novamente mais tarde!');
+        });
     }
 
     function goToSetAGoal() {
