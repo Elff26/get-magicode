@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
 
   logoText: {
     fontSize: 85,
-    color: Colors.LOGO_TEXT_COLOR
+    color: Colors.LIGHT_GRAY
   },
 
   homeTitle: {

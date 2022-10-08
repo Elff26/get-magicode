@@ -14,8 +14,11 @@ export default function Header({ backArrow, children, navigation, title }) {
                     <MaterialIcons name="keyboard-arrow-left" size={42} color={Colors.PRIMARY_COLOR} />
                 </TouchableOpacity>
             )}
-            {children}
             <Text style={styles.textHeader}>{title}</Text>
+
+            <View style={styles.icons}>
+                {children}
+            </View>
         </View>
     )
 }
@@ -40,5 +43,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: Colors.PRIMARY_COLOR,
         fontWeight: 'bold'
+    },
+
+    icons: {
+        marginLeft: 'auto',
+        marginRight: 20
     }
 })

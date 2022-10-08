@@ -14,11 +14,18 @@ const Colors = {
     RED_GMAIL_ICON: '#c71610',
     BLUE_FACEBOOK_ICON: '#3b5998',
     WHITE_SAFE_COLOR: '#FFF',
-    LOGO_TEXT_COLOR: '#CACACA',
+    LIGHT_GRAY: '#CACACA',
     CANCEL_BUTTON: 'rgba(212, 51, 63, .5)',
     BOTTOM_SHEET_SCREEN_BACKGROUND: '#bbb',
     GREEN_TEXT: "#44952A",
-    BLACK: "#000"
+    BLACK: "#000",
+    GREEN_PROGRESS_BAR: 'rgb(0, 230, 0)',
+    LIGHT_GREEN: '#7FDF9C',
+    LIGHT_RED: '#E9989E',
+    LIGHT_YELLOW: '#E0DC7F',
+    GREEN_CHECK_ICON: '#159F3F',
+    RED_ERROR_ICON: '#CC3A3A',
+    YELLOW_ACHIEVEMENT_ICON: '#888310'
 }
 
 module.exports = Colors;
