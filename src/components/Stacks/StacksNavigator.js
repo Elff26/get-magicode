@@ -12,6 +12,7 @@ import Classroom from "../../pages/ClassroomScreen/Classroom";
 import ClassroomExercise from "../../pages/ClassroomScreen/ClassroomExercise";
 import Statistics from "../../pages/StatisticsScreen/Statistics";
 import Ranking from "../../pages/RankingScreen/Ranking";
+import Achievement from "../../pages/AchievementScreen/Achievement";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,7 @@ const ProfileStackNavigator = () => {
       <Stack.Screen name='PrivacyAndSecurity' component={PrivacyAndSecurityOptions} />
       <Stack.Screen name='ChangePassword' component={ChangePassword} />
       <Stack.Screen name='SetAGoal' component={SetAGoal} />
+      <Stack.Screen name='Achievement' component={Achievement} />
     </Stack.Navigator>
   );
 }

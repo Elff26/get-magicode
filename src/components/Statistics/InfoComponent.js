@@ -2,20 +2,21 @@ import { Feather } from '@expo/vector-icons';
 import { 
     StyleSheet, 
     Text, 
+    TouchableOpacity,
     View
 } from "react-native";
 
 import Colors from "../../utils/ColorPallete/Colors";
 
-export default function InfoComponent({ title, total, backgroundColor, icon, iconColor, newStyle }) {
+export default function InfoComponent({ title, total, backgroundColor, icon, iconColor, newStyle, onPress }) {
     return (
-        <View style={styles.infoComponent}>
+        <TouchableOpacity style={styles.infoComponent} disabled={!onPress ? true : false} onPress={!onPress ? () => {} : onPress}>
             <View style={[styles.infoIconComponent, { backgroundColor }]}>
                 <Feather name={icon} color={iconColor} size={45} />
             </View>
             <Text style={styles.infoText}>{title}</Text>
             <Text style={styles.infoText}>{total}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -26,7 +27,6 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         width: 120
     },  
-
 
     infoIconComponent: {
         width: 60,

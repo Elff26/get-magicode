@@ -38,6 +38,10 @@ export default function Statistics({ navigation }) {
         navigation.navigate('ProfileOptions');
     }
 
+    function goToAchievementScreen() {
+        navigation.navigate('Achievement');
+    }
+
     return (
         
         <View style={styles.screenContainer}>
@@ -92,6 +96,7 @@ export default function Statistics({ navigation }) {
                             icon="award"
                             backgroundColor={Colors.LIGHT_YELLOW}
                             iconColor={Colors.YELLOW_ACHIEVEMENT_ICON}
+                            onPress={goToAchievementScreen}
                         />
                     </View>
 
