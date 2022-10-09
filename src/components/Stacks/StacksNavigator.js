@@ -11,6 +11,7 @@ import ChooseTechnologies from "../../pages/ChooseTechnologiesScreen/chooseTechn
 import Classroom from "../../pages/ClassroomScreen/Classroom";
 import ClassroomExercise from "../../pages/ClassroomScreen/ClassroomExercise";
 import Statistics from "../../pages/StatisticsScreen/Statistics";
+import Ranking from "../../pages/RankingScreen/Ranking";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,8 +28,8 @@ const MainStackNavigator = () => {
 
 const RankingStackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ChooseTechnologies">
-      <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Ranking">
+      <Stack.Screen name="RankingScreen" component={Ranking} />
     </Stack.Navigator>
   );
 }

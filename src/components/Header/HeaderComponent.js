@@ -2,7 +2,7 @@ import { Platform, StatusBar, StyleSheet, TouchableOpacity, Text, View } from "r
 import { MaterialIcons } from '@expo/vector-icons'; 
 import Colors from "../../utils/ColorPallete/Colors";
 
-export default function Header({ backArrow, children, navigation, title }) {
+export default function Header({ backArrow, children, navigation, title, arrowColor }) {
     function previousScreen() {
         navigation.goBack()
     } 
@@ -11,7 +11,7 @@ export default function Header({ backArrow, children, navigation, title }) {
         <View style={styles.header}>
             {backArrow && (
                 <TouchableOpacity style={styles.backArrouButton} onPress={previousScreen}>
-                    <MaterialIcons name="keyboard-arrow-left" size={42} color={Colors.PRIMARY_COLOR} />
+                    <MaterialIcons name="keyboard-arrow-left" size={42} color={!arrowColor ? Colors.PRIMARY_COLOR : arrowColor} />
                 </TouchableOpacity>
             )}
             <Text style={styles.textHeader}>{title}</Text>

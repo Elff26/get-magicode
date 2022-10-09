@@ -35,7 +35,7 @@ export default function BottomTabComponent() {
                 }}
             />
             <Tab.Screen 
-                name='Ranking' 
+                name='Rank' 
                 component={RankingStackNavigator} 
                 options={{
                     tabBarShowLabel: false,
