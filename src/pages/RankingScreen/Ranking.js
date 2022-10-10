@@ -29,6 +29,7 @@ export default function Ranking({ navigation }) {
     useEffect(() => {
         async function getData() {
             try {
+                console.log("z")
                 const response = await Axios.get(`/GetHigherXp/${currentRankType}`);
     
                 if(response.data.higherXp) {
@@ -40,8 +41,8 @@ export default function Ranking({ navigation }) {
                             user: userRank.user
                         }
                     });
-    
-                    if(ranking.length >= 3) {
+
+                    if(ranking.length >= 0) {
                         setTopUsers(ranking.slice(0, 3));
                         setOtherUsers(ranking.slice(3));
                     } else {
@@ -102,9 +103,9 @@ export default function Ranking({ navigation }) {
             </View>
             
             {
-                otherUsers.length > 0 && (
+                otherUsers.length > 0 || topUsers.length > 0 && (
                     <FlatList
-                        data={otherUsers}
+                        data={otherUsers > 0 ? otherUsers : topUsers}
                         contentContainerStyle={styles.otherUsersRanking}
                         renderItem={(user) => (
                             <>
@@ -115,10 +116,16 @@ export default function Ranking({ navigation }) {
                                         />
                                     )
                                 }
-                                <UserRank 
-                                    userRank={user.item}
-                                    position={user.index + 4}
-                                />
+
+                                {
+                                    otherUsers > 0 && (
+                                        <UserRank 
+                                            userRank={user.item}
+                                            position={user.index + 4}
+                                        />
+                                    )
+                                }
+                                
                             </>
                         )}
                     />

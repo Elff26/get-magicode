@@ -11,11 +11,12 @@ import {
 } from "react-native";
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 
-import Colors, { LIGHT_RED, LIGHT_YELLOW } from "../../utils/ColorPallete/Colors";
+import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProgressBar from '../../components/Statistics/ProgressBar';
 import InfoComponent from '../../components/Statistics/InfoComponent';
+import Axios from '../../api/api';
 
 export default function Statistics({ navigation }) {
     const [user, setUser] = useState({});
@@ -24,7 +25,18 @@ export default function Statistics({ navigation }) {
 
     useEffect(() => {
         async function getData() {
-            setUser(JSON.parse(await AsyncStorage.getItem('@User')));
+            try {
+                let user = JSON.parse(await AsyncStorage.getItem('@User'))
+                const response = await Axios.get(`/FindUserById/${user.userID}`)
+
+                if(response.data.user) {
+                    setUser(response.data.user);
+                } else {
+                    setUser(user);
+                }
+            } catch (error) {
+                setError(e.response.data.message);
+            }
         }
 
         getData();
@@ -57,26 +69,24 @@ export default function Statistics({ navigation }) {
                 </Text>
 
                 <ScrollView contentContainerStyle={styles.statisticsContent}>
-                    <View>
-                        <View>
-                            <Image 
-                                style={styles.userImage}
-                                source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
-                            ></Image>
-                            <Text style={styles.userName}>{user.name}</Text>
-                        </View>
+                    <View style={styles.userInfo}>
+                        <Image 
+                            style={styles.userImage}
+                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
+                        ></Image>
+                        <Text style={styles.userName}>{user.name}</Text>
                     </View>
 
                     <ProgressBar 
-                        title="Nível"
-                        currentData={10}
-                        maxData={100}
+                        currentData={user.statistics.currentXp}
+                        maxData={user.statistics.level.valueXp}
+                        showIcon={true}
                     />
 
                     <View style={styles.infoContent}>
                         <InfoComponent 
                             title="Acertos"
-                            total={10}
+                            total={user.statistics.numberOfHits}
                             icon="check-circle"
                             backgroundColor={Colors.LIGHT_GREEN}
                             iconColor={Colors.GREEN_CHECK_ICON}
@@ -84,7 +94,7 @@ export default function Statistics({ navigation }) {
 
                         <InfoComponent 
                             title="Erros"
-                            total={10}
+                            total={user.statistics.numberOfMistakes}
                             icon="x-circle"
                             backgroundColor={Colors.LIGHT_RED}
                             iconColor={Colors.RED_ERROR_ICON}
@@ -92,7 +102,7 @@ export default function Statistics({ navigation }) {
 
                         <InfoComponent 
                             title="Conquistas"
-                            total={2}
+                            total={3}
                             icon="award"
                             backgroundColor={Colors.LIGHT_YELLOW}
                             iconColor={Colors.YELLOW_ACHIEVEMENT_ICON}
@@ -102,7 +112,7 @@ export default function Statistics({ navigation }) {
 
                     <ProgressBar 
                         title="Aulas completas:"
-                        currentData={50}
+                        currentData={user.statistics.completedClasses}
                         maxData={100}
                         newStyle={styles.classroomsCompletesStyle}
                     />
@@ -155,7 +165,15 @@ const styles = StyleSheet.create({
     },
 
     statisticsContent: {
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%'
+    },
+
+    userInfo: {
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10
     },
 
     userImage: {

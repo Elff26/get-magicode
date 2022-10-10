@@ -9,20 +9,32 @@ import UserTopRank from './UserTopRank';
 export default function({ usersRank }) {
     return (
         <View style={styles.topUsersList}>
-            <UserTopRank
-                userRank={usersRank[1]}
-                position={2}
-            />
-
-            <UserTopRank
-                userRank={usersRank[0]}
-                position={1}
-            />
-
-            <UserTopRank
-                userRank={usersRank[2]}
-                position={3}
-            />
+            {
+                usersRank.length > 1 && (
+                    <UserTopRank
+                        userRank={usersRank[1]}
+                        position={2}
+                    />
+                )
+            }
+            
+            {
+                usersRank.length > 0 && (
+                    <UserTopRank
+                        userRank={usersRank[0]}
+                        position={1}
+                    />
+                )
+            }
+           
+           {
+                usersRank.length > 2 && (
+                    <UserTopRank
+                        userRank={usersRank[2]}
+                        position={3}
+                    />
+                )
+            }
         </View>
     )
 }
