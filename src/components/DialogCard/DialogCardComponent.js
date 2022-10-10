@@ -6,14 +6,18 @@ export default function DialogCardComponent({ title, description, onPressToClose
     return (
         <Dialog visible={visible} onDismiss={onPressToClose}>
             <Dialog.ScrollArea>
-                <ScrollView contentContainerStyle={{padding: 24}}>                            
+                <ScrollView>                            
                     <Dialog.Title style={styles.achievementName}>{title}</Dialog.Title>
+                    
+                    <Dialog.Content>
+                        <Text style={styles.achievementXp}>20 XP</Text>
 
-                    <Text style={styles.achievementDescription}>{description}</Text>
+                        <Text style={styles.achievementDescription}>{description}</Text>
+                    </Dialog.Content>
                 </ScrollView>
             </Dialog.ScrollArea>
             <Dialog.Actions>
-                <Button onPress={onPressToClose}>OK</Button>
+                <Button onPress={onPressToClose} color={Colors.PRIMARY_COLOR}>OK</Button>
             </Dialog.Actions>
         </Dialog>
     )
@@ -31,4 +35,10 @@ const styles = StyleSheet.create({
         color: Colors.TEXT_COLOR,
         textAlign: 'justify'
     },
+
+    achievementXp: {
+        fontSize: 22,
+        color: Colors.PRIMARY_COLOR,
+        textAlign: 'center'
+    }
 })
