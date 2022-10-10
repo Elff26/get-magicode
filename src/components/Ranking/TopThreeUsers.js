@@ -6,21 +6,21 @@ import {
 
 import UserTopRank from './UserTopRank';
 
-export default function({ users }) {
+export default function({ usersRank }) {
     return (
         <View style={styles.topUsersList}>
             <UserTopRank
-                user={users[1]}
+                userRank={usersRank[1]}
                 position={2}
             />
 
             <UserTopRank
-                user={users[0]}
+                userRank={usersRank[0]}
                 position={1}
             />
 
             <UserTopRank
-                user={users[2]}
+                userRank={usersRank[2]}
                 position={3}
             />
         </View>
@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        height: 200
+        height: 250
     }
 })

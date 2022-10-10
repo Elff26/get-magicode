@@ -7,19 +7,19 @@ import {
 
 import Colors from "../../utils/ColorPallete/Colors";
 
-export default function UserRank({ user, position }) {
+export default function UserRank({ userRank, position }) {
     return (
         <View style={styles.userRank}>
             <View style={styles.userView}>
                 <Image 
                     style={styles.userImage}
-                    source={{ uri: user.image }}
+                    source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.imagem }}
                 />
-                <Text style={styles.rankText}>#{position} - {user.name}</Text>
+                <Text style={styles.rankText}>#{position} - {userRank.user.name}</Text>
             </View>
 
             <View style={styles.userScoreView}>
-                <Text style={styles.rankText}>{user.xp}</Text>
+                <Text style={styles.rankText}>{userRank.xp}</Text>
                 <Text style={styles.rankXp}>XP</Text>
             </View>
         </View> 
@@ -55,10 +55,20 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: Colors.TEXT_COLOR,
         marginLeft: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        textAlignVertical: 'bottom'
     },  
 
+    rankXp: {
+        fontSize: 16,
+        color: Colors.TEXT_COLOR,
+        textAlign: 'center',
+        textAlignVertical: 'bottom'
+    },
+
     userScoreView: {
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'row',
+        height: '100%'
     }
 })

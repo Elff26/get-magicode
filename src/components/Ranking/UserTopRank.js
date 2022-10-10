@@ -12,7 +12,7 @@ import Colors from "../../utils/ColorPallete/Colors";
 
 var width = Dimensions.get('window').width; 
 
-export default function UserTopRank({ user, position }) {
+export default function UserTopRank({ userRank, position }) {
     const [iconColor, setIconColor] = useState();
 
     useEffect(() => {
@@ -31,10 +31,11 @@ export default function UserTopRank({ user, position }) {
                 <FontAwesome5 name="crown" color={iconColor} size={28} />
                 <Image 
                     style={styles.userImage}
-                    source={{ uri: user.image }}
+                    source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.imagem }}
                 />
-                <Text style={styles.rankText}>#{position}</Text>
-                <Text style={styles.rankText}>{user.name}</Text>
+                <Text style={styles.rankTextPosition}>#{position}</Text>
+                <Text style={styles.rankTextName}>{userRank.user.name}</Text>
+                <Text style={styles.rankTextName}>{userRank.xp} XP</Text>
             </View>
         </View> 
     )
@@ -49,13 +50,13 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.FOOTER_BACKGROUND_COLOR,
         padding: 6,
         margin: 5,
-        height: 140,
+        height: 180,
         borderRadius: 5
     },
 
     topUserRank: {
         width: width / 3,
-        height: 180
+        height: 220
     },
 
     topUsersView: {
@@ -71,12 +72,21 @@ const styles = StyleSheet.create({
         borderWidth: 1
     },
 
-    rankText: {
-        fontSize: 22,
+    rankTextPosition: {
+        fontSize: 20,
         color: Colors.TEXT_COLOR,
         marginLeft: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        overflow: 'hidden'
     },  
+
+    rankTextName: {
+        fontSize: 16,
+        color: Colors.TEXT_COLOR,
+        marginLeft: 10,
+        textAlign: 'center',
+        overflow: 'hidden'
+    }, 
 
     rankXp: {
         fontSize: 18,

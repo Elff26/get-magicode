@@ -14,6 +14,7 @@ import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TopThreeUsers from '../../components/Ranking/TopThreeUsers';
 import UserRank from '../../components/Ranking/UserRank';
+import Axios from '../../api/api';
 
 var width = Dimensions.get('window').width; 
 
@@ -21,50 +22,39 @@ export default function Ranking({ navigation }) {
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [currentRankType, setCurrentRankType] = useState("geral");
+    const [currentRankType, setCurrentRankType] = useState("general");
+    const [topUsers, setTopUsers] = useState([]);
+    const [otherUsers, setOtherUsers] = useState([]);
 
-    let users = [
-        {
-            name: 'Teste',
-            xp: 500,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        },
-        {
-            name: 'Teste 2',
-            xp: 499,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        },
-        {
-            name: 'Teste 3',
-            xp: 498,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        },
-        {
-            name: 'Teste 4',
-            xp: 400,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        },
-        {
-            name: 'Teste 5',
-            xp: 390,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        },
-        {
-            name: 'Teste 6',
-            xp: 380,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        },
-        {
-            name: 'Teste 7',
-            xp: 370,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-        },
-        {
-            name: 'Teste 8',
-            xp: 360,
-            image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
+    useEffect(() => {
+        async function getData() {
+            try {
+                const response = await Axios.get(`/GetHigherXp/${currentRankType}`);
+    
+                if(response.data.higherXp) {
+                    let users = response.data.higherXp;
+
+                    let ranking = users.map((userRank) => {
+                        return {
+                            xp: userRank.monthXp ? userRank.monthXp : userRank.totalXp,
+                            user: userRank.user
+                        }
+                    });
+    
+                    if(ranking.length >= 3) {
+                        setTopUsers(ranking.slice(0, 3));
+                        setOtherUsers(ranking.slice(3));
+                    } else {
+                        setTopUsers(ranking);
+                    }
+                }
+            } catch(e) {
+                setError(e.response.data.message);
+            }
         }
-    ]
+
+        getData();
+    }, [currentRankType]);
 
     useEffect(() => {
         async function getData() {
@@ -75,11 +65,11 @@ export default function Ranking({ navigation }) {
     }, []);
 
     const onChangeToMonthlyRanking = () => {
-        setCurrentRankType('mensal');
+        setCurrentRankType('month');
     }
 
     const onChangeToGeneralRanking = () => {
-        setCurrentRankType('geral');
+        setCurrentRankType('general');
     }
 
     return (
@@ -94,7 +84,7 @@ export default function Ranking({ navigation }) {
             <View style={styles.rankType}>
                 <TouchableOpacity style={[
                         styles.rankTypeButton,
-                        currentRankType === 'geral' ? styles.activeRankType : {}
+                        currentRankType === 'general' ? styles.activeRankType : {}
                     ]}
                     onPress={onChangeToGeneralRanking}
                 >
@@ -103,29 +93,38 @@ export default function Ranking({ navigation }) {
 
                 <TouchableOpacity style={[
                         styles.rankTypeButton,
-                        currentRankType === 'mensal' ? styles.activeRankType : {}
+                        currentRankType === 'month' ? styles.activeRankType : {}
                     ]}
                     onPress={onChangeToMonthlyRanking}
                     >
                     <Text style={styles.rankTypeText}>Mensal</Text>
                 </TouchableOpacity>
             </View>
-
-            <TopThreeUsers 
-                users={users.slice(0, 3)}
-            />
-
-            <FlatList
-                data={users.slice(3)}
-                initialNumToRender={2}
-                contentContainerStyle={styles.otherUsersRanking}
-                renderItem={(user) => (
-                    <UserRank 
-                        user={user.item}
-                        position={user.index + 4}
+            
+            {
+                otherUsers.length > 0 && (
+                    <FlatList
+                        data={otherUsers}
+                        contentContainerStyle={styles.otherUsersRanking}
+                        renderItem={(user) => (
+                            <>
+                                {
+                                    user.index === 0 && topUsers.length > 0 && (
+                                        <TopThreeUsers 
+                                            usersRank={topUsers}
+                                        />
+                                    )
+                                }
+                                <UserRank 
+                                    userRank={user.item}
+                                    position={user.index + 4}
+                                />
+                            </>
+                        )}
                     />
-                )}
-            />
+                )
+            }
+            
         </View>
     )
 }
@@ -146,8 +145,6 @@ const styles = StyleSheet.create({
 
     otherUsersRanking: {
         width: width,
-        borderTopStartRadius: 20,
-        borderTopEndRadius: 20,
         overflow: 'hidden'
     },
 
