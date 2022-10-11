@@ -17,22 +17,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProgressBar from '../../components/Statistics/ProgressBar';
 import InfoComponent from '../../components/Statistics/InfoComponent';
 import Axios from '../../api/api';
+import { useIsFocused } from "@react-navigation/native";
+
 
 export default function Statistics({ navigation }) {
+    const isFocused = useIsFocused();
+
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [numberOfClasses, setNumberOfClasses] = useState(0);
 
     useEffect(() => {
         async function getData() {
             try {
                 let user = JSON.parse(await AsyncStorage.getItem('@User'))
-                const response = await Axios.get(`/FindUserById/${user.userID}`)
+                const responseUser = await Axios.get(`/FindUserById/${user.userID}`);
+                const responseClasses = await Axios.get(`/CountAllClassrooms`);
 
-                if(response.data.user) {
-                    setUser(response.data.user);
+                if(responseUser.data.user) {
+                    setUser(responseUser.data.user);
                 } else {
                     setUser(user);
+                }
+
+                if(responseClasses.data.numberOfClasses) {
+                    setNumberOfClasses(responseClasses.data.numberOfClasses);
                 }
             } catch (error) {
                 setError(e.response.data.message);
@@ -40,7 +50,7 @@ export default function Statistics({ navigation }) {
         }
 
         getData();
-    }, []);
+    }, [isFocused]);
 
     function goToGoalScreen() {
         navigation.navigate('SetAGoal');
@@ -68,55 +78,59 @@ export default function Statistics({ navigation }) {
                     Perfil
                 </Text>
 
-                <ScrollView contentContainerStyle={styles.statisticsContent}>
-                    <View style={styles.userInfo}>
-                        <Image 
-                            style={styles.userImage}
-                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
-                        ></Image>
-                        <Text style={styles.userName}>{user.name}</Text>
-                    </View>
+                {
+                    user.statistics && (
+                        <ScrollView contentContainerStyle={styles.statisticsContent}>
+                            <View style={styles.userInfo}>
+                                <Image 
+                                    style={styles.userImage}
+                                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
+                                ></Image>
+                                <Text style={styles.userName}>{user.name}</Text>
+                            </View>
 
-                    <ProgressBar 
-                        currentData={user.statistics.currentXp}
-                        maxData={user.statistics.level.valueXp}
-                        showIcon={true}
-                    />
+                            <ProgressBar 
+                                currentData={user.statistics.currentXp}
+                                maxData={user.statistics.level.valueXp}
+                                showIcon={true}
+                            />
 
-                    <View style={styles.infoContent}>
-                        <InfoComponent 
-                            title="Acertos"
-                            total={user.statistics.numberOfHits}
-                            icon="check-circle"
-                            backgroundColor={Colors.LIGHT_GREEN}
-                            iconColor={Colors.GREEN_CHECK_ICON}
-                        />
+                            <View style={styles.infoContent}>
+                                <InfoComponent 
+                                    title="Acertos"
+                                    total={user.statistics.numberOfHits}
+                                    icon="check-circle"
+                                    backgroundColor={Colors.LIGHT_GREEN}
+                                    iconColor={Colors.GREEN_CHECK_ICON}
+                                />
 
-                        <InfoComponent 
-                            title="Erros"
-                            total={user.statistics.numberOfMistakes}
-                            icon="x-circle"
-                            backgroundColor={Colors.LIGHT_RED}
-                            iconColor={Colors.RED_ERROR_ICON}
-                        />
+                                <InfoComponent 
+                                    title="Erros"
+                                    total={user.statistics.numberOfMistakes}
+                                    icon="x-circle"
+                                    backgroundColor={Colors.LIGHT_RED}
+                                    iconColor={Colors.RED_ERROR_ICON}
+                                />
 
-                        <InfoComponent 
-                            title="Conquistas"
-                            total={3}
-                            icon="award"
-                            backgroundColor={Colors.LIGHT_YELLOW}
-                            iconColor={Colors.YELLOW_ACHIEVEMENT_ICON}
-                            onPress={goToAchievementScreen}
-                        />
-                    </View>
+                                <InfoComponent 
+                                    title="Conquistas"
+                                    total={3}
+                                    icon="award"
+                                    backgroundColor={Colors.LIGHT_YELLOW}
+                                    iconColor={Colors.YELLOW_ACHIEVEMENT_ICON}
+                                    onPress={goToAchievementScreen}
+                                />
+                            </View>
 
-                    <ProgressBar 
-                        title="Aulas completas:"
-                        currentData={user.statistics.completedClasses}
-                        maxData={100}
-                        newStyle={styles.classroomsCompletesStyle}
-                    />
-                </ScrollView>
+                            <ProgressBar 
+                                title="Aulas completas:"
+                                currentData={user.statistics.completedClasses}
+                                maxData={numberOfClasses}
+                                newStyle={styles.classroomsCompletesStyle}
+                            />
+                        </ScrollView>
+                    )
+                }
 
                 <View style={styles.buttonGroup}>
                     <ButtonComponent newStyle={styles.newStyleButton} 

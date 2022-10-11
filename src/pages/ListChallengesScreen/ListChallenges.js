@@ -74,10 +74,10 @@ const ListChallenges = ({ route, navigation }) => {
             if(currentTechnology && currentTechnology.technology) {
                 try {
                     const response = await Axios.get(`/FindChallengeByTechnology/${currentTechnology.technology.technologyID}`);
-                
+
                     if(response.data.challenges) {
                         setChallenges(response.data.challenges);
-    
+            
                         const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnology/${user.userID}/${currentTechnology.technology.technologyID}`);
                         
                         if(responseUserChallenges.data.userChallenges) {
