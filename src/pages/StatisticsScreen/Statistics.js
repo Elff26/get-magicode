@@ -44,7 +44,7 @@ export default function Statistics({ navigation }) {
                 if(responseClasses.data.numberOfClasses) {
                     setNumberOfClasses(responseClasses.data.numberOfClasses);
                 }
-            } catch (error) {
+            } catch (e) {
                 setError(e.response.data.message);
             }
         }

@@ -7,13 +7,12 @@ import {
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons'; 
 import Colors from '../../utils/ColorPallete/Colors';
 
-export default function LifeCompoenent() {
+export default function LifeCompoenent({ numberOfLifes }) {
     const [lifeArray, setLifeArray] = useState([]);
     const [lifeDetails, setLifeDetails] = useState(false);
 
     useEffect(() => {
         let i = 0;
-        let numberOfLifes = 4;
         let lifes = [];
 
         while(i < 5) {
@@ -27,7 +26,7 @@ export default function LifeCompoenent() {
         }
 
         setLifeArray(lifes);
-    }, []);
+    }, [numberOfLifes]);
 
     function showLifeDetails() {
         setLifeDetails(true);

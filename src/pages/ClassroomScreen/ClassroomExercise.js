@@ -58,29 +58,36 @@ export default function ClassroomExercise({ navigation, route }) {
 
     useEffect(() => {
         async function verifyData() {
-            if(answered) {
-                let result = answers.filter((item) => item.isCorrect).length / challenge.exercises.length;
-                setResult(result);
+            try {
+                if(answered) {
+                    let result = answers.filter((item) => item.isCorrect).length / challenge.exercises.length;
+                    setResult(result);
+        
+                    if(result <= 0.5) {
+                        const response = await Axios.put(`DecreaseNumberOfLifes/${user.userID}`);
     
-                if(result <= 0.5) {
-                    setAnswered(false);
-                } else {
-                  const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
-                  let userChallenge = result.data.userChallenge;
-                  let newUser = user;
-          
-                  newUser.challenges = user.challenges.map(item => {
-                    if(item.userChallengeID === userChallenge.userChallengeID) {
-                      item.completed = true;
+                        if(response.data.numberOfLifes) {
+                            user.numberOfLifes = response.data.numberOfLifes;
+    
+                            await AsyncStorage.mergeItem("@User", JSON.stringify(user));
+                            setUser(user);
+                            setAnswered(false);
+                        }
+                    } else {
+                      const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
+    
+                      if(result.data.userChallenge) {
+                          const resultUserUpdated = await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                            xpGain: challenge.difficulty.valueXP
+                          });
+
+                          setUser(resultUserUpdated.data.user);
+                          await AsyncStorage.mergeItem('@User', JSON.stringify(resultUserUpdated.data.user));
+                      }
                     }
-          
-                    return item;
-                  });
-          
-                  setUser(newUser);
-    
-                  await AsyncStorage.mergeItem('@User', JSON.stringify(newUser));
-                }
+                } 
+            } catch(e) {
+                setError(e.response.data.message);
             }
         }
 
@@ -214,9 +221,7 @@ export default function ClassroomExercise({ navigation, route }) {
 
     function returnToChallengeList() {
         navigation.navigate('ListChallenges', {
-            params: {
-                user
-            }
+            user
         });
     }
 
@@ -291,7 +296,7 @@ export default function ClassroomExercise({ navigation, route }) {
                                 )
                             }
                             {
-                                challenge.typeChallenge === "quiz" && (
+                                challenge.typeChallenge === "quiz" && !answered && (
                                     <BottomMenuQuizExercise 
                                         questionNumber={questionNumber}
                                         numberOfExercises={challenge.exercises.length - 1}
@@ -303,10 +308,20 @@ export default function ClassroomExercise({ navigation, route }) {
                             }
 
                             {
-                                challenge.typeChallenge === "code" && (
+                                challenge.typeChallenge === "code" && !answered && (
                                     <ButtonComponent newStyle={styles.newStyleButtonCompile} onPress={runCode}>
                                         <Text style={styles.textButton}>
                                             <Feather name="play" color={Colors.GREEN_TEXT} size={32} />
+                                        </Text>
+                                    </ButtonComponent>
+                                )
+                            }
+
+                            {
+                                answered && (
+                                    <ButtonComponent newStyle={styles.newStyleReturnToHome} onPress={returnToChallengeList}>
+                                        <Text style={styles.textButton}>
+                                            <Feather name="home" color={Colors.WHITE_SAFE_COLOR} size={32} />
                                         </Text>
                                     </ButtonComponent>
                                 )
@@ -412,5 +427,12 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         backgroundColor: Colors.GREEN_BUTTON_CONFIRM
+    },
+
+    newStyleReturnToHome: {
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        backgroundColor: Colors.PRIMARY_COLOR_DISABLED
     }
 })

@@ -29,7 +29,6 @@ export default function Ranking({ navigation }) {
     useEffect(() => {
         async function getData() {
             try {
-                console.log("z")
                 const response = await Axios.get(`/GetHigherXp/${currentRankType}`);
     
                 if(response.data.higherXp) {

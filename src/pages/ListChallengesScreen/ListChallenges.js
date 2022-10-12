@@ -35,7 +35,7 @@ const ListChallenges = ({ route, navigation }) => {
             
             var userData;
 
-            if(routeParams.screen === 'ChooseTechnologies') {
+            if(routeParams.user) {
                 userData = routeParams.user;
             } else {
                 userData = JSON.parse(await AsyncStorage.getItem('@User'));
@@ -64,8 +64,8 @@ const ListChallenges = ({ route, navigation }) => {
     }, [route]);
 
     useEffect(() => {
-        if(routeParams.user) {
-            setUser(routeParams.user);
+        if(routeParams && routeParams.params && routeParams.params.user) {
+            setUser(routeParams.params.user);
         }
     }, [isFocused]);
 
@@ -128,6 +128,7 @@ const ListChallenges = ({ route, navigation }) => {
                             openBottomSheet={openBottomSheet} 
                             setOpenBottomSheet={setOpenBottomSheet} 
                             currentTechnology={currentTechnology}
+                            numberOfLifes={user.numberOfLifes}
                         />
 
                         {

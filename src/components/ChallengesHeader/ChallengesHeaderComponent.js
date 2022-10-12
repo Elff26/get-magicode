@@ -7,11 +7,11 @@ import {
 import ChooseTechnologieComponent from '../ChooseTechnologie/ChooseTechnologieComponent';
 import LifeCompoenent from '../Life/LifeComponent'
 
-export default function ChallengesHeaderComponent({ navigation, openBottomSheet, setOpenBottomSheet, currentTechnology }) {
+export default function ChallengesHeaderComponent({ navigation, openBottomSheet, setOpenBottomSheet, currentTechnology, numberOfLifes }) {
     return (
         <View style={styles.header}>
             <ChooseTechnologieComponent navigation={navigation} openBottomSheet={openBottomSheet} setOpenBottomSheet={setOpenBottomSheet} currentTechnology={currentTechnology} />
-            <LifeCompoenent />
+            <LifeCompoenent numberOfLifes={numberOfLifes} />
         </View>
     )
 }
