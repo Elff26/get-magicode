@@ -13,6 +13,7 @@ import ClassroomExercise from "../../pages/ClassroomScreen/ClassroomExercise";
 import Statistics from "../../pages/StatisticsScreen/Statistics";
 import Ranking from "../../pages/RankingScreen/Ranking";
 import Achievement from "../../pages/AchievementScreen/Achievement";
+import PvPExercise from "../../pages/ClassroomScreen/PvPExercise";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ const MainStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ListChallenges">
       <Stack.Screen name="ListChallenges" component={ListChallenges} />
+      <Stack.Screen name="PvPExercise" component={PvPExercise} />
       <Stack.Screen name="ChooseTechnologies" component={ChooseTechnologies} />
       <Stack.Screen name="Classroom" component={Classroom} />
       <Stack.Screen name="ClassroomExercise" component={ClassroomExercise} />

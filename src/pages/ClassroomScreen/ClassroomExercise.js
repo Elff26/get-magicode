@@ -16,9 +16,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CardComponent from "../../components/Card/CardComponent";
 import CodeEditorComponent from "../../components/CodeEditor/CodeEditorComponent";
 import RenderAlternativesComponent from "../../components/QuizExercise/RenderAlternativesComponent";
-import BottomMenuQuizExercise from "../../components/QuizExercise/BottomMenuQuizExercise";
 import ButtonComponent from "../../components/Buttons/ButtonComponent";
 import OutputTerminal from "../../components/OutputTerminal/OutputTerminal";
+import SyntaxHighlighter from 'react-native-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/styles/hljs';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -35,6 +36,8 @@ export default function ClassroomExercise({ navigation, route }) {
     const [answered, setAnswered] = useState(false);
     const [showCard, setShowCard] = useState(false);
     const [result, setResult] = useState(0);
+    const [numberOfExercises, setNumberOfExercises] = useState(0);
+    const [codeQuestionAnswered, setCodeQuestionAnswered] = useState(false);
 
     useEffect(() => {
         async function getData() {
@@ -43,7 +46,10 @@ export default function ClassroomExercise({ navigation, route }) {
                 const response = await Axios.get(`FindChallengeById/${challengeID}`);
                 
                 if(response.data.challenge) {
-                  setChallenge(response.data.challenge);
+                  let challenge = response.data.challenge;
+                  
+                  setChallenge(challenge);
+                  setNumberOfExercises(challenge.exercises.length - 1);
                 }
       
                 setUser(JSON.parse(await AsyncStorage.getItem('@User')))
@@ -95,9 +101,7 @@ export default function ClassroomExercise({ navigation, route }) {
     }, [answered]);
 
     async function goToNextQuestion() {
-        if(answered && questionNumber === challenge.exercises.length - 1) {
-            return returnToChallengeList();
-        }
+        checkIfIsComplete();
 
         if(challenge.typeChallenge === "code") {
             return nextCodeQuestion();
@@ -107,12 +111,16 @@ export default function ClassroomExercise({ navigation, route }) {
     }
 
     async function nextCodeQuestion() {
-        if(questionNumber < answers.length - 1) {
-            setChecked(answers[questionNumber + 1].alternativeID);
+        let answered = answers.findIndex((answer) => answer.exerciseID === challenge.exercises[questionNumber].exerciseID);
+
+        if(questionNumber === answers.length - 1) {
+            setCodeQuestionAnswered(false);
         }
 
-        if(questionNumber < challenge.exercises.length - 1) {
+        if(answered !== -1) {
             setQuestionNumber(questionNumber + 1);
+        } else {
+            await runCode();
         }
     }
 
@@ -127,11 +135,11 @@ export default function ClassroomExercise({ navigation, route }) {
                     setChecked(answers[questionNumber + 1].alternativeID);
                 }
         
-                if(questionNumber < challenge.exercises.length - 1) {
+                if(questionNumber < numberOfExercises) {
                     setQuestionNumber(questionNumber + 1);
                 }
 
-                if(questionNumber === challenge.exercises.length - 1 && !answered) {
+                if(questionNumber === numberOfExercises && !answered) {
                     setAnswered(true);
                     setShowCard(true);
                 }
@@ -143,12 +151,9 @@ export default function ClassroomExercise({ navigation, route }) {
 
     function saveQuizAnswers(isCorrect) {
         let allAnswers = answers;
-        let alreadyAnswered = -1;
 
-        if(allAnswers.length > 0) {
-            alreadyAnswered = allAnswers.findIndex(answer => answer.exerciseID === challenge.exercises[questionNumber].exerciseID);
-        }
-
+        let alreadyAnswered = allAnswers.findIndex(answer => answer.exerciseID === challenge.exercises[questionNumber].exerciseID);
+    
         if(alreadyAnswered !== -1) {
             allAnswers[alreadyAnswered].alternativeID = checked;
             allAnswers[alreadyAnswered].isCorrect = isCorrect;
@@ -165,10 +170,6 @@ export default function ClassroomExercise({ navigation, route }) {
     }
 
     async function runCode() {
-        if(answered && questionNumber === challenge.exercises.length - 1) {
-            return returnToChallengeList();
-        }
-
         try {
             let response = await Axios.post(`SendExerciseCode/${user.userID}/${challenge.challengeID}/${challenge.exercises[questionNumber].exerciseID}`, {
                 userCode: code,
@@ -179,19 +180,13 @@ export default function ClassroomExercise({ navigation, route }) {
                 let result = response.data.result;
 
                 saveCodeAnswers(result);
-        
-                if(questionNumber < answers.length - 1) {
-                    setChecked(answers[questionNumber + 1].alternativeID);
-                }
-        
-                if(questionNumber < challenge.exercises.length - 1) {
-                    setQuestionNumber(questionNumber + 1);
-                }
 
-                if(questionNumber === challenge.exercises.length - 1 && !answered) {
+                if(questionNumber === numberOfExercises && !answered) {
                     setAnswered(true);
                     setShowCard(true);
                 }
+
+                setCodeQuestionAnswered(true);
             }
         } catch(e) {
             setError(e.response.data.message);
@@ -205,7 +200,8 @@ export default function ClassroomExercise({ navigation, route }) {
             exerciseID: challenge.exercises[questionNumber].exerciseID,
             isCorrect: answer.isCorrect,
             answer,
-            answered: true 
+            answered: true,
+            code
         });
 
         setAnswers(allAnswers);
@@ -215,8 +211,18 @@ export default function ClassroomExercise({ navigation, route }) {
         if (challenge.typeChallenge === "quiz") {
             setChecked(answers[questionNumber - 1].alternativeID);
         }
+
+        if (challenge.typeChallenge === "code") {
+            setCodeQuestionAnswered(true);
+        }
         
         setQuestionNumber(questionNumber - 1);
+    }
+
+    function checkIfIsComplete() {
+        if(answered && questionNumber === numberOfExercises) {
+            return returnToChallengeList();
+        }
     }
 
     function returnToChallengeList() {
@@ -242,34 +248,35 @@ export default function ClassroomExercise({ navigation, route }) {
                                 <Header backArrow={true} navigation={navigation} />
                                     <View style={styles.content}>
                                         <Text style={styles.title}>Questão {questionNumber + 1}</Text>
-                                        {/* <Text style={styles.subtitle}>{challenge.exercises[questionNumber].name}</Text> */}
 
                                         <RenderJsonContent content={challenge.exercises[questionNumber].description} />
 
+                                        <RenderAlternativesComponent 
+                                            alternatives={challenge.exercises[questionNumber].alternatives}
+                                            checked={checked}
+                                            setChecked={setChecked}
+                                            answered={answered}
+                                            show={challenge.typeChallenge === "quiz"}
+                                        />
+
+                                        <CodeEditorComponent 
+                                            setCode={setCode} 
+                                            language={challenge.technology.name} 
+                                            theme="dracula" 
+                                            show={challenge.typeChallenge === "code" && !codeQuestionAnswered} 
+                                        />  
+                                        
                                         {
-                                            challenge.typeChallenge === "quiz" && (
-                                                <RenderAlternativesComponent 
-                                                    alternatives={challenge.exercises[questionNumber].alternatives}
-                                                    checked={checked}
-                                                    setChecked={setChecked}
-                                                    answered={answered}
-                                                />
+                                            codeQuestionAnswered && (
+                                                <SyntaxHighlighter 
+                                                    language={challenge.technology.name} 
+                                                    style={dracula}
+                                                    highlighter={"hljs"}
+                                                >{answers[questionNumber].code}</SyntaxHighlighter>
                                             )
-                                        }
-                                        {
-                                            challenge.typeChallenge === "code" && (
-                                                <>
-                                                    <CodeEditorComponent setCode={setCode} language={challenge.technology.name} theme="dracula" />
-                                                    
-                                                    {
-                                                        answers.length - 1 >= questionNumber && (
-                                                            <OutputTerminal answer={answers[questionNumber].answer} />
-                                                        )
-                                                    }
-                                                    
-                                                </>
-                                            )
-                                        }                   
+                                        }  
+
+                                        <OutputTerminal answer={codeQuestionAnswered ? answers[questionNumber].answer : null} />        
                                     </View>
                         </ScrollView>
 
@@ -287,31 +294,13 @@ export default function ClassroomExercise({ navigation, route }) {
                             </ButtonComponent>
 
                             {
-                                questionNumber < challenge.exercises.length - 1 && (
-                                    <ButtonComponent newStyle={styles.newStyleButton} onPress={goToNextQuestion}>
+                                questionNumber <= numberOfExercises && (
+                                    <ButtonComponent newStyle={{...styles.newStyleButton, backgroundColor: questionNumber === numberOfExercises ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR}} onPress={goToNextQuestion}>
                                         <Text style={styles.textButton}>
-                                            <Feather name="chevron-right" color={Colors.WHITE_SAFE_COLOR} size={32} />
-                                        </Text>
-                                    </ButtonComponent>
-                                )
-                            }
-                            {
-                                challenge.typeChallenge === "quiz" && !answered && (
-                                    <BottomMenuQuizExercise 
-                                        questionNumber={questionNumber}
-                                        numberOfExercises={challenge.exercises.length - 1}
-                                        navigation={navigation}
-                                        goToNextQuestion={goToNextQuestion}
-                                        answered={answered}
-                                    />
-                                )
-                            }
-
-                            {
-                                challenge.typeChallenge === "code" && !answered && (
-                                    <ButtonComponent newStyle={styles.newStyleButtonCompile} onPress={runCode}>
-                                        <Text style={styles.textButton}>
-                                            <Feather name="play" color={Colors.GREEN_TEXT} size={32} />
+                                            <Feather 
+                                                name={questionNumber === numberOfExercises ? "check" : "chevron-right"} 
+                                                color={questionNumber === numberOfExercises ? Colors.GREEN_CHECK_ICON : Colors.WHITE_SAFE_COLOR} size={32} 
+                                            />
                                         </Text>
                                     </ButtonComponent>
                                 )

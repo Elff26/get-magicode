@@ -90,7 +90,7 @@ const Register = ({ navigation }) => {
                     autoComplete="email"
                     keyboardType="email-address"
                     textContentType='emailAddress'
-                    
+                    autoCapitalize='none'
                 />
                 {
                     (email.trim() === '' && submited) && (

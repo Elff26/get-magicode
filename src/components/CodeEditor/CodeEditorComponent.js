@@ -3,11 +3,11 @@ import codeEditorHTML from '../../utils/CodeEditor/CodeEditorHtml';
 import CodeEditorLanguageDictionary from '../../utils/CodeEditor/CodeEditorLanguageDictionary';
 
 
-export default function CodeEditorComponent({ setCode, theme, language }) {
+export default function CodeEditorComponent({ setCode, theme, language, show }) {
     return (
         <>
             {
-                (language && theme) && (
+                (show && language && theme) && (
                     <WebView
                         originWhitelist={['*']}
                         source={{ html: codeEditorHTML(theme, CodeEditorLanguageDictionary[`${language}`]) }}

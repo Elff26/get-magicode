@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { 
-    ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
-    SafeAreaView, 
     StyleSheet, 
     Text, 
     TextInput, 
@@ -17,7 +15,6 @@ import Header from '../../components/Header/HeaderComponent';
 import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
-
 
 export default function Login({ route, navigation }) {
     const routeParams = route;
@@ -91,6 +88,7 @@ export default function Login({ route, navigation }) {
                         autoComplete="email"
                         keyboardType="email-address"
                         textContentType='emailAddress'
+                        autoCapitalize='none'
                     />
                     {
                         (email.trim() === '' && submited) && (

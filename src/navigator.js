@@ -12,7 +12,7 @@ import ThirdRegisterMoreInfo from './pages/RegisterScreen/ThirdRegisterMoreInfo'
 
 const Stack = createNativeStackNavigator();
 
-const Navigator = (
+const Navigator = () => (
     <NavigationContainer>
         <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
             <Stack.Screen name='Home' component={Home}/>

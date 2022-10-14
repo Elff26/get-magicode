@@ -5,23 +5,30 @@ import {
 import Colors from "../../utils/ColorPallete/Colors";
 import AlternativeOptionComponent from "../AlternativeOption/AlternativeOptionComponent";
 
-export default function RenderAlternativesComponent({ alternatives, checked, setChecked, answered }) {
+export default function RenderAlternativesComponent({ alternatives, checked, setChecked, answered, show, disabled }) {
     return (
-        <View style={styles.goalItem}>
+        <>
             {
-                alternatives.map((item) => (
-                    <View key={item.alternativeID} style={answered ? (item.isCorrect ? styles.correctAlternative : styles.wrongAlternative) : styles.defaultAlternative}>
-                        <AlternativeOptionComponent
-                            value={item.alternativeID}
-                            label={item.alternativeID}
-                            status={(checked === item.alternativeID) ? 'checked' : 'unchecked'} 
-                            changeChecked={setChecked}
-                            alternativeText={item.description}
-                        />
+                show && (
+                    <View style={styles.goalItem}>
+                        {
+                            alternatives.map((item) => (
+                                <View key={item.alternativeID} style={answered ? (item.isCorrect ? styles.correctAlternative : styles.wrongAlternative) : styles.defaultAlternative}>
+                                    <AlternativeOptionComponent
+                                        disabled={disabled}
+                                        value={item.alternativeID}
+                                        label={item.alternativeID}
+                                        status={(checked === item.alternativeID) ? 'checked' : 'unchecked'} 
+                                        changeChecked={setChecked}
+                                        alternativeText={item.description}
+                                    />
+                                </View>
+                            ))
+                        }
                     </View>
-                ))
+                )
             }
-        </View>
+        </>
     )
 }
 

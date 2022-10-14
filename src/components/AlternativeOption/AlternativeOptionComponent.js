@@ -8,10 +8,11 @@ import { RadioButton } from 'react-native-paper';
 
 import Colors from '../../utils/ColorPallete/Colors';
 
-export default function AlternativeOptionComponent({ value, label, status, changeChecked, alternativeText }) {
+export default function AlternativeOptionComponent({ value, label, status, changeChecked, alternativeText, disabled }) {
     return (
         <View style={styles.goalRadio}>
             <RadioButton
+                disabled={disabled}
                 value={value}
                 label={label}
                 status={status}

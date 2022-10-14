@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { 
     StyleSheet, 
     Text,
@@ -8,14 +9,20 @@ import Colors from "../../utils/ColorPallete/Colors";
 export default function OutputTerminal({ answer }) {
     return (
         <>
-            <Text>Output: </Text>
-            <View style={styles.terminal}>
-                <Text style={styles.textTerminal}>{answer.output}</Text>
+        {
+            answer && (
+                <>
+                    <Text>Output: </Text>
+                    <View style={styles.terminal}>
+                        <Text style={styles.textTerminal}>{answer.output}</Text>
 
-                <View style={styles.separator}></View>
-                <Text style={styles.textTerminal}>Tempo de CPU: {answer.cpuTime}</Text>
-                <Text style={styles.textTerminal}>Memória: {answer.memory}</Text>
-            </View>
+                        <View style={styles.separator}></View>
+                        <Text style={styles.textTerminal}>Tempo de CPU: {answer.cpuTime}</Text>
+                        <Text style={styles.textTerminal}>Memória: {answer.memory}</Text>
+                    </View>
+                </>
+            )
+        }
         </>
     )
 }

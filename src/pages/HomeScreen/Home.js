@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
   ActivityIndicator,
@@ -14,6 +14,7 @@ import * as SecureStore from 'expo-secure-store';
 import axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../../api/api';
+import { SocketContext } from '../../utils/Socket/socket';
 
 import { 
   FACEBOOK_CLIENT_ID,
@@ -26,6 +27,8 @@ import {
 } from '@env';
 
 const Home = ({ navigation }) => {
+  const socket = useContext(SocketContext);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +56,7 @@ const Home = ({ navigation }) => {
     }
 
     getData(); 
-    setLoading(false);   
+    setLoading(false);  
   }, []);
 
   const clearUserData = async () => {

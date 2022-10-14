@@ -130,6 +130,7 @@ export default function Account({navigation}) {
                         autoComplete="email"
                         keyboardType="email-address"
                         textContentType='emailAddress'
+                        autoCapitalize='none'
                     />
 
                     <MaskInput

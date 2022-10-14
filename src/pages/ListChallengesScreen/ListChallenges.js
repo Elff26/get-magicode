@@ -19,6 +19,7 @@ import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../../api/api';
 import { useIsFocused } from '@react-navigation/native';
+import PvPInviteCard from '../../components/PlayerVSPlayer/PvPInviteCard';
 
 const ListChallenges = ({ route, navigation }) => {
     const routeParams = route;
@@ -29,6 +30,7 @@ const ListChallenges = ({ route, navigation }) => {
     const [openBottomSheet, setOpenBottomSheet] = useState(false);
     const [currentTechnology, setCurrentTechnology] = useState(null);
     const [error, setError] = useState("");
+    const [showPvPCard, setShowPvPCard] = useState(false);
 
     useEffect(() => {
         async function getData() {
@@ -154,9 +156,11 @@ const ListChallenges = ({ route, navigation }) => {
                             )
                         }
 
-                        <TouchableOpacity style={styles.versusButton}>
+                        <TouchableOpacity style={styles.versusButton} onPress={() => setShowPvPCard(!showPvPCard)}>
                             <MaterialCommunityIcons name="sword-cross" size={28} color={Colors.RED_COLOR_DEFAULT} />
                         </TouchableOpacity>
+
+                        <PvPInviteCard showCard={showPvPCard} setShowCard={setShowPvPCard} navigation={navigation} user={user} />
 
                         {
                             (user && user.technologies && user.technologies.length > 0) && (
