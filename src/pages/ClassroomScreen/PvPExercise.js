@@ -205,8 +205,7 @@ export default function PvPExercise({ navigation, route }) {exercises
 
     async function runCode() {
         try {
-            //ARRUMAR, NÃO TER ESSE MÉTODO, TENTAR JUNTAR OS DOIS
-            let response = await Axios.post(`SendExerciseCodeTwo/${user.userID}/${exercises[questionNumber].exerciseID}`, {
+            let response = await Axios.post(`SendExerciseCode/${user.userID}/${exercises[questionNumber].exerciseID}`, {
                 userCode: code,
                 language: currentTechnology
             });
@@ -217,6 +216,7 @@ export default function PvPExercise({ navigation, route }) {exercises
 
             return response.data.result.isCorrect;
         } catch(e) {
+            console.log(e.response.data.message);
             setError(e.response.data.message);
         }
     }

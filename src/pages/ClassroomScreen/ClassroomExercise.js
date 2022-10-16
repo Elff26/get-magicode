@@ -171,13 +171,19 @@ export default function ClassroomExercise({ navigation, route }) {
 
     async function runCode() {
         try {
-            let response = await Axios.post(`SendExerciseCode/${user.userID}/${challenge.challengeID}/${challenge.exercises[questionNumber].exerciseID}`, {
+            let response = await Axios.post(`SendExerciseCode/${user.userID}/${challenge.exercises[questionNumber].exerciseID}`, {
                 userCode: code,
                 language: challenge.technology.name
             });
 
             if(response.data) {
                 let result = response.data.result;
+
+                if(result.isCorrect) {
+                    await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                        xpGain: challenge.difficulty.valueXP
+                    });
+                }
 
                 saveCodeAnswers(result);
 
