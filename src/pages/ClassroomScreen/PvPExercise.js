@@ -14,7 +14,6 @@ import { Dimensions } from 'react-native';
 import RenderJsonContent from "../../components/RenderJsonContent/RenderJsonContent";
 import Axios from "../../api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CardComponent from "../../components/Card/CardComponent";
 import CodeEditorComponent from "../../components/CodeEditor/CodeEditorComponent";
 import RenderAlternativesComponent from "../../components/QuizExercise/RenderAlternativesComponent";
 import ButtonComponent from "../../components/Buttons/ButtonComponent";
@@ -23,10 +22,11 @@ import SyntaxHighlighter from 'react-native-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/styles/hljs';
 import { SocketContext } from '../../utils/Socket/socket';
 import UserScoreComponent from "../../components/PlayerVSPlayer/UserScoreComponent";
+import PvPResult from "../../components/PlayerVSPlayer/PvPResult";
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function PvPExercise({ navigation, route }) {
+export default function PvPExercise({ navigation, route }) {exercises
     const socket = useContext(SocketContext);
     const roomNumber = route.params.roomNumber;
     
@@ -36,16 +36,17 @@ export default function PvPExercise({ navigation, route }) {
     const [exercises, setExercises] = useState([]);
     const [error, setError] = useState('');
     const [checked, setChecked] = useState(0);
-    const [answers, setAnswers] = useState([]);
     const [answered, setAnswered] = useState(false);
     const [numberOfExercises, setNumberOfExercises] = useState(0);
-    const [codeQuestionAnswered, setCodeQuestionAnswered] = useState(false);
     const [currentTechnology, setCurrentTechnology] = useState({});
     const [userAnswers, setUserAnswers] = useState([]);
     const [opponent, setOpponent] = useState({});
     const [opponentAnswers, setOpponentAnswers] = useState([]);
     const [waitingOpponent, setWaitingOpponent] = useState(false);
     const [finished, setFinished] = useState(false);
+    const [userXp, setUserXp] = useState(0);
+    const [opponentXp, setOpponentXp] = useState(0);
+    const [winner, setWinner] = useState(0);
 
     useEffect(() => {
         async function getData() {
@@ -68,9 +69,20 @@ export default function PvPExercise({ navigation, route }) {
     }, []);
 
     useEffect(() => {
-        socket.on('randomizedExercises', async (exercises, usersID) => {
-            setExercises(exercises);
-            setNumberOfExercises(exercises.length);
+        socket.on('randomizedExercises', async (challenges, usersID) => {
+            let allExercises = challenges.map((challenge) => {
+                let exercises = challenge.exercises.map((exercise) => {
+                    return {
+                        ...exercise, 
+                        xp: challenge.difficulty.valueXP
+                    }
+                });
+
+                return exercises;
+            });
+
+            setExercises(allExercises.flat());
+            setNumberOfExercises(allExercises.flat().length);
             
             try {
                 if(user) {
@@ -97,8 +109,9 @@ export default function PvPExercise({ navigation, route }) {
             socket.off('opponentAnswer');
             socket.off('goToNextQuestion');
             socket.off('challengeFinished');
+            socket.off('randomizedExercises');
         }
-    }, [exercises, userAnswers, questionNumber, finished]);
+    }, [exercises, userAnswers, questionNumber, finished, opponent]);
 
     const socketEventOpponentAnwswer = () => {
         socket.on('opponentAnswer', (isCorrect) => {           
@@ -106,6 +119,10 @@ export default function PvPExercise({ navigation, route }) {
                 exerciseID: exercises[questionNumber].exerciseID,
                 isCorrect
             }]);
+
+            if(isCorrect) {
+                setOpponentXp(opponentXp + exercises[questionNumber].xp)
+            }
 
             let userAnswered = userAnswers.findIndex((answer) => answer.exerciseID === exercises[questionNumber].exerciseID);
             
@@ -130,7 +147,32 @@ export default function PvPExercise({ navigation, route }) {
     }
 
     const socketEventChallengeFinished = () => {
-        socket.on('challengeFinished', () => {
+        socket.on('challengeFinished', async () => {
+            let userCorrect = userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
+            let opponentCorrect = opponentAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
+
+            if(userCorrect > opponentCorrect) {
+                setWinner(1);
+            } else if(userCorrect < opponentCorrect) {
+                setWinner(0);
+            } else {
+                setWinner(-1);
+            }
+
+            try {
+                if(userCorrect > opponentCorrect) {
+                    await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                        xpGain: userXp
+                    });
+                } else if(userCorrect === opponentCorrect) {
+                    await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                        xpGain: 10
+                    });
+                }
+            } catch(e) {
+                setError(e.response.data.message);
+            }
+            
             setFinished(true);
         });
     }
@@ -185,6 +227,10 @@ export default function PvPExercise({ navigation, route }) {
             isCorrect
         }]);
 
+        if(isCorrect) {
+            setUserXp(userXp + exercises[questionNumber].xp);
+        }
+
         setWaitingOpponent(true);
     }
 
@@ -201,80 +247,17 @@ export default function PvPExercise({ navigation, route }) {
                             finished && (
                                 <>
                                     <View style={styles.finishedChellenge}>
-                                        {
-                                            userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0) < opponentAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0) && (
-                                                <View style={styles.result}>
-                                                    <Text style={styles.finishedResultLost}>Derrota</Text>
-                                                    <View style={styles.scoreContent}>
-                                                        <UserScoreComponent 
-                                                            user={user}
-                                                            userAnswers={userAnswers}
-                                                            questionNumber={questionNumber}
-                                                            size={1.5}
-                                                            finished={true}
-                                                        />
-
-                                                        <UserScoreComponent 
-                                                            user={opponent}
-                                                            userAnswers={opponentAnswers}
-                                                            questionNumber={questionNumber}
-                                                            size={2}
-                                                            finished={true}
-                                                        />
-                                                    </View>
-                                                </View>
-                                            )
-                                        }
-
-                                        {
-                                            userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0) > opponentAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0) && (
-                                                <View style={styles.result}>
-                                                    <Text style={styles.finishedResultWin}>Vitória</Text>
-                                                    <View style={styles.scoreContent}>
-                                                        <UserScoreComponent 
-                                                            user={user}
-                                                            userAnswers={userAnswers}
-                                                            questionNumber={questionNumber}
-                                                            size={2}
-                                                            finished={true}
-                                                        />
-
-                                                        <UserScoreComponent 
-                                                            user={opponent}
-                                                            userAnswers={opponentAnswers}
-                                                            questionNumber={questionNumber}
-                                                            size={1.5}
-                                                            finished={true}
-                                                        />
-                                                    </View>
-                                                </View>
-                                            )
-                                        }
-
-                                        {
-                                            userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0) === opponentAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0) && (
-                                                <View style={styles.result}>
-                                                    <Text style={styles.finishedResultDraw}>Empate</Text>
-                                                    <View style={styles.scoreContent}>
-                                                        <UserScoreComponent 
-                                                            user={user}
-                                                            userAnswers={userAnswers}
-                                                            questionNumber={questionNumber}
-                                                            size={2}
-                                                            finished={true}
-                                                        />
-
-                                                        <UserScoreComponent 
-                                                            user={opponent}
-                                                            userAnswers={opponentAnswers}
-                                                            questionNumber={questionNumber}
-                                                            size={2}
-                                                            finished={true}
-                                                        />
-                                                    </View>
-                                                </View>
-                                            )
-                                        }
+                                        <PvPResult 
+                                            user={user}
+                                            userAnswers={userAnswers}
+                                            opponent={opponent}
+                                            opponentAnswers={opponentAnswers}
+                                            questionNumber={questionNumber}
+                                            winner={winner}
+                                            userXp={userXp}
+                                            opponentXp={opponentXp}
+                                            drawXp={10}
+                                        />
                                     </View>
                                     <View style={styles.buttonGroup}>
                                         <ButtonComponent onPress={quitTest} newStyle={{ width: '100%' }}>
@@ -308,8 +291,6 @@ export default function PvPExercise({ navigation, route }) {
                                                     questionNumber={questionNumber}
                                                 />
                                             </View>
-
-                                            <View style={styles.separator} />
 
                                             <Text style={styles.title}>Questão {questionNumber + 1}</Text>
 
@@ -390,7 +371,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        width: '100%'
+        width: '100%',
+        borderBottomWidth: 0.5,
+        borderBottomColor: Colors.TEXT_COLOR,
+        marginBottom: 10
     },
     
     title: {
@@ -420,12 +404,6 @@ const styles = StyleSheet.create({
 
     editorStyle: {
         marginBottom: 20,
-    },
-
-    separator: {
-        marginVertical: 10,
-        borderWidth: .5,
-        borderColor: Colors.TEXT_COLOR
     },
 
     buttonGroup: {
@@ -478,27 +456,8 @@ const styles = StyleSheet.create({
 
     finishedChellenge: {
         flex: 1,
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
-    },
-
-    result: {
-        justifyContent: 'center',
-        alignItems: 'center'
-    },  
-
-    finishedResultLost: {
-        fontSize: 50,
-        color: Colors.RED_ERROR_ICON
-    },
-
-    finishedResultWin: {
-        fontSize: 50,
-        color: Colors.GREEN_CHECK_ICON
-    },
-
-    finishedResultDraw: {
-        fontSize: 50,
-        color: Colors.TEXT_COLOR
-    }
+    }    
 })

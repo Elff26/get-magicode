@@ -33,8 +33,9 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user 
         return () => {
             socket.off('roomNumber');
             socket.off('initChallenge');
+            socket.off('roomNotExists');
         }
-    }, [user, roomNumber]);
+    }, [user, roomNumber, error]);
 
     async function copyCodeToClipboard() {
         await Clipboard.setStringAsync(createdRoomNumber);
@@ -46,7 +47,7 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user 
     }
 
     async function acceptChallenge() {
-        setError("Sala não existe");
+        setError("");
         socket.emit('acceptChallenge', roomNumber, user.userID);
     }
 
