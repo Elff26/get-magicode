@@ -36,7 +36,7 @@ export default function Ranking({ navigation }) {
 
                     let ranking = users.map((userRank) => {
                         return {
-                            xp: userRank.monthXp ? userRank.monthXp : userRank.totalXp,
+                            xp: currentRankType === "month" ? userRank.monthXp : userRank.totalXp,
                             user: userRank.user
                         }
                     });
@@ -100,32 +100,25 @@ export default function Ranking({ navigation }) {
                     <Text style={styles.rankTypeText}>Mensal</Text>
                 </TouchableOpacity>
             </View>
+
+            {
+                topUsers.length > 0 && (
+                    <TopThreeUsers 
+                        usersRank={topUsers}
+                    />
+                )
+            }
             
             {
-                otherUsers.length > 0 || topUsers.length > 0 && (
+                otherUsers.length > 0 && (
                     <FlatList
-                        data={otherUsers > 0 ? otherUsers : topUsers}
+                        data={otherUsers}
                         contentContainerStyle={styles.otherUsersRanking}
                         renderItem={(user) => (
-                            <>
-                                {
-                                    user.index === 0 && topUsers.length > 0 && (
-                                        <TopThreeUsers 
-                                            usersRank={topUsers}
-                                        />
-                                    )
-                                }
-
-                                {
-                                    otherUsers > 0 && (
-                                        <UserRank 
-                                            userRank={user.item}
-                                            position={user.index + 4}
-                                        />
-                                    )
-                                }
-                                
-                            </>
+                            <UserRank 
+                                userRank={user.item}
+                                position={user.index + 4}
+                            />
                         )}
                     />
                 )

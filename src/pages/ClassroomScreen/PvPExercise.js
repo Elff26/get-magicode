@@ -216,7 +216,6 @@ export default function PvPExercise({ navigation, route }) {exercises
 
             return response.data.result.isCorrect;
         } catch(e) {
-            console.log(e.response.data.message);
             setError(e.response.data.message);
         }
     }
