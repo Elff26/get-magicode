@@ -1,10 +1,9 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
     KeyboardAvoidingView,
     Platform,
     StyleSheet, 
     Text, 
-    TextInput, 
     TouchableOpacity, 
     View 
 } from 'react-native';
@@ -15,6 +14,7 @@ import Header from '../../components/Header/HeaderComponent';
 import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
+import InputTextComponent from '../../components/InputText/InputTextComponent';
 
 export default function Login({ route, navigation }) {
     const routeParams = route;
@@ -77,46 +77,48 @@ export default function Login({ route, navigation }) {
             
             <View style={styles.principalView}>
                 <Text style={styles.titleLogo}>Get MagiCode</Text>
-                <View>
-                    <Text style={styles.titlePage}>Login</Text>
-                    <TextInput
-                        style={styles.textInput}
-                        onChangeText={setEmail}
-                        value={email}
-                        placeholder='E-mail'
-                        autoComplete="email"
-                        keyboardType="email-address"
-                        textContentType='emailAddress'
-                        autoCapitalize='none'
-                    />
+
+                <Text style={styles.titlePage}>Login</Text>
+
+                <InputTextComponent
+                    onChangeText={setEmail}
+                    value={email}
+                    icon='mail'
+                    placeholder='E-mail'
+                    autoComplete="email"
+                    keyboardType="email-address"
+                    textContentType='emailAddress'
+                    autoCapitalize='none'
+                >
                     {
                         (email.trim() === '' && submited) && (
                             <Text style={styles.errorText}>Email is required</Text>
                         )
                     }
+                </InputTextComponent>
 
-                    <TextInput
-                        style={styles.textInput}
-                        onChangeText={setPassword}
-                        value={password}
-                        secureTextEntry={true}
-                        placeholder='Password'
-                    />
+                <InputTextComponent
+                    onChangeText={setPassword}
+                    value={password}
+                    secureTextEntry={true}
+                    placeholder='Senha'
+                    icon='lock'
+                >
                     {
                         (password.trim() === '' && submited) && (
                             <Text style={styles.errorText}>Password is required</Text>
                         )
                     }
+                </InputTextComponent>
 
-                    <Text style={styles.errorText}>{error}</Text>
+                <Text style={styles.errorText}>{error}</Text>
 
-                    <ButtonComponent newStyle={styles.button} onPress={loginUser} isLoading={isLoading}>
-                        <Text style={styles.textButton}>Entrar</Text>
-                    </ButtonComponent>
-                    <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
-                        <Text style={styles.textForgotPassword}>Esqueci a senha</Text>
-                    </TouchableOpacity>
-                </View>
+                <ButtonComponent newStyle={styles.button} onPress={loginUser} isLoading={isLoading}>
+                    <Text style={styles.textButton}>Entrar</Text>
+                </ButtonComponent>
+                <TouchableOpacity style={styles.buttonForgotPassword} onPress={goToForgotPasswordEmail}>
+                    <Text style={styles.textForgotPassword}>Esqueci a senha</Text>
+                </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
     );
@@ -148,21 +150,11 @@ const styles = StyleSheet.create({
         color: Colors.TEXT_COLOR
     },
 
-    textInput: {
-        width: 232,
-        height: 35,
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 50,
-        textAlign: 'center',
-        marginTop: 25,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND
-    },
-
     button: {
-        width: 198,
+        width: 200,
         height: 46,
         borderRadius: 40,
+        alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Colors.PRIMARY_COLOR,

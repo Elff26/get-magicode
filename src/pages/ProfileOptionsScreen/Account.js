@@ -19,6 +19,8 @@ import { Dimensions } from "react-native";
 import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
+import MaskTextComponent from '../../components/InputText/MaskTextComponent';
+import InputTextComponent from '../../components/InputText/InputTextComponent';
 
 var width = Dimensions.get('window').width; 
 
@@ -113,43 +115,43 @@ export default function Account({navigation}) {
                 <View>
                     <Text style={styles.titleLogo}>Dados da conta</Text> 
 
-                    <TextInput
+                    <InputTextComponent
                         value={name}
                         onChangeText={setName}
                         editable={editData}
-                        style={styles.textInput}
                         placeholder="Nome"
+                        icon='user'
                     />
 
-                    <TextInput
+                    <InputTextComponent
                         value={email}
                         onChangeText={setEmail}
                         editable={editData}
-                        style={styles.textInput}
                         placeholder="E-mail"
                         autoComplete="email"
                         keyboardType="email-address"
                         textContentType='emailAddress'
                         autoCapitalize='none'
+                        icon='mail'
                     />
 
-                    <MaskInput
+                    <MaskTextComponent 
                         placeholder='Telefone'
                         onChangeText={(masked, unmasked) => setPhone(unmasked)}
                         value={phone}
-                        style={styles.textInput}
                         mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
                         keyboardType="phone-pad"
                         editable={editData}
+                        icon='phone'
                     />
 
-                    <MaskInput
+                    <MaskTextComponent 
                         placeholder='Data de Nascimento'
                         onChangeText={(masked, unmasked) => setBirthday(masked)}
                         value={birthday}
-                        style={styles.textInput}
                         mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
                         editable={editData}
+                        icon='calendar'
                     />
 
                     <Text style={styles.errorText}>{error}</Text>
@@ -205,18 +207,6 @@ const styles = StyleSheet.create({
     bottonText: {
         color: Colors.TEXT_COLOR,
         fontSize: 20
-    },
-
-    textInput:{
-        width: width - 20,
-        height: 40,
-        padding: 10,
-        marginTop: 20,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
-        textAlign: 'center',
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 20
     },
 
     errorText: {

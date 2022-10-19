@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { StyleSheet,Text, TextInput, View} from "react-native";
+import { StyleSheet,Text, View} from "react-native";
 import Axios from "../../api/api";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import InputTextComponent from "../../components/InputText/InputTextComponent";
 
 
 export default function ForgotPasswordCode({navigation}) {
@@ -54,11 +55,12 @@ export default function ForgotPasswordCode({navigation}) {
                 </View>
                 <View style={styles.formCode}>
                     <Text style={styles.descriptionCode}>Informe o código que foi enviado no seu email</Text>
-                    <TextInput
+  
+                    <InputTextComponent
                         placeholder= "Código"
                         value={code}
                         onChangeText= {setCode}
-                        style={styles.textInputCode}
+                        icon='key'
                     />
 
                     <Text style={styles.errorText}>{error}</Text>
@@ -96,19 +98,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         alignItems: 'center',
         padding: 5
-    },
-
-    textInputCode:{
-        width: 304,
-        height: 40,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 20,
-        textAlign: 'center',
-        justifyContent: 'center',
-        marginBottom: 30,
-        marginTop: 30,
     },
 
     textValidationButton:{

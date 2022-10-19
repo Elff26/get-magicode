@@ -156,7 +156,7 @@ const ListChallenges = ({ route, navigation }) => {
                             >
                                 {
                                     difficulties.map((difficulty) => (
-                                        <Picker.Item label={difficulty.description} value={difficulty} />
+                                        <Picker.Item style={styles.pickerItem} key={difficulty.difficultyID} label={difficulty.description} value={difficulty} />
                                     ))
                                 }
                             </Picker>
@@ -177,7 +177,7 @@ const ListChallenges = ({ route, navigation }) => {
                                     onScrollToIndexFailed={() => {}}
                                     inverted={true}
                                     renderItem={({ item, index }) => (
-                                        <View key={index} style={styles.challengesGroup}>
+                                        <View key={item.challengeID} style={styles.challengesGroup}>
                                             <PathSide index={index} completed={index < challengeToDo} animated={challengeToDo === index ? true : false} todo={challengeToDo}>
                                                 <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index)}>
                                                     <AnimatedButtonGroupComponent item={item} animated={challengeToDo === index ? true : false} />
@@ -265,5 +265,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginLeft: 5,
         marginTop: 5
+    },
+
+    pickerItem: {
+        textAlign: 'center',
+        color: Colors.PRIMARY_COLOR,
+        fontSize: 20
     }
 })

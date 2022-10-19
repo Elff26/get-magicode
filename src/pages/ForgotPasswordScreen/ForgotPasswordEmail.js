@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { StyleSheet,Text, TextInput, View} from "react-native";
+import { StyleSheet,Text, View} from "react-native";
 import Axios from "../../api/api";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import InputTextComponent from "../../components/InputText/InputTextComponent";
 
 
 export default function ForgotPasswordEmail({navigation}) {
@@ -48,17 +49,18 @@ export default function ForgotPasswordEmail({navigation}) {
                     <Text style={styles.description}>Informe um email para enviarmos um código de recuperação de senha</Text>
                 </View>
                 <View style={styles.form}>
-                    <TextInput
+                    <InputTextComponent
                         value={email}
                         placeholder= "Email"
                         onChangeText= {setEmail}
-                        style={styles.textInput}
-                    />
-                    {
-                        (email.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Email is required</Text>
-                        )
-                    }
+                        icon='mail'
+                    >
+                        {
+                            (email.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>Email is required</Text>
+                            )
+                        }
+                    </InputTextComponent>
 
                     <Text style={styles.errorText}>{error}</Text>
 
@@ -95,20 +97,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    textInput:{
-        width: 304,
-        height: 40,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 20,
-        textAlign: 'center',
-        justifyContent: 'center'
-    },
-
     textSendButton:{
         color: Colors.WHITE_SAFE_COLOR
     },
+    
     buttonEmail: {
         width: 198,
         height: 49,

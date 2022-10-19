@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { 
-    ActivityIndicator,
     SafeAreaView, 
     StyleSheet, 
     Text, 
-    TextInput, 
     View 
 } from 'react-native';
 
@@ -17,6 +15,7 @@ import { Dimensions } from "react-native";
 import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
+import InputTextComponent from '../../components/InputText/InputTextComponent';
 
 var width = Dimensions.get('window').width; 
 
@@ -75,31 +74,33 @@ export default function ChangePassword({navigation}) {
                 <Text style={styles.titleLogo}>Alteração de Senha</Text> 
 
                 <View>
-                    <TextInput
+                    <InputTextComponent
                         value={password}
                         onChangeText={setPassword}
-                        style={styles.textInput}
                         placeholder="Confirme sua senha"
                         secureTextEntry={true}
-                    />
-                    {
-                        (password.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Password is required</Text>
-                        )
-                    }
+                        icon='lock'
+                    >
+                        {
+                            (password.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>Password is required</Text>
+                            )
+                        }
+                    </InputTextComponent>
 
-                    <TextInput
+                    <InputTextComponent
                         value={newPassword}
                         onChangeText={setNewPassword}
-                        style={styles.textInput}
                         placeholder="Digite a nova senha"
                         secureTextEntry={true}
-                    />
-                    {
-                        (newPassword.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>New password is required</Text>
-                        )
-                    }
+                        icon='lock'
+                    >
+                        {
+                            (newPassword.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>New password is required</Text>
+                            )
+                        }
+                    </InputTextComponent>
 
                     <Text style={styles.errorText}>{error}</Text>
                 </View>
@@ -147,18 +148,6 @@ const styles = StyleSheet.create({
     buttonText: {
         color: Colors.WHITE_SAFE_COLOR,
         fontSize: 20
-    },
-
-    textInput:{
-        width: width - 20,
-        height: 40,
-        padding: 10,
-        marginTop: 20,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
-        textAlign: 'center',
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 20
     },
 
     errorText: {

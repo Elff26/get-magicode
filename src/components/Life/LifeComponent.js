@@ -6,10 +6,12 @@ import {
 
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons'; 
 import Colors from '../../utils/ColorPallete/Colors';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import CardLifeComponent from '../Card/CardLifeComponent';
 
 export default function LifeCompoenent({ numberOfLifes }) {
     const [lifeArray, setLifeArray] = useState([]);
-    const [lifeDetails, setLifeDetails] = useState(false);
+    const [showCard, setShowCard] = useState(false);
 
     useEffect(() => {
         let i = 0;
@@ -28,22 +30,20 @@ export default function LifeCompoenent({ numberOfLifes }) {
         setLifeArray(lifes);
     }, [numberOfLifes]);
 
-    function showLifeDetails() {
-        setLifeDetails(true);
-    }
-    
     return (
-        <View style={styles.lifeComponentBar}>
+        <TouchableOpacity style={styles.lifeComponentBar} onPress={() => setShowCard(true)}>
             {
                 lifeArray.map((value, index) => {
                     return (
                         value === 1 ? 
-                            <AntDesign onPress={showLifeDetails} key={index} style={styles.lifeComponent} name="heart" size={24} color={Colors.RED_COLOR_DEFAULT} /> : 
-                            <FontAwesome5 onPress={showLifeDetails} style={styles.lifeComponent} key={index} name="heart-broken" size={24} color={Colors.RED_COLOR_DEFAULT} />
+                            <AntDesign key={index} style={styles.lifeComponent} name="heart" size={24} color={Colors.RED_COLOR_DEFAULT} /> : 
+                            <FontAwesome5 style={styles.lifeComponent} key={index} name="heart-broken" size={24} color={Colors.RED_COLOR_DEFAULT} />
                     )
                 })
             }
-        </View>
+
+            <CardLifeComponent showCard={showCard} setShowCard={setShowCard} numberOfLifes={numberOfLifes} />
+        </TouchableOpacity>
     )
 }
 

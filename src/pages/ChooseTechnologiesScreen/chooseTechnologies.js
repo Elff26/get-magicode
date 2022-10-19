@@ -69,6 +69,8 @@ export default function ChooseTechnologies({ navigation }) {
             } catch(e) {
                 setError(e.response.data.message);
             }
+
+            setIsLoading(false);
         }
     }
     

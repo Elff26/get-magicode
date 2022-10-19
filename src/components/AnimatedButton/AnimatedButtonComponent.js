@@ -1,3 +1,4 @@
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { Easing, useSharedValue, withDelay, withRepeat, withTiming, useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
@@ -38,7 +39,15 @@ export default function AnimatedButtonComponent({ isBoss, delay, style, from, to
         <>
             <AnimatedView 
                 style={[style, buttonAnimation, isBoss ? { backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND } : {}]}
-            />
+            >
+                {
+                    isBoss ? (
+                        <AntDesign name="codesquareo" size={32} color={Colors.WHITE_SAFE_COLOR} />
+                    ) : (
+                        <FontAwesome5 name="book-open" color={Colors.WHITE_SAFE_COLOR} size={32} />
+                    )
+                }
+            </AnimatedView>
         </>
     )   
 }

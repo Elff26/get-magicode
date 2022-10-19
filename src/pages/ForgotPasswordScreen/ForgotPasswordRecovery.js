@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { StyleSheet,Text, TextInput, View} from "react-native";
+import { StyleSheet,Text, View} from "react-native";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import Axios from "../../api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import InputTextComponent from "../../components/InputText/InputTextComponent";
 
 export default function ForgotPasswordRecovery({navigation}) {
     const [userID, setUserID] = useState("");
@@ -46,6 +47,8 @@ export default function ForgotPasswordRecovery({navigation}) {
         } catch(e) {
             setError(e.response.data.message);
         }
+
+        setIsLoading(false);
     }
 
     return ( 
@@ -57,33 +60,38 @@ export default function ForgotPasswordRecovery({navigation}) {
                 </View>
                 <View style={styles.formRecovery}>
                     <Text style={styles.descriptionRecovery}>Informe sua nova senha:</Text>
-                    <TextInput
+
+                    <InputTextComponent
                         value={password}
                         placeholder= "Senha"
                         onChangeText= {setPassword}
-                        style={styles.textInputRecovery}
                         secureTextEntry={true}
-                    />
-                    {
-                        (password.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Password is required</Text>
-                        )
-                    }
+                        icon='lock'
+                    >
+                        {
+                            (password.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>Password is required</Text>
+                            )
+                        }
+                    </InputTextComponent>
+
                     <View>
                         <Text style={styles.descriptionRecovery}>Confirme sua nova senha:</Text>
                     </View>
-                    <TextInput
+
+                    <InputTextComponent
                         value={confirmPassword}
                         placeholder= "Confirme a senha"
                         onChangeText= {setConfirmPassword}
-                        style={styles.textInputRecovery}
                         secureTextEntry={true}
-                    />
-                    {
-                        (confirmPassword.trim() === '' && submited) || (confirmPassword !== password) && (
-                            <Text style={styles.errorText}>password and password confirmation do not match</Text>
-                        )
-                    }
+                        icon='lock'
+                    >
+                        {
+                            (confirmPassword.trim() === '' && submited) || (confirmPassword !== password) && (
+                                <Text style={styles.errorText}>password and password confirmation do not match</Text>
+                            )
+                        }
+                    </InputTextComponent>
 
                     <Text style={styles.errorText}>{error}</Text>
 
@@ -113,18 +121,6 @@ const styles = StyleSheet.create({
         color: Colors.PRIMARY_COLOR,
         fontSize: 30,
         textAlign: 'center'
-    },
-
-    textInputRecovery:{
-        width: 304,
-        height: 40,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 20,
-        textAlign: 'center',
-        justifyContent: 'center',
-        margin: 10
     },
 
     textAgreeButton:{

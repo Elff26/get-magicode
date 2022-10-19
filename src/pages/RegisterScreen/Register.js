@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-import MaskInput from 'react-native-mask-input';
 import { 
+    KeyboardAvoidingView,
     ScrollView,
     StyleSheet, 
     Text, 
-    TextInput,
     View,
     TouchableOpacity
 } from 'react-native'
@@ -14,6 +13,12 @@ import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
 import Colors from '../../utils/ColorPallete/Colors'
 import Axios from '../../api/api';
+import InputTextComponent from '../../components/InputText/InputTextComponent';
+import MaskTextComponent from '../../components/InputText/MaskTextComponent';
+import GoogleAuth from '../../utils/ThirdAuth/GoogleAuth';
+import FacebookAuth from '../../utils/ThirdAuth/FacebookAuth';
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
 const Register = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -29,9 +34,8 @@ const Register = ({ navigation }) => {
         setError('');
         setIsLoading(true);
         setSubmited(true);
-        let reg = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
 
-        if(!name || !email || !birthday || !phone || !password || !reg.test(email)) {
+        if(!name || !email || !birthday || !phone || !password || !regEmail(email)) {
             setIsLoading(false);
             return;
         }
@@ -68,104 +72,127 @@ const Register = ({ navigation }) => {
         }
     }
 
+    
+    const onGoogleAuthentication = async () => {
+        setError("");
+        GoogleAuth(navigation, setError)
+    }
+
+    const onFacebookAuthentication = async () => {
+        setError("");
+        FacebookAuth(navigation, setError);
+    }
+
+    function regEmail(email) {
+        return (/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/gi).test(email);
+    }
+
     return(
-        <ScrollView behavior={Platform.OS === "ios" ? "padding" : "height"} contentContainerStyle={styles.main} keyboardShouldPersistTaps={'handled'}>
-            <Header backArrow={true} navigation={navigation} />
+        <KeyboardAvoidingView style={styles.main}>
+            <ScrollView behavior={Platform.OS === "ios" ? "padding" : "height"} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps={'handled'}>
+                <Header backArrow={true} navigation={navigation} />
 
-            <Text style={styles.title}>Cadastre-se</Text>
+                <Text style={styles.title}>Cadastre-se</Text>
 
-            <TextInput
-                placeholder='Nome Completo'
-                onChangeText={setName}
-                value={name}
-                style={styles.textInput}
-            />
-            {
-                (name.trim() === '' && submited) && (
-                    <Text style={styles.errorText}>Name is required</Text>
-                )
-            }
             
-            <TextInput
-                placeholder='Email'
-                onChangeText={setEmail}
-                value={email}
-                style={styles.textInput}
-                autoComplete="email"
-                keyboardType="email-address"
-                textContentType='emailAddress'
-                autoCapitalize='none'
-            />
-            {
-                (email.trim() === '' && submited) && (
-                    <Text style={styles.errorText}>Email is required</Text>
-                )
-            }
-            {
-                (email.trim() !== '' && !(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i.test(email)) && submited) && (
-                    <Text style={styles.errorText}>Invalid email</Text>
-                )
-            }
+                <InputTextComponent
+                    placeholder='Nome Completo'
+                    onChangeText={setName}
+                    value={name}
+                    icon='user'
+                >
+                    {
+                        (name.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Name is required</Text>
+                        )
+                    }
+                </InputTextComponent>     
 
-            <MaskInput
-                placeholder='Data de Nascimento'
-                onChangeText={(masked, unmasked) => setBirthday(masked)}
-                value={birthday}
-                style={styles.textInput}
-                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-            />
-            {
-                (birthday.trim() === '' && submited) && (
-                    <Text style={styles.errorText}>Birthday is required</Text>
-                )
-            }
+                <InputTextComponent
+                    placeholder='Email'
+                    onChangeText={setEmail}
+                    value={email}
+                    autoComplete="email"
+                    keyboardType="email-address"
+                    textContentType='emailAddress'
+                    autoCapitalize='none'
+                    icon='mail'
+                >
+                    {
+                        (email.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Email is required</Text>
+                        )
+                    }
+                    {
+                        (email.trim() !== '' && !(regEmail(email)) && submited) && (
+                            <Text style={styles.errorText}>Invalid email</Text>
+                        )
+                    }
+                </InputTextComponent>      
 
-            <MaskInput
-                placeholder='Telefone'
-                onChangeText={(masked, unmasked) => setPhone(unmasked)}
-                value={phone}
-                style={styles.textInput}
-                mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                keyboardType="phone-pad"
-            />
-            {
-                (phone.trim() === '' && submited) && (
-                    <Text style={styles.errorText}>Phone is required</Text>
-                )
-            }
+                <MaskTextComponent 
+                    placeholder='Data de Nascimento'
+                    onChangeText={(masked, unmasked) => setBirthday(masked)}
+                    value={birthday}
+                    mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+                    icon='calendar'
+                >
+                    {
+                        (birthday.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Birthday is required</Text>
+                        )
+                    }
+                </MaskTextComponent>
 
-            <TextInput
-                placeholder='Senha'
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
-                style={styles.textInput}
-            />
-            {
-                (password.trim() === '' && submited) && (
-                    <Text style={styles.errorText}>Password is required</Text>
-                )
-            }
+                <MaskTextComponent 
+                    placeholder='Telefone'
+                    onChangeText={(masked, unmasked) => setPhone(unmasked)}
+                    value={phone}
+                    mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                    keyboardType="phone-pad"
+                    icon='phone'
+                >
+                    {
+                        (phone.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Phone is required</Text>
+                        )
+                    }
+                </MaskTextComponent>            
 
-            <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
-                <Text style={styles.buttonText}>Criar Conta</Text>
-            </ButtonComponent>
+                <InputTextComponent
+                    placeholder='Senha'
+                    secureTextEntry={true}
+                    onChangeText={setPassword}
+                    value={password}
+                    icon='lock'
+                >
+                    {
+                        (password.trim() === '' && submited) && (
+                            <Text style={styles.errorText}>Password is required</Text>
+                        )
+                    }
+                </InputTextComponent>   
 
-            <Text style={styles.errorText}>{error}</Text>
+                <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
+                    <Text style={styles.buttonText}>Criar Conta</Text>
+                </ButtonComponent>
 
-            <View style={styles.viewLoginOptions}>
-                <Text style={styles.simpleText}>Ou entre com: </Text>
-                <View style={styles.loginOptions}>
-                    <TouchableOpacity>
-                        <FontAwesome5 name='facebook' size={24} color={Colors.BLUE_FACEBOOK_ICON} />
-                    </TouchableOpacity>
+                <Text style={styles.errorText}>{error}</Text>
 
-                    <TouchableOpacity>
-                        <MaterialCommunityIcons name='gmail' size={24} color={Colors.RED_GMAIL_ICON} />
-                    </TouchableOpacity>
+                <View style={styles.viewLoginOptions}>
+                    <Text style={styles.simpleText}>Ou entre com: </Text>
+                    <View style={styles.loginOptions}>
+                        <TouchableOpacity onPress={onFacebookAuthentication}>
+                            <FontAwesome5 name='facebook' size={24} color={Colors.BLUE_FACEBOOK_ICON} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={onGoogleAuthentication}>
+                            <MaterialCommunityIcons name='gmail' size={24} color={Colors.RED_GMAIL_ICON} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -175,8 +202,12 @@ const styles = StyleSheet.create({
     main:{
         flex: 1,       
         backgroundColor: Colors.WHITE_SAFE_COLOR,
+    },
+
+    scrollContent: {
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'space-around',
         paddingBottom: 30
     },
 
@@ -184,18 +215,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         fontSize: 34,
         color: Colors.PRIMARY_COLOR
-    },
-
-    textInput:{
-        width: 251.93,
-        height: 40,
-        padding: 10,
-        marginTop: 20,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
-        textAlign: 'center',
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 20
     },
 
     button: {

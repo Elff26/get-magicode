@@ -6,16 +6,21 @@ import {
 } from "react-native";
 import Colors from "../../utils/ColorPallete/Colors";
 import ButtonComponent from "../Buttons/ButtonComponent";
+import InputTextComponent from "../InputText/InputTextComponent";
 
 export default function PvPEnterRoom({ acceptChallenge, roomNumber, setRoomNumber, error }) {
     return (
         <>
             <Text style={styles.normalText}>Digite o código da sala</Text>
-            <TextInput
-                style={styles.codeInput}
+
+            <InputTextComponent
                 value={roomNumber}
                 onChangeText={setRoomNumber}
-                placeholder="Código"
+                placeholder= "Código"
+                icon='key'
+                style={{ 
+                    height: 30 
+                }}
             />
 
             <Text style={styles.errorText}>{error}</Text>

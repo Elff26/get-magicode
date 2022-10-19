@@ -1,3 +1,4 @@
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import {
     StyleSheet, 
     View
@@ -13,7 +14,7 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
                 animated && (
                     <View style={styles.content}>
                         <AnimatedButtonComponent 
-                            isBoss={item.isBoss}
+                            isBoss={item.typeChallenge === "boss"}
                             delay={3600}
                             style={styles.classImageAbsolute}
                             from={1}
@@ -24,7 +25,7 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
                             easingType={Easing.bounce}
                         />
                         <AnimatedButtonComponent 
-                            isBoss={item.isBoss}
+                            isBoss={item.typeChallenge === "boss"}
                             delay={4100}
                             style={styles.classImage}
                             from={0}
@@ -40,7 +41,15 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
 
             {
                 !animated && (
-                    <View style={[styles.classImage, item.isBoss ? { backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND } : {}]} />
+                    <View style={[styles.classImage, item.typeChallenge === "boss" ? { backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND } : {}]}>
+                        {
+                            item.typeChallenge === "boss" ? (
+                                <AntDesign name="codesquareo" size={32} color={Colors.WHITE_SAFE_COLOR} />
+                            ) : (
+                                <FontAwesome5 name="book-open" color={Colors.WHITE_SAFE_COLOR} size={32} />
+                            )
+                        }
+                    </View>
                 )
             }
         </>
@@ -60,13 +69,17 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         position: 'absolute',
         top: 0,
-        left: 0
+        left: 0,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 
     classImage: {
         width: 100,
         height: 100,
         backgroundColor: Colors.PRIMARY_COLOR,
-        borderRadius: 50
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 })
