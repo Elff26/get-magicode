@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
     FlatList,
     Platform,
@@ -20,13 +20,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from '../../api/api';
 import { useIsFocused } from '@react-navigation/native';
 import PvPInviteCard from '../../components/PlayerVSPlayer/PvPInviteCard';
+import { Picker } from '@react-native-picker/picker';
 
 const ListChallenges = ({ route, navigation }) => {
+    const flatListRef = useRef();
+
     const routeParams = route;
     const isFocused = useIsFocused();
     const [user, setUser] = useState();
     const [challengeToDo, setChallengeToDo] = useState(null);
     const [challenges, setChallenges] = useState();
+    const [difficulties, setDifficulties] = useState([]);
+    const [selectedDifficulty, setSelectedDifficulty] = useState();
     const [openBottomSheet, setOpenBottomSheet] = useState(false);
     const [currentTechnology, setCurrentTechnology] = useState(null);
     const [error, setError] = useState("");
@@ -34,13 +39,23 @@ const ListChallenges = ({ route, navigation }) => {
 
     useEffect(() => {
         async function getData() {
-            
             var userData;
 
             if(routeParams.user) {
                 userData = routeParams.user;
             } else {
                 userData = JSON.parse(await AsyncStorage.getItem('@User'));
+            }
+
+            try {
+                const responseDifficulties = await Axios.get('/FindAllDifficulties');
+    
+                if(responseDifficulties.data.difficulties) {
+                    setDifficulties(responseDifficulties.data.difficulties);
+                    setSelectedDifficulty(responseDifficulties.data.difficulties[0]);
+                }
+            } catch(e) {
+                setError(e.response.data.message);
             }
 
             if(userData) {
@@ -75,19 +90,19 @@ const ListChallenges = ({ route, navigation }) => {
         async function getChallenges() {
             if(currentTechnology && currentTechnology.technology) {
                 try {
-                    const response = await Axios.get(`/FindChallengeByTechnology/${currentTechnology.technology.technologyID}`);
+                    const response = await Axios.get(`/FindChallengeByTechnologyAndDifficulty/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
 
                     if(response.data.challenges) {
                         setChallenges(response.data.challenges);
             
-                        const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnology/${user.userID}/${currentTechnology.technology.technologyID}`);
-                        
+                        const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnologyAndDifficulty/${user.userID}/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
+
                         if(responseUserChallenges.data.userChallenges) {
                             let userChallenges = responseUserChallenges.data.userChallenges;
                             let userChallengesLength = userChallenges.length;
     
                             let challengeToDoTemp = userChallenges.findIndex((item) => !item.completed);
-    
+
                             if(challengeToDoTemp !== -1) { 
                                 setChallengeToDo(challengeToDoTemp);
                             } else if(userChallengesLength < response.data.challenges.length) {
@@ -104,7 +119,7 @@ const ListChallenges = ({ route, navigation }) => {
         }
 
         getChallenges();
-    }, [currentTechnology]);
+    }, [currentTechnology, selectedDifficulty]);
 
     async function goToClassroomScreen(challenge) {
         try {
@@ -133,13 +148,33 @@ const ListChallenges = ({ route, navigation }) => {
                             numberOfLifes={user.numberOfLifes}
                         />
 
+                        <View style={styles.pickerConteiner}>
+                            <Picker 
+                                style={styles.picker}
+                                selectedValue={selectedDifficulty}
+                                onValueChange={(itemValue) => setSelectedDifficulty(itemValue)}
+                            >
+                                {
+                                    difficulties.map((difficulty) => (
+                                        <Picker.Item label={difficulty.description} value={difficulty} />
+                                    ))
+                                }
+                            </Picker>
+                        </View>
+
                         {
                             challengeToDo != null && (
                                 <FlatList 
                                     extraData={user}
+                                    ref={flatListRef}
                                     style={styles.challenges}
                                     data={challenges}
-                                    initialScrollIndex={challengeToDo}
+                                    onContentSizeChange={() => {
+                                        if (challengeToDo && challengeToDo > 1) {
+                                            flatListRef.current.scrollToIndex({  index: challengeToDo });
+                                        }
+                                    }}
+                                    onScrollToIndexFailed={() => {}}
                                     inverted={true}
                                     renderItem={({ item, index }) => (
                                         <View key={index} style={styles.challengesGroup}>
@@ -221,5 +256,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         right: 10
+    },
+
+    pickerConteiner: {
+        borderWidth: 1,
+        borderColor: Colors.LIGHT_GRAY,
+        width: '50%',
+        borderRadius: 10,
+        marginLeft: 5,
+        marginTop: 5
     }
 })

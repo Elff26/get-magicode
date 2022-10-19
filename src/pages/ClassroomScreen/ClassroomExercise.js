@@ -13,13 +13,13 @@ import { Dimensions } from 'react-native';
 import RenderJsonContent from "../../components/RenderJsonContent/RenderJsonContent";
 import Axios from "../../api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CardComponent from "../../components/Card/CardComponent";
 import CodeEditorComponent from "../../components/CodeEditor/CodeEditorComponent";
 import RenderAlternativesComponent from "../../components/QuizExercise/RenderAlternativesComponent";
 import ButtonComponent from "../../components/Buttons/ButtonComponent";
 import OutputTerminal from "../../components/OutputTerminal/OutputTerminal";
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/styles/hljs';
+import CardChallengeFinishedComponent from "../../components/Card/CardChallengeFinishedComponent";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -69,7 +69,7 @@ export default function ClassroomExercise({ navigation, route }) {
                     let result = answers.filter((item) => item.isCorrect).length / challenge.exercises.length;
                     setResult(result);
         
-                    if(result <= 0.5) {
+                    if(result < 0.5) {
                         const response = await Axios.put(`DecreaseNumberOfLifes/${user.userID}`);
     
                         if(response.data.numberOfLifes) {
@@ -246,7 +246,7 @@ export default function ClassroomExercise({ navigation, route }) {
     }
 
     return (
-        <View style={[styles.screenContainer, showCard ? { backgroundColor: Colors.BOTTOM_SHEET_SCREEN_BACKGROUND } : {}]}>
+        <View style={styles.screenContainer}>
             {
                 challenge && (
                     <>
@@ -286,7 +286,7 @@ export default function ClassroomExercise({ navigation, route }) {
                                     </View>
                         </ScrollView>
 
-                        <View style={[styles.buttonGroup, { opacity: + !showCard }]}>
+                        <View style={styles.buttonGroup}>
                             <ButtonComponent newStyle={questionNumber === 0 ? styles.newStyleButtonDisabled : styles.newStyleButton} disabled={questionNumber === 0} onPress={returnToPreviousQuestion}>
                                 <Text style={styles.textButton}>
                                     <Feather name="chevron-left" color={Colors.WHITE_SAFE_COLOR} size={32} />
@@ -324,7 +324,7 @@ export default function ClassroomExercise({ navigation, route }) {
                             
                         </View>
 
-                        <CardComponent
+                        <CardChallengeFinishedComponent
                             title="Resultado"
                             subtitle={`${(result * 100).toFixed(2)}%`}
                             message={result >= 0.5 ? "Parabéns, você foi aprovado!" : "Você foi reprovado, mas não desista! Estude e gabarite esse exercício!"}
@@ -333,6 +333,7 @@ export default function ClassroomExercise({ navigation, route }) {
                             buttonText={result >= 0.5 ? "Fechar" : "Voltar ao início"}
                             onPressButton={result >= 0.5 ? closeCard : returnToChallengeList}
                             isPercentage={true}
+                            setShowCard={setShowCard}
                         />
                     </>
                 )

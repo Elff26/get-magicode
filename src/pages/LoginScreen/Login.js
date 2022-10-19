@@ -46,6 +46,7 @@ export default function Login({ route, navigation }) {
         setSubmited(true);
 
         if(!email || !password) {
+            setIsLoading(false);
             return;
         }
 
@@ -60,9 +61,7 @@ export default function Login({ route, navigation }) {
                 setIsLoading(false);
                 navigation.navigate('BottomTabComponent');
             }
-            setIsLoading(false);
         } catch(e) {
-            setIsLoading(false);
             setError(e.response.data.message);
         }
         setIsLoading(false);

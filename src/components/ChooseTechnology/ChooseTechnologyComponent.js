@@ -8,7 +8,7 @@ import {
 import { AntDesign } from '@expo/vector-icons'; 
 import Colors from '../../utils/ColorPallete/Colors';
 
-export default function ChooseTechnologieComponent({ openBottomSheet, setOpenBottomSheet, currentTechnology }) { 
+export default function ChooseTechnologyComponent({ openBottomSheet, setOpenBottomSheet, currentTechnology }) { 
     const openChooseTech = () => {
         setOpenBottomSheet(!openBottomSheet);
     }

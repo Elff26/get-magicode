@@ -11,7 +11,7 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
         <>
             {
                 animated && (
-                    <>
+                    <View style={styles.content}>
                         <AnimatedButtonComponent 
                             isBoss={item.isBoss}
                             delay={3600}
@@ -34,7 +34,7 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
                             opacity={0.9}
                             easingType={Easing.circle}
                         />
-                    </>
+                    </View>
                 )
             }
 
@@ -48,10 +48,15 @@ export default function AnimatedButtonGroupComponent({ item, animated }) {
 }
 
 const styles = StyleSheet.create({
+    content: {
+        width: 100, 
+        height: 100
+    },
+
     classImageAbsolute: {
         width: 100,
         height: 100,
-        backgroundColor: Colors.PRIMARY_COLOR,
+        backgroundColor: Colors.PRIMARY_COLOR_DISABLED,
         borderRadius: 50,
         position: 'absolute',
         top: 0,

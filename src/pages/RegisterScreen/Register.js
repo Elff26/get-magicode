@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import MaskInput from 'react-native-mask-input';
 import { 
-    KeyboardAvoidingView,
+    ScrollView,
     StyleSheet, 
     Text, 
     TextInput,
     View,
-    TouchableOpacity,
-    ScrollView
+    TouchableOpacity
 } from 'react-native'
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
@@ -51,10 +50,16 @@ const Register = ({ navigation }) => {
             });
 
             if(response.data.user) {
-                setIsLoading(false);
-                navigation.navigate('Login', {
-                    userRegistered: true
-                });
+                let user = response.data.user;
+
+                const userStatisticsResponse = await Axios.post(`/CreateUserStatistics/${user.userID}`);
+
+                if(userStatisticsResponse.data.user) {
+                    setIsLoading(false);
+                    navigation.navigate('Login', {
+                        userRegistered: true
+                    });
+                }
             }
             setIsLoading(false);
         } catch(e) {
@@ -64,105 +69,103 @@ const Register = ({ navigation }) => {
     }
 
     return(
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.main}>
-            <ScrollView contentContainerStyle={styles.form}>
-                <Header backArrow={true} navigation={navigation} />
+        <ScrollView behavior={Platform.OS === "ios" ? "padding" : "height"} contentContainerStyle={styles.main} keyboardShouldPersistTaps={'handled'}>
+            <Header backArrow={true} navigation={navigation} />
 
-                <Text style={styles.title}>Cadastre-se</Text>
+            <Text style={styles.title}>Cadastre-se</Text>
 
-                <TextInput
-                    placeholder='Nome Completo'
-                    onChangeText={setName}
-                    value={name}
-                    style={styles.textInput}
-                />
-                {
-                    (name.trim() === '' && submited) && (
-                        <Text style={styles.errorText}>Name is required</Text>
-                    )
-                }
-                
-                <TextInput
-                    placeholder='Email'
-                    onChangeText={setEmail}
-                    value={email}
-                    style={styles.textInput}
-                    autoComplete="email"
-                    keyboardType="email-address"
-                    textContentType='emailAddress'
-                    autoCapitalize='none'
-                />
-                {
-                    (email.trim() === '' && submited) && (
-                        <Text style={styles.errorText}>Email is required</Text>
-                    )
-                }
-                {
-                    (email.trim() !== '' && !(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i.test(email)) && submited) && (
-                        <Text style={styles.errorText}>Invalid email</Text>
-                    )
-                }
+            <TextInput
+                placeholder='Nome Completo'
+                onChangeText={setName}
+                value={name}
+                style={styles.textInput}
+            />
+            {
+                (name.trim() === '' && submited) && (
+                    <Text style={styles.errorText}>Name is required</Text>
+                )
+            }
+            
+            <TextInput
+                placeholder='Email'
+                onChangeText={setEmail}
+                value={email}
+                style={styles.textInput}
+                autoComplete="email"
+                keyboardType="email-address"
+                textContentType='emailAddress'
+                autoCapitalize='none'
+            />
+            {
+                (email.trim() === '' && submited) && (
+                    <Text style={styles.errorText}>Email is required</Text>
+                )
+            }
+            {
+                (email.trim() !== '' && !(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i.test(email)) && submited) && (
+                    <Text style={styles.errorText}>Invalid email</Text>
+                )
+            }
 
-                <MaskInput
-                    placeholder='Data de Nascimento'
-                    onChangeText={(masked, unmasked) => setBirthday(masked)}
-                    value={birthday}
-                    style={styles.textInput}
-                    mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-                />
-                {
-                    (birthday.trim() === '' && submited) && (
-                        <Text style={styles.errorText}>Birthday is required</Text>
-                    )
-                }
+            <MaskInput
+                placeholder='Data de Nascimento'
+                onChangeText={(masked, unmasked) => setBirthday(masked)}
+                value={birthday}
+                style={styles.textInput}
+                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+            />
+            {
+                (birthday.trim() === '' && submited) && (
+                    <Text style={styles.errorText}>Birthday is required</Text>
+                )
+            }
 
-                <MaskInput
-                    placeholder='Telefone'
-                    onChangeText={(masked, unmasked) => setPhone(unmasked)}
-                    value={phone}
-                    style={styles.textInput}
-                    mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                    keyboardType="phone-pad"
-                />
-                {
-                    (phone.trim() === '' && submited) && (
-                        <Text style={styles.errorText}>Phone is required</Text>
-                    )
-                }
+            <MaskInput
+                placeholder='Telefone'
+                onChangeText={(masked, unmasked) => setPhone(unmasked)}
+                value={phone}
+                style={styles.textInput}
+                mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                keyboardType="phone-pad"
+            />
+            {
+                (phone.trim() === '' && submited) && (
+                    <Text style={styles.errorText}>Phone is required</Text>
+                )
+            }
 
-                <TextInput
-                    placeholder='Senha'
-                    secureTextEntry={true}
-                    onChangeText={setPassword}
-                    value={password}
-                    style={styles.textInput}
-                />
-                {
-                    (password.trim() === '' && submited) && (
-                        <Text style={styles.errorText}>Password is required</Text>
-                    )
-                }
+            <TextInput
+                placeholder='Senha'
+                secureTextEntry={true}
+                onChangeText={setPassword}
+                value={password}
+                style={styles.textInput}
+            />
+            {
+                (password.trim() === '' && submited) && (
+                    <Text style={styles.errorText}>Password is required</Text>
+                )
+            }
 
-                <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
-                    <Text style={styles.buttonText}>Criar Conta</Text>
-                </ButtonComponent>
+            <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
+                <Text style={styles.buttonText}>Criar Conta</Text>
+            </ButtonComponent>
 
-                <Text style={styles.errorText}>{error}</Text>
+            <Text style={styles.errorText}>{error}</Text>
 
-                <View style={styles.viewLoginOptions}>
-                    <Text style={styles.simpleText}>Ou entre com: </Text>
-                    <View style={styles.loginOptions}>
-                        <TouchableOpacity>
-                            <FontAwesome5 name='facebook' size={24} color={Colors.BLUE_FACEBOOK_ICON} />
-                        </TouchableOpacity>
+            <View style={styles.viewLoginOptions}>
+                <Text style={styles.simpleText}>Ou entre com: </Text>
+                <View style={styles.loginOptions}>
+                    <TouchableOpacity>
+                        <FontAwesome5 name='facebook' size={24} color={Colors.BLUE_FACEBOOK_ICON} />
+                    </TouchableOpacity>
 
-                        <TouchableOpacity>
-                            <MaterialCommunityIcons name='gmail' size={24} color={Colors.RED_GMAIL_ICON} />
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity>
+                        <MaterialCommunityIcons name='gmail' size={24} color={Colors.RED_GMAIL_ICON} />
+                    </TouchableOpacity>
                 </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+            </View>
+        </ScrollView>
     )
 }
 
@@ -171,10 +174,7 @@ export default Register
 const styles = StyleSheet.create({
     main:{
         flex: 1,       
-        backgroundColor: Colors.WHITE_SAFE_COLOR
-    },
-
-    form:{
+        backgroundColor: Colors.WHITE_SAFE_COLOR,
         flexDirection: 'column',
         alignItems: 'center',
         paddingBottom: 30

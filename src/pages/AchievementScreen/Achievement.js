@@ -13,7 +13,7 @@ import {
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DialogCardComponent from '../../components/DialogCard/DialogCardComponent';
+import AchievementCardComponent from '../../components/Card/AchievementCardComponent';
 
 export default function Achievement({ navigation }) {
     const [user, setUser] = useState({});
@@ -131,11 +131,11 @@ export default function Achievement({ navigation }) {
                 />
             </View> 
 
-            <DialogCardComponent 
+            <AchievementCardComponent 
                 title={selectedAchievement.name}
                 description={selectedAchievement.description}
-                onPressToClose={closeAchievementDialog}
-                visible={dialogOpened}
+                setShowCard={setDialogOpened}
+                showCard={dialogOpened}
             />
         </View>
     )

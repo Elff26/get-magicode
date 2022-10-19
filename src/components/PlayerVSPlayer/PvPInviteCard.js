@@ -2,9 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { Dimensions, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import Colors from "../../utils/ColorPallete/Colors";
 import ButtonComponent from '../Buttons/ButtonComponent';
-import * as Clipboard from 'expo-clipboard';
-import ToastComponent from "../Toast/ToastComponent";
 import { SocketContext } from '../../utils/Socket/socket';
+import PvPEnterRoom from "./PvPEnterRoom";
+import PvPCreateRoom from "./PvPCreateRoomComponent";
+import CardComponent from "../Card/CardComponent";
 
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
@@ -37,11 +38,6 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user 
         }
     }, [user, roomNumber, error]);
 
-    async function copyCodeToClipboard() {
-        await Clipboard.setStringAsync(createdRoomNumber);
-        ToastComponent('Copiado com sucesso');
-    }
-
     async function createRoom() {
         socket.emit('play', user.userID);
     }
@@ -51,81 +47,43 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user 
         socket.emit('acceptChallenge', roomNumber, user.userID);
     }
 
-    async function returnToCode() {
-        setCreatedRoomNumber("");
-    }
-
     return (
         <>
             {
                 showCard && (
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={showCard}
-                        onRequestClose={() => setShowCard(!showCard)}
+                    <CardComponent showCard={showCard} setShowCard={setShowCard}>
+                        <Text style={styles.pvpCardTitle}>Desafiar Jogadores</Text>
+                        {
+                            !createdRoomNumber && (
+                                <View style={styles.pvpCardContent}>
+                                    <PvPEnterRoom 
+                                        acceptChallenge={acceptChallenge} 
+                                        roomNumber={roomNumber} 
+                                        setRoomNumber={setRoomNumber} 
+                                        error={error} 
+                                    />
 
-                    >
-                        <TouchableOpacity style={styles.pvpCardBackground} onPressOut={() => setShowCard(!showCard)} activeOpacity={1}>
-                            <TouchableWithoutFeedback>
-                                <View style={styles.pvpCard}>
-                                    <Text style={styles.pvpCardTitle}>Desafiar Jogadores</Text>
-
-                                    {
-                                        !createdRoomNumber && (
-                                            <View style={styles.pvpCardContent}>
-                                                <Text style={styles.normalText}>Digite o código da sala</Text>
-                                                <TextInput
-                                                    style={styles.codeInput}
-                                                    value={roomNumber}
-                                                    onChangeText={setRoomNumber}
-                                                    placeholder="Código"
-                                                />
-
-                                                <Text style={styles.errorText}>{error}</Text>
-                                                <View style={styles.buttonsGroup}>
-                                                    <ButtonComponent onPress={acceptChallenge}>
-                                                        <Text style={styles.textButton}>Entrar</Text>
-                                                    </ButtonComponent>
-                                                </View>
-
-                                                <View style={styles.separator}></View>
-                                                <Text style={styles.normalText}>OU</Text>
-                                
-                                                <View style={styles.buttonsGroup}>
-                                                    <ButtonComponent onPress={createRoom}>
-                                                        <Text style={styles.textButton}>Criar uma sala</Text>
-                                                    </ButtonComponent>
-                                                    <ButtonComponent onPress={() => navigation.navigate('PvPExercise')}>
-                                                        <Text style={styles.textButton}>Encontrar uma partida</Text>
-                                                    </ButtonComponent>
-                                                </View>
-                                            </View>
-                                        )
-                                    }
-
-                                    {
-                                        (createdRoomNumber && createdRoomNumber !== "") ? (
-                                            <>
-                                                <Text style={styles.normalText}>Código da sala</Text>
-                                                <Text style={styles.textCode}>{createdRoomNumber}</Text>
-
-                                                <View style={styles.buttonsGroup}>
-                                                    <ButtonComponent onPress={copyCodeToClipboard}>
-                                                        <Text style={styles.textButton}>Copiar código</Text>
-                                                    </ButtonComponent>
-                                                    <ButtonComponent onPress={returnToCode}>
-                                                        <Text style={styles.textButton}>Voltar</Text>
-                                                    </ButtonComponent>
-                                                </View>
-                                            </>
-                                        ) : null
-                                    }
-                                    
+                                    <View style={styles.separator}></View>
+                                    <Text style={styles.normalText}>OU</Text>
+                    
+                                    <View style={styles.buttonsGroup}>
+                                        <ButtonComponent onPress={createRoom}>
+                                            <Text style={styles.textButton}>Criar uma sala</Text>
+                                        </ButtonComponent>
+                                    </View>
                                 </View>
-                            </TouchableWithoutFeedback>
-                        </TouchableOpacity>
-                   </Modal>
+                            )
+                        }
+
+                        {
+                            (createdRoomNumber && createdRoomNumber !== "") ? (
+                                <PvPCreateRoom 
+                                    createdRoomNumber={createdRoomNumber}
+                                    setCreatedRoomNumber={setCreatedRoomNumber}
+                                />
+                            ) : null
+                        }
+                    </CardComponent>
                 ) 
             }
         </>
@@ -162,18 +120,6 @@ const styles = StyleSheet.create({
         width: '100%'
     },
 
-    codeInput: {
-        width: '100%',
-        height: 35,
-        borderWidth: 1,
-        borderColor: Colors.PRIMARY_COLOR,
-        borderRadius: 50,
-        textAlign: 'center',
-        marginTop: 25,
-        backgroundColor: Colors.TEXT_INPUT_BACKGROUND,
-        color: Colors.TEXT_COLOR
-    },
-
     separator: {
         marginTop: 10,
         marginBottom: 5,
@@ -206,10 +152,5 @@ const styles = StyleSheet.create({
     textCode: {
         fontSize: 42,
         color: Colors.PRIMARY_COLOR
-    },
-
-    errorText: {
-        color: Colors.ERROR_COLOR,
-        textAlign: 'center'
     }
 })

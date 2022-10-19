@@ -84,10 +84,6 @@ export default function ChooseTechnologies({ navigation }) {
         setSelectedItems(selectedItems.filter(item => item != technology));
     }
 
-    function goToKnowledgeTest() {
-        navigation.navigate('KnowledgeTestIntro');
-    }
-
     return (
         <View style={styles.screenContainer}>
                 <Header backArrow={true} navigation={navigation} />
@@ -126,9 +122,6 @@ export default function ChooseTechnologies({ navigation }) {
                         onPress={associateUserToTechnology}
                         isLoading={isLoading}>
                         <Text style={styles.textButton}>Aprender</Text>
-                    </ButtonComponent>
-                    <ButtonComponent newStyle={styles.newStyleButton}>
-                        <Text style={styles.textButton} onPress={goToKnowledgeTest}>Fazer teste</Text>
                     </ButtonComponent>
                 </View>
         </View>
@@ -201,7 +194,7 @@ const styles = StyleSheet.create({
     },
 
     newStyleButton: {
-        width: '49%',
+        width: '70%',
         marginHorizontal: 10
     }
 })

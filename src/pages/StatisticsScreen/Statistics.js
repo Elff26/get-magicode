@@ -27,6 +27,7 @@ export default function Statistics({ navigation }) {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [numberOfClasses, setNumberOfClasses] = useState(0);
+    const [numberOfAchievements, setNumberOfAchievements] = useState(0);
 
     useEffect(() => {
         async function getData() {
@@ -34,6 +35,7 @@ export default function Statistics({ navigation }) {
                 let user = JSON.parse(await AsyncStorage.getItem('@User'))
                 const responseUser = await Axios.get(`/FindUserById/${user.userID}`);
                 const responseClasses = await Axios.get(`/CountAllClassrooms`);
+                const responseAchievements = await Axios.get(`/ListAchievementUserHave/${user.userID}`);
 
                 if(responseUser.data.user) {
                     setUser(responseUser.data.user);
@@ -43,6 +45,10 @@ export default function Statistics({ navigation }) {
 
                 if(responseClasses.data.numberOfClasses) {
                     setNumberOfClasses(responseClasses.data.numberOfClasses);
+                }
+
+                if(responseAchievements.data.achievements) {
+                    setNumberOfAchievements(responseAchievements.data.achievements.length);
                 }
             } catch (e) {
                 setError(e.response.data.message);
@@ -114,7 +120,7 @@ export default function Statistics({ navigation }) {
 
                                 <InfoComponent 
                                     title="Conquistas"
-                                    total={3}
+                                    total={numberOfAchievements}
                                     icon="award"
                                     backgroundColor={Colors.LIGHT_YELLOW}
                                     iconColor={Colors.YELLOW_ACHIEVEMENT_ICON}

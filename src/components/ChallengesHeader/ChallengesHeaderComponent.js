@@ -1,16 +1,14 @@
 import {
     StyleSheet,
-    TouchableOpacity,
     View
 } from 'react-native';
-
-import ChooseTechnologieComponent from '../ChooseTechnologie/ChooseTechnologieComponent';
+import ChooseTechnologyComponent from '../ChooseTechnology/ChooseTechnologyComponent';
 import LifeCompoenent from '../Life/LifeComponent'
 
 export default function ChallengesHeaderComponent({ navigation, openBottomSheet, setOpenBottomSheet, currentTechnology, numberOfLifes }) {
     return (
         <View style={styles.header}>
-            <ChooseTechnologieComponent navigation={navigation} openBottomSheet={openBottomSheet} setOpenBottomSheet={setOpenBottomSheet} currentTechnology={currentTechnology} />
+            <ChooseTechnologyComponent navigation={navigation} openBottomSheet={openBottomSheet} setOpenBottomSheet={setOpenBottomSheet} currentTechnology={currentTechnology} />
             <LifeCompoenent numberOfLifes={numberOfLifes} />
         </View>
     )
