@@ -197,6 +197,7 @@ export default function PvPExercise({ navigation, route }) {exercises
                 saveAnswers(response.data.alternativeIsCorrect);
             }
 
+            setChecked(null);
             return response.data.alternativeIsCorrect;
         } catch(e) {
             setError(e.response.data.message);
@@ -332,7 +333,14 @@ export default function PvPExercise({ navigation, route }) {exercises
 
                                         {
                                             questionNumber <= exercises.length && (
-                                                <ButtonComponent newStyle={{...styles.newStyleButton, backgroundColor: questionNumber === exercises.length ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR}} onPress={goToNextQuestion}>
+                                                <ButtonComponent 
+                                                    newStyle={{...styles.newStyleButton, 
+                                                            backgroundColor: questionNumber === exercises.length ? Colors.LIGHT_GREEN : 
+                                                                !checked && exercises[questionNumber].type === 'quiz' ? Colors.PRIMARY_COLOR_DISABLED : Colors.PRIMARY_COLOR
+                                                        }} 
+                                                        onPress={goToNextQuestion}
+                                                        disabled={!checked && exercises[questionNumber].type === 'quiz'}
+                                                    >
                                                     <Text style={styles.textButton}>
                                                         <Feather 
                                                             name={questionNumber === exercises.length ? "check" : "chevron-right"} 

@@ -8,20 +8,15 @@ import {
 } from "react-native";
 import Colors from "../../utils/ColorPallete/Colors";
 
-export default function UserScoreComponent({ user, userAnswers, questionNumber, size, finished, totalXp }) {
+export default function UserScoreComponent({ user, userAnswers, questionNumber }) {
     return (
         <View style={styles.scoreComponent}>
             <View style={styles.userImages}>
                 <View style={styles.imageContent}>
-                    {
-                        finished && !!totalXp && (
-                            <FontAwesome5 name="crown" color={Colors.GOLDEN_CROWN} size={28} />
-                        ) 
-                    }
-                    <Image style={[styles.userImage, size ? { width: 50 * size, height: 50 * size, borderRadius: 50 * size / 2 } : {}]} source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }} />
+                    <Image style={styles.userImage} source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }} />
                 </View>
                 {
-                    userAnswers.length - 1 === questionNumber && !finished && (
+                    userAnswers.length - 1 === questionNumber && (
                         <View key={userAnswers.length} style={[styles.iconBackground, userAnswers[questionNumber].isCorrect ? { backgroundColor: Colors.LIGHT_GREEN } : { backgroundColor: Colors.LIGHT_RED }]}>
                             {
                                 userAnswers[questionNumber].isCorrect ? (
@@ -34,13 +29,8 @@ export default function UserScoreComponent({ user, userAnswers, questionNumber, 
                     )
                 }
             </View>
-            <Text style={ !finished ? styles.userName : styles.userNameFinished}>{user.name}</Text>
-            <Text style={ !finished ? styles.score : styles.scoreFinished }>Acertos: {userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0)}</Text>
-            {
-                finished && !!totalXp && (
-                    <Text style={styles.xpText}>+ {totalXp}XP</Text>
-                ) 
-            }
+            <Text style={styles.userName}>{user.name}</Text>
+            <Text style={styles.score}>Acertos: {userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0)}</Text>
         </View>
     )
 }
@@ -88,20 +78,5 @@ const styles = StyleSheet.create({
     score: {
         fontSize: 20,
         textAlign: 'center'
-    },
-
-    userNameFinished: {
-        fontSize: 28,
-        textAlign: 'center'
-    },
-
-    scoreFinished: {
-        fontSize: 18,
-        textAlign: 'center'
-    },
-
-    xpText: {
-        color: Colors.GREEN_CHECK_ICON,
-        fontSize: 24
     }
 })

@@ -38,12 +38,14 @@ export default function PvPCreateRoom({ createdRoomNumber, setCreatedRoomNumber 
 const styles = StyleSheet.create({
     normalText: {
         fontSize: 18,
-        color: Colors.TEXT_COLOR
+        color: Colors.TEXT_COLOR,
+        textAlign: 'center',
     },
 
     textCode: {
         fontSize: 42,
-        color: Colors.PRIMARY_COLOR
+        color: Colors.PRIMARY_COLOR,
+        textAlign: 'center',
     },
  
     buttonsGroup: {

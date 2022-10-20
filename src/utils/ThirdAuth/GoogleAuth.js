@@ -19,7 +19,7 @@ export default async function GoogleAuth(navigation, setError) {
         
         if(authResponse.type === 'success') {
             const response = await axios.post(`SiginWithGoogle`, {
-            googleCode: authResponse.params.code
+                googleCode: authResponse.params.code
             });
 
             if(response.data.user && response.data.token) {

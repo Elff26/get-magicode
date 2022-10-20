@@ -4,39 +4,30 @@ import {
     View
 } from 'react-native';
 import Colors from '../../utils/ColorPallete/Colors';
-import UserScoreComponent from './UserScoreComponent';
+import UserScoreFinishedComponent from './UserScoreFinishedCompoment';
 
-export default function ({ user, userAnswers, opponent, opponentAnswers, questionNumber, winner, userXp, opponentXp, drawXp }) {
+export default function ({ user, userAnswers, questionNumber, winner, userXp, drawXp }) {
     return (
         <View style={styles.result}>
-            <Text style={ 
-                winner === 1 ? 
-                    styles.finishedResultWin : 
-                    (
-                        winner === 0 ? 
-                        styles.finishedResultLost : 
-                        styles.finishedResultDraw
-                    )
-            }>
-                { winner === 1 ? "Vitória" : (winner === 0 ? "Derrota" : "Empate") }
-            </Text>
+            <View style={styles.whiteBackground}>
+                <Text style={ 
+                    winner === 1 ? 
+                        styles.finishedResultWin : 
+                        (
+                            winner === 0 ? 
+                            styles.finishedResultLost : 
+                            styles.finishedResultDraw
+                        )
+                }>
+                    { winner === 1 ? "Vitória" : (winner === 0 ? "Derrota" : "Empate") }
+                </Text>
+            </View>
             <View style={styles.scoreContent}>
-                <UserScoreComponent
+                <UserScoreFinishedComponent
                     user={user}
                     userAnswers={userAnswers}
-                    questionNumber={questionNumber}
-                    size={winner === 1 ? 2 : (winner === 0 ? 1 : 1.5)}
-                    finished={true}
                     totalXp={winner === 1 ? userXp : (winner === 0 ? 0 : drawXp)}
-                />
-
-                <UserScoreComponent 
-                    user={opponent}
-                    userAnswers={opponentAnswers}
-                    questionNumber={questionNumber}
-                    size={winner === 1 ? 1 : (winner === 0 ? 2 : 1.5)}
-                    finished={true}
-                    totalXp={winner === 0 ? opponentXp : (winner === 1 ? 0 : drawXp)}
+                    winner={winner}
                 />
             </View>
         </View>
@@ -47,22 +38,31 @@ const styles = StyleSheet.create({
     result: {
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
+        backgroundColor: Colors.PRIMARY_COLOR
     }, 
+
+    whiteBackground: {
+        width: '100%',
+        backgroundColor: Colors.WHITE_SAFE_COLOR
+    },
 
     finishedResultLost: {
         fontSize: 50,
-        color: Colors.RED_ERROR_ICON
+        color: Colors.RED_ERROR_ICON,
+        textAlign: 'center'
     },
 
     finishedResultWin: {
         fontSize: 50,
-        color: Colors.GREEN_CHECK_ICON
+        color: Colors.GREEN_CHECK_ICON,
+        textAlign: 'center'
     },
 
     finishedResultDraw: {
         fontSize: 50,
-        color: Colors.TEXT_COLOR
+        color: Colors.TEXT_COLOR,
+        textAlign: 'center'
     },
 
     scoreContent: {

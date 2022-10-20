@@ -27,7 +27,7 @@ export default async function FacebookAuth(navigation, setError) {
 
           await SecureStore.setItemAsync(SECURE_STORE_KEY, token);
           await AsyncStorage.setItem("@Service", 'facebook');
-
+          
           if(!user.phone || !user.birthday) {
             navigation.navigate('ThirdRegisterMorInfo', {
               userID: user.userID
