@@ -61,7 +61,6 @@ export default function PvPExercise({ navigation, route }) {exercises
                 currentTech = currentTech[0];
             }
 
-            setCurrentTechnology(currentTech.technology.name);
             setUser(user);
         }
           
@@ -69,7 +68,7 @@ export default function PvPExercise({ navigation, route }) {exercises
     }, []);
 
     useEffect(() => {
-        socket.on('randomizedExercises', async (challenges, usersID) => {
+        socket.on('randomizedExercises', async (challenges, usersID, technologyName) => {
             let allExercises = challenges.map((challenge) => {
                 let exercises = challenge.exercises.map((exercise) => {
                     return {
@@ -81,6 +80,7 @@ export default function PvPExercise({ navigation, route }) {exercises
                 return exercises;
             });
 
+            setCurrentTechnology(technologyName);
             setExercises(allExercises.flat());
             setNumberOfExercises(allExercises.flat().length);
             
@@ -134,6 +134,7 @@ export default function PvPExercise({ navigation, route }) {exercises
 
     const socketEventGoToNextAnswer = () => {
         socket.on('goToNextQuestion', () => {
+            setChecked(null);
             setQuestionNumber(oldQuestionNumber => {
                 if(oldQuestionNumber < exercises.length - 1) {
                     return questionNumber + 1
@@ -197,7 +198,6 @@ export default function PvPExercise({ navigation, route }) {exercises
                 saveAnswers(response.data.alternativeIsCorrect);
             }
 
-            setChecked(null);
             return response.data.alternativeIsCorrect;
         } catch(e) {
             setError(e.response.data.message);
@@ -277,7 +277,6 @@ export default function PvPExercise({ navigation, route }) {exercises
                                         <Header backArrow={true} navigation={navigation} />
 
                                         <View style={styles.content}>
-
                                             <View style={styles.scoreContent}>
                                                 <UserScoreComponent 
                                                     user={user}
@@ -313,12 +312,14 @@ export default function PvPExercise({ navigation, route }) {exercises
                                             />       
 
                                             {
-                                                (waitingOpponent && exercises[questionNumber] === "code") && (
-                                                    <SyntaxHighlighter 
-                                                        language={currentTechnology} 
-                                                        style={dracula}
-                                                        highlighter={"hljs"}
-                                                    >{code}</SyntaxHighlighter>
+                                                (waitingOpponent && exercises[questionNumber].type === "code") && (
+                                                    <>
+                                                        <SyntaxHighlighter 
+                                                            language={currentTechnology} 
+                                                            style={dracula}
+                                                            highlighter={"hljs"}
+                                                        >{code}</SyntaxHighlighter>
+                                                    </>
                                                 )
                                             } 
                                         </View>

@@ -8,7 +8,7 @@ import Colors from "../../utils/ColorPallete/Colors";
 import ButtonComponent from "../Buttons/ButtonComponent";
 import CardComponent from "./CardComponent"
 
-export default function AchievementCardComponent({ showCard, setShowCard, title, description }) {
+export default function AchievementCardComponent({ showCard, setShowCard, title, description, xp }) {
     function closeCard() {
         setShowCard(false);
     }
@@ -21,7 +21,7 @@ export default function AchievementCardComponent({ showCard, setShowCard, title,
                     <View style={styles.separator} />
 
                     <View>
-                        <Text style={styles.achievementXp}>20 XP</Text>
+                        <Text style={styles.achievementXp}>{xp} XP</Text>
 
                         <Text style={styles.achievementDescription}>{description}</Text>
                     </View>

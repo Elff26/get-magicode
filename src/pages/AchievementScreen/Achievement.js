@@ -10,6 +10,7 @@ import {
     View
 } from "react-native";
 
+import Axios from '../../api/api';
 import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,59 +23,40 @@ export default function Achievement({ navigation }) {
     const [currentRankType, setCurrentRankType] = useState("geral");
     const [dialogOpened, setDialogOpened] = useState(false);
     const [selectedAchievement, setSelectedAchievement] = useState({});
+    const [allAchievements, setAllAchievements] = useState([]);
+    const [userAchievements, setUserAchievements] = useState([]);
 
-    const achievements = [
-        {
-            name: "conquista 1",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate aliquet lacus sed congue. Curabitur sed nisi neque. Sed non tortor leo. Cras fermentum risus enim, at dapibus erat iaculis eget. Cras nec nulla odio. Suspendisse imperdiet ullamcorper augue, vitae viverra diam ornare sed.',
-            unlocked: true
-        },
-        {
-            name: "conquista 2",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate aliquet lacus sed congue. Curabitur sed nisi neque. Sed non tortor leo. Cras fermentum risus enim, at dapibus erat iaculis eget. Cras nec nulla odio. Suspendisse imperdiet ullamcorper augue, vitae viverra diam ornare sed.',
-            unlocked: true
-        },
-        {
-            name: "conquista 3",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate aliquet lacus sed congue. Curabitur sed nisi neque. Sed non tortor leo. Cras fermentum risus enim, at dapibus erat iaculis eget. Cras nec nulla odio. Suspendisse imperdiet ullamcorper augue, vitae viverra diam ornare sed.',
-            unlocked: true
-        },
-        {
-            name: "conquista 4",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate aliquet lacus sed congue. Curabitur sed nisi neque. Sed non tortor leo. Cras fermentum risus enim, at dapibus erat iaculis eget. Cras nec nulla odio. Suspendisse imperdiet ullamcorper augue, vitae viverra diam ornare sed.',
-            unlocked: true
-        },
-        {
-            name: "conquista 5",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vulputate aliquet lacus sed congue. Curabitur sed nisi neque. Sed non tortor leo. Cras fermentum risus enim, at dapibus erat iaculis eget. Cras nec nulla odio. Suspendisse imperdiet ullamcorper augue, vitae viverra diam ornare sed.',
-            unlocked: true
-        },
-        {
-            name: "conquista 6",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            unlocked: false
-        },
-        {
-            name: "conquista 7",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            unlocked: false
-        },
-        {
-            name: "conquista 8",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            unlocked: false
-        },
-        {
-            name: "conquista 9",
-            image: 'https://cdn-icons-png.flaticon.com/512/1378/1378582.png',
-            unlocked: false
-        },
-    ]
+    useEffect(() => {
+        async function getData() {
+            try {
+                userData = JSON.parse(await AsyncStorage.getItem('@User'));
+
+                let allAchievementsData = await Axios.get('/ListAllAchievement');
+
+                if(allAchievementsData.data.achievement) {
+                    let allUserAchievementsData = await Axios.get(`/ListAchievementUserHave/${userData.userID}`);
+
+                    if(allUserAchievementsData.data.achievements) {
+                        let achievements = allAchievementsData.data.achievement.map(achievement => {
+                            let userHave = allUserAchievementsData.data.achievements.includes(achievement.achievementID);
+
+                            return {
+                                achievement: achievement,
+                                unlocked: userHave
+                            }
+                        });
+
+                        setAllAchievements(achievements);
+                        setUserAchievements(allUserAchievementsData.data.achievements);
+                    }
+                }
+            } catch (e) {
+                setError(e.response.data.message);
+            }
+        }
+
+        getData();
+    }, []);
 
     useEffect(() => {
         async function getData() {
@@ -84,13 +66,9 @@ export default function Achievement({ navigation }) {
         getData();
     }, []);
 
-    function selectAchievement(achievement) {
-        setSelectedAchievement(achievement);
+    function selectAchievement(userAchievement) {
+        setSelectedAchievement(userAchievement.achievement);
         setDialogOpened(true);
-    }
-
-    function closeAchievementDialog() {
-        setDialogOpened(false);
     }
 
     return (
@@ -103,24 +81,24 @@ export default function Achievement({ navigation }) {
 
             <View style={styles.achievementContent}>
                 <FlatList 
-                    data={achievements}
+                    data={allAchievements}
                     contentContainerStyle={styles.achievementList}
                     numColumns={3}
-                    renderItem={(achievement => (
-                        <View style={styles.achievementItem} key={achievement.index}>
+                    renderItem={(({ item }) => (
+                        <View style={styles.achievementItem} key={item.index}>
                             {
-                                achievement.item.unlocked && (
-                                    <TouchableOpacity style={styles.unlockedAchievement} onPress={() => selectAchievement(achievement.item)}>
+                                item.unlocked && (
+                                    <TouchableOpacity style={styles.unlockedAchievement} onPress={() => selectAchievement(item)}>
                                         <Image
                                             style={styles.unlockedAchievementImage}
-                                            source={{ uri: achievement.item.image }}
+                                            source={{ uri: item.achievement.image !== "" ? item.achievement.image : 'https://cdn2.iconfinder.com/data/icons/seo-web-optomization-ultimate-set/512/page_quality-512.png' }}
                                         />
                                     </TouchableOpacity>
                                 )
                             }
 
                             {
-                                !achievement.item.unlocked && (
+                                !item.unlocked && (
                                     <View style={styles.lockedAchievement}>
                                         <Feather name='lock' color={Colors.RED_COLOR_DEFAULT} size={42} />
                                     </View>
@@ -134,6 +112,7 @@ export default function Achievement({ navigation }) {
             <AchievementCardComponent 
                 title={selectedAchievement.name}
                 description={selectedAchievement.description}
+                xp={selectedAchievement.xp}
                 setShowCard={setDialogOpened}
                 showCard={dialogOpened}
             />
@@ -154,16 +133,15 @@ const styles = StyleSheet.create({
     },
 
     achievementList: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%'
+        width: '100%',
+        justifyContent: 'flex-end'
     },
 
     achievementItem: {
-        width: '33.33%',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: 10
+        marginVertical: 10,
+        flexBasis: '33%'
     },
 
     achievementContent: {

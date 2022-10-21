@@ -11,26 +11,33 @@ import Colors from "../../utils/ColorPallete/Colors";
 export default function UserScoreComponent({ user, userAnswers, questionNumber }) {
     return (
         <View style={styles.scoreComponent}>
-            <View style={styles.userImages}>
-                <View style={styles.imageContent}>
-                    <Image style={styles.userImage} source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }} />
-                </View>
-                {
-                    userAnswers.length - 1 === questionNumber && (
-                        <View key={userAnswers.length} style={[styles.iconBackground, userAnswers[questionNumber].isCorrect ? { backgroundColor: Colors.LIGHT_GREEN } : { backgroundColor: Colors.LIGHT_RED }]}>
+            {
+                user && (
+                    <>
+                        <View style={styles.userImages}>
+                            <View style={styles.imageContent}>
+                                <Image style={styles.userImage} source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }} />
+                            </View>
                             {
-                                userAnswers[questionNumber].isCorrect ? (
-                                    <Feather name="check-circle" size={22} color={Colors.GREEN_CHECK_ICON} />
-                                ) : (
-                                    <Feather name="x-circle" size={22} color={Colors.RED_ERROR_ICON} />
+                                userAnswers.length - 1 === questionNumber && (
+                                    <View key={userAnswers.length} style={[styles.iconBackground, userAnswers[questionNumber].isCorrect ? { backgroundColor: Colors.LIGHT_GREEN } : { backgroundColor: Colors.LIGHT_RED }]}>
+                                        {
+                                            userAnswers[questionNumber].isCorrect ? (
+                                                <Feather name="check-circle" size={22} color={Colors.GREEN_CHECK_ICON} />
+                                            ) : (
+                                                <Feather name="x-circle" size={22} color={Colors.RED_ERROR_ICON} />
+                                            )
+                                        }
+                                    </View>
                                 )
                             }
                         </View>
-                    )
-                }
-            </View>
-            <Text style={styles.userName}>{user.name}</Text>
-            <Text style={styles.score}>Acertos: {userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0)}</Text>
+
+                        <Text style={styles.userName}>{user.name}</Text>
+                        <Text style={styles.score}>Acertos: {userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0)}</Text>
+                    </>
+                )
+            }
         </View>
     )
 }

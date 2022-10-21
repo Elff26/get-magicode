@@ -195,7 +195,13 @@ const ListChallenges = ({ route, navigation }) => {
                             <MaterialCommunityIcons name="sword-cross" size={28} color={Colors.RED_COLOR_DEFAULT} />
                         </TouchableOpacity>
 
-                        <PvPInviteCard showCard={showPvPCard} setShowCard={setShowPvPCard} navigation={navigation} user={user} />
+                        <PvPInviteCard 
+                            showCard={showPvPCard} 
+                            setShowCard={setShowPvPCard} 
+                            navigation={navigation} 
+                            user={user} 
+                            currentTechnology={currentTechnology}
+                        />
 
                         {
                             (user && user.technologies && user.technologies.length > 0) && (

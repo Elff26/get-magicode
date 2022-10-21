@@ -9,20 +9,26 @@ import Colors from "../../utils/ColorPallete/Colors";
 
 export default function UserRank({ userRank, position }) {
     return (
-        <View style={styles.userRank}>
-            <View style={styles.userView}>
-                <Image 
-                    style={styles.userImage}
-                    source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.imagem }}
-                />
-                <Text style={styles.rankText}>#{position} - {userRank.user.name}</Text>
-            </View>
+        <>
+            {
+                userRank.user && (
+                    <View style={styles.userRank}>
+                        <View style={styles.userView}>
+                            <Image 
+                                style={styles.userImage}
+                                source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.image }}
+                            />
+                            <Text numberOfLines={1} style={styles.rankText}>#{position} - {userRank.user.name}</Text>
+                        </View>
 
-            <View style={styles.userScoreView}>
-                <Text style={styles.rankText}>{userRank.xp}</Text>
-                <Text style={styles.rankXp}>XP</Text>
-            </View>
-        </View> 
+                        <View style={styles.userScoreView}>
+                            <Text style={styles.rankXp}>{userRank.xp}</Text>
+                            <Text style={styles.rankXp}>XP</Text>
+                        </View>
+                    </View> 
+                )
+            }
+        </>
     )
 }
 
@@ -55,8 +61,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         color: Colors.TEXT_COLOR,
         marginLeft: 10,
-        textAlign: 'center',
-        textAlignVertical: 'bottom'
+        width: '70%'
     },  
 
     rankXp: {
