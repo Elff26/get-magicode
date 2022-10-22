@@ -29,7 +29,7 @@ const Home = ({ navigation }) => {
     async function getData() {
       let accessToken = await SecureStore.getItemAsync(SECURE_STORE_KEY);
       let service = await AsyncStorage.getItem('@Service');
-      let user = await AsyncStorage.getItem('@User');
+      let user = JSON.parse(await AsyncStorage.getItem('@User'));
 
       if(user) {
         if(accessToken && service) {
@@ -43,7 +43,7 @@ const Home = ({ navigation }) => {
             return clearUserData();
           }
 
-          checkToken(accessToken, url);
+          checkToken(accessToken, url, user.userID);
         }
       }
     }
@@ -57,16 +57,22 @@ const Home = ({ navigation }) => {
     await AsyncStorage.clear();
   }
 
-  const checkToken = async (accessToken, url) => {
+  const checkToken = async (accessToken, url, userID) => {
     try {
       let result = await Axios.get(`${url}`, {
         headers: {
-          accessToken
+          accesstoken: accessToken,
+          userid: userID
         }
       });
   
       if(!result) {
         throw new Error('Não autorizado');
+      }      
+
+      if(result.data.accessToken) {
+        await SecureStore.deleteItemAsync(SECURE_STORE_KEY);
+        await SecureStore.setItemAsync(SECURE_STORE_KEY, result.data.accessToken);
       }
   
       navigation.navigate('BottomTabComponent');

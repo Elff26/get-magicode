@@ -23,24 +23,24 @@ export default async function GoogleAuth(navigation, setError) {
             });
 
             if(response.data.user && response.data.token) {
-            let token = response.data.token;
-            let user = response.data.user;
+                let token = response.data.token;
+                let user = response.data.user;
 
-            await SecureStore.setItemAsync(SECURE_STORE_KEY, token);
-            await AsyncStorage.setItem("@Service", 'google');
+                await SecureStore.setItemAsync(SECURE_STORE_KEY, token);
+                await AsyncStorage.setItem("@Service", 'google');
 
-            if(!user.phone || !user.birthday) {
-                navigation.navigate('ThirdRegisterMorInfo', {
-                    userID: user.userID,
-                    hasPhone: user.phone,
-                    hasBirthday: user.birthday
-                });
+                if(!user.phone || !user.birthday) {
+                    navigation.navigate('ThirdRegisterMorInfo', {
+                        userID: user.userID,
+                        hasPhone: user.phone,
+                        hasBirthday: user.birthday
+                    });
 
-                return;
-            }
+                    return;
+                }
 
-            await AsyncStorage.setItem('@User', JSON.stringify(user));
-            navigation.navigate('BottomTabComponent');
+                await AsyncStorage.setItem('@User', JSON.stringify(user));
+                navigation.navigate('BottomTabComponent');
             }
         }
     } catch (error) {

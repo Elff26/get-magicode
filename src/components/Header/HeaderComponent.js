@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
 
     icons: {
         marginLeft: 'auto',
-        marginRight: 20
+        marginRight: 20,
+        justifyContent: 'center'
     }
 })

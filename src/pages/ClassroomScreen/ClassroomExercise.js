@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
     ScrollView,
     StyleSheet, 
     Text,
+    TouchableOpacity,
     View
 } from "react-native";
 
@@ -251,7 +252,11 @@ export default function ClassroomExercise({ navigation, route }) {
                 challenge && (
                     <>
                         <ScrollView>
-                                <Header backArrow={true} navigation={navigation} />
+                                <Header backArrow={true} navigation={navigation}>
+                                    <TouchableOpacity style={styles.tipIcon}>
+                                        <MaterialCommunityIcons name="lightbulb-on" size={32} color={Colors.GOLDEN_CROWN} />
+                                    </TouchableOpacity>
+                                </Header>
                                     <View style={styles.content}>
                                         <Text style={styles.title}>Questão {questionNumber + 1}</Text>
 
@@ -352,6 +357,11 @@ const styles = StyleSheet.create({
         flex: 1,
         maxWidth: windowWidth,
         padding: 10
+    },
+
+    tipIcon: {
+        position: 'absolute',
+        right: '10%'
     },
 
     title: {
