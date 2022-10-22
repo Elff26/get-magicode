@@ -21,6 +21,7 @@ import OutputTerminal from "../../components/OutputTerminal/OutputTerminal";
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/styles/hljs';
 import CardChallengeFinishedComponent from "../../components/Card/CardChallengeFinishedComponent";
+import CardTipComponent from "../../components/Card/CardTipComponent";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -39,6 +40,22 @@ export default function ClassroomExercise({ navigation, route }) {
     const [result, setResult] = useState(0);
     const [numberOfExercises, setNumberOfExercises] = useState(0);
     const [codeQuestionAnswered, setCodeQuestionAnswered] = useState(false);
+    const [currentTip, setCurrentTip] = useState(-1);
+    const [showTipCard, setShowTipCard] = useState(false);
+    const tips = [
+        {
+            tipID: 1,
+            tipDescription: 'É um país da Europa'
+        },
+        {
+            tipID: 2,
+            tipDescription: 'Seu idioma é o Holandês'
+        },
+        {
+            tipID: 3,
+            tipDescription: 'Que país é esse?'
+        }
+    ]
 
     useEffect(() => {
         async function getData() {
@@ -242,6 +259,16 @@ export default function ClassroomExercise({ navigation, route }) {
         navigation.goBack();
     }
 
+    function getATip() {
+        if(currentTip < 2) {
+            setCurrentTip(currentTip + 1);
+        } else {
+            setCurrentTip(0);
+        }
+
+        setShowTipCard(true);
+    }
+
     function closeCard() {
         setShowCard(false);
     }
@@ -253,7 +280,7 @@ export default function ClassroomExercise({ navigation, route }) {
                     <>
                         <ScrollView>
                                 <Header backArrow={true} navigation={navigation}>
-                                    <TouchableOpacity style={styles.tipIcon}>
+                                    <TouchableOpacity style={styles.tipIcon} onPress={getATip}>
                                         <MaterialCommunityIcons name="lightbulb-on" size={32} color={Colors.GOLDEN_CROWN} />
                                     </TouchableOpacity>
                                 </Header>
@@ -339,6 +366,13 @@ export default function ClassroomExercise({ navigation, route }) {
                             onPressButton={result >= 0.5 ? closeCard : returnToChallengeList}
                             isPercentage={true}
                             setShowCard={setShowCard}
+                        />
+
+                        <CardTipComponent 
+                            showCard={showTipCard}
+                            setShowCard={setShowTipCard}
+                            tip={tips[currentTip]}
+                            tipNumber={currentTip}
                         />
                     </>
                 )
