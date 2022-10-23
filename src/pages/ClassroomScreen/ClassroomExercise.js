@@ -22,6 +22,7 @@ import SyntaxHighlighter from 'react-native-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/styles/hljs';
 import CardChallengeFinishedComponent from "../../components/Card/CardChallengeFinishedComponent";
 import CardTipComponent from "../../components/Card/CardTipComponent";
+import AchievementUnlockedComponent from "../../components/Achievement/AchievementUnlockedComponent";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -42,6 +43,8 @@ export default function ClassroomExercise({ navigation, route }) {
     const [codeQuestionAnswered, setCodeQuestionAnswered] = useState(false);
     const [currentTip, setCurrentTip] = useState(-1);
     const [showTipCard, setShowTipCard] = useState(false);
+    const [achievementsUnlocked, setAchievementsUnlocked] = useState([]);
+    const [hasNewAchievement, setHasNewAchievement] = useState(false);
     const tips = [
         {
             tipID: 1,
@@ -158,6 +161,21 @@ export default function ClassroomExercise({ navigation, route }) {
                 }
 
                 if(questionNumber === numberOfExercises && !answered) {
+                    try {
+                        let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
+                            technologyID: challenge.technology.technologyID
+                        });
+
+                        if(response.data.userAchievement) {
+                            let achievements = await response.data.userAchievement.map((userAchievement) => userAchievement.achievement);
+
+                            setAchievementsUnlocked(achievements);
+                            setHasNewAchievement(true);
+                        }
+                    } catch(e) {
+                        setError(e.response.data.message);
+                    }
+
                     setAnswered(true);
                     setShowCard(true);
                 }
@@ -206,6 +224,21 @@ export default function ClassroomExercise({ navigation, route }) {
                 saveCodeAnswers(result);
 
                 if(questionNumber === numberOfExercises && !answered) {
+                    try {
+                        let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
+                            technologyID: challenge.technology.technologyID
+                        });
+
+                        if(response.data.userAchievement) {
+                            let achievements = await response.data.userAchievement.map((userAchievement) => userAchievement.achievement);
+
+                            setAchievementsUnlocked(achievements);
+                            setHasNewAchievement(true);
+                        }
+                    } catch(e) {
+                        setError(e.response.data.message);
+                    }
+
                     setAnswered(true);
                     setShowCard(true);
                 }
@@ -367,6 +400,14 @@ export default function ClassroomExercise({ navigation, route }) {
                             isPercentage={true}
                             setShowCard={setShowCard}
                         />
+
+                        {
+                            hasNewAchievement && (
+                                achievementsUnlocked.map((achievement, index) => (
+                                    <AchievementUnlockedComponent key={achievement.achievementID} achievement={achievement} number={index + 1} />
+                                ))
+                            )
+                        }
 
                         <CardTipComponent 
                             showCard={showTipCard}

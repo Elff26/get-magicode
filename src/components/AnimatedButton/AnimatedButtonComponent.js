@@ -1,7 +1,7 @@
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Animated, { Easing, useSharedValue, withDelay, withRepeat, withTiming, useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
+import { View } from 'react-native';
+import Animated, { useSharedValue, withDelay, withRepeat, withTiming, useAnimatedStyle, interpolate } from 'react-native-reanimated';
 
 import Colors from '../../utils/ColorPallete/Colors';
 
