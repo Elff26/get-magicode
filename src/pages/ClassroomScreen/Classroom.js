@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Axios from '../../api/api';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
+import LoadingComponent from '../../components/Loading/LoadingComponent';
 import RenderJsonContent from '../../components/RenderJsonContent/RenderJsonContent';
 import Colors from '../../utils/ColorPallete/Colors';
 
@@ -13,6 +14,7 @@ export default function Classroom({ navigation, route }) {
   const [error, setError] = useState('');
   const [challenge, setChallenge] = useState([]);
   const [currentClassIndex, setCurrentClassIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -50,6 +52,8 @@ export default function Classroom({ navigation, route }) {
 
   async function finishChallenge() {
     try {
+      setIsLoading(true);
+
       const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
 
       if(result.data.userChallenge) {
@@ -66,6 +70,7 @@ export default function Classroom({ navigation, route }) {
 
         await AsyncStorage.mergeItem('@User', JSON.stringify(newUser));
 
+        setIsLoading(false);
         navigation.navigate('ListChallenges', {
           params: {
             user: newUser
@@ -79,6 +84,11 @@ export default function Classroom({ navigation, route }) {
 
   return (
     <View style={styles.container}>
+      {
+          isLoading && (
+              <LoadingComponent />
+          )
+      }
       <Header backArrow={true} navigation={navigation} />
 
       {

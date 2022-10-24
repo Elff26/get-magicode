@@ -18,6 +18,7 @@ import MaskTextComponent from '../../components/InputText/MaskTextComponent';
 import GoogleAuth from '../../utils/ThirdAuth/GoogleAuth';
 import FacebookAuth from '../../utils/ThirdAuth/FacebookAuth';
 import { LogBox } from "react-native";
+import DateUtils from '../../utils/DateUtils';
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
 const Register = ({ navigation }) => {
@@ -43,7 +44,7 @@ const Register = ({ navigation }) => {
         const user = {
             name,
             email,
-            birthday,
+            birthday: DateUtils.dateConvertToEUA(birthday),
             phone,
             password
         }

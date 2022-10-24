@@ -23,6 +23,7 @@ import { dracula } from 'react-syntax-highlighter/styles/hljs';
 import CardChallengeFinishedComponent from "../../components/Card/CardChallengeFinishedComponent";
 import CardTipComponent from "../../components/Card/CardTipComponent";
 import AchievementUnlockedComponent from "../../components/Achievement/AchievementUnlockedComponent";
+import LoadingComponent from "../../components/Loading/LoadingComponent";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -45,6 +46,8 @@ export default function ClassroomExercise({ navigation, route }) {
     const [showTipCard, setShowTipCard] = useState(false);
     const [achievementsUnlocked, setAchievementsUnlocked] = useState([]);
     const [hasNewAchievement, setHasNewAchievement] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
     const tips = [
         {
             tipID: 1,
@@ -65,7 +68,7 @@ export default function ClassroomExercise({ navigation, route }) {
             try {
               if(challengeID) {
                 const response = await Axios.get(`FindChallengeById/${challengeID}`);
-                
+        
                 if(response.data.challenge) {
                   let challenge = response.data.challenge;
                   
@@ -73,6 +76,7 @@ export default function ClassroomExercise({ navigation, route }) {
                   setNumberOfExercises(challenge.exercises.length - 1);
                 }
       
+                setIsLoading(false);
                 setUser(JSON.parse(await AsyncStorage.getItem('@User')))
               }
             } catch(e) {
@@ -86,16 +90,17 @@ export default function ClassroomExercise({ navigation, route }) {
     useEffect(() => {
         async function verifyData() {
             try {
+                setIsLoading(true);
                 if(answered) {
                     let result = answers.filter((item) => item.isCorrect).length / challenge.exercises.length;
                     setResult(result);
-        
+
                     if(result < 0.5) {
                         const response = await Axios.put(`DecreaseNumberOfLifes/${user.userID}`);
     
                         if(response.data.numberOfLifes) {
                             user.numberOfLifes = response.data.numberOfLifes;
-    
+
                             await AsyncStorage.mergeItem("@User", JSON.stringify(user));
                             setUser(user);
                             setAnswered(false);
@@ -113,6 +118,8 @@ export default function ClassroomExercise({ navigation, route }) {
                       }
                     }
                 } 
+
+                setIsLoading(false);
             } catch(e) {
                 setError(e.response.data.message);
             }
@@ -122,13 +129,20 @@ export default function ClassroomExercise({ navigation, route }) {
     }, [answered]);
 
     async function goToNextQuestion() {
+        setIsLoading(true);
         checkIfIsComplete();
 
-        if(challenge.typeChallenge === "code") {
-            return nextCodeQuestion();
-        } else if (challenge.typeChallenge === "quiz") {
-            return nextQuizQuestion();
+        if(!answered) {
+            if(challenge.exercises[questionNumber].type === "code") {
+                await nextCodeQuestion();
+            } else if (challenge.exercises[questionNumber].type === "quiz") {
+                await nextQuizQuestion();
+            }
+        } else {
+            setQuestionNumber(questionNumber + 1);
         }
+
+        setIsLoading(false);
     }
 
     async function nextCodeQuestion() {
@@ -265,11 +279,11 @@ export default function ClassroomExercise({ navigation, route }) {
     }
 
     function returnToPreviousQuestion() {
-        if (challenge.typeChallenge === "quiz") {
+        if (challenge.exercises[questionNumber].type === "quiz") {
             setChecked(answers[questionNumber - 1].alternativeID);
         }
 
-        if (challenge.typeChallenge === "code") {
+        if (challenge.exercises[questionNumber].type === "code") {
             setCodeQuestionAnswered(true);
         }
         
@@ -309,8 +323,14 @@ export default function ClassroomExercise({ navigation, route }) {
     return (
         <View style={styles.screenContainer}>
             {
+                isLoading && (
+                    <LoadingComponent />
+                )
+            }
+            {
                 challenge && (
                     <>
+                        
                         <ScrollView>
                                 <Header backArrow={true} navigation={navigation}>
                                     <TouchableOpacity style={styles.tipIcon} onPress={getATip}>
@@ -327,14 +347,15 @@ export default function ClassroomExercise({ navigation, route }) {
                                             checked={checked}
                                             setChecked={setChecked}
                                             answered={answered}
-                                            show={challenge.typeChallenge === "quiz"}
+                                            show={challenge.exercises[questionNumber].type === "quiz"}
                                         />
+                                        
 
                                         <CodeEditorComponent 
                                             setCode={setCode} 
                                             language={challenge.technology.name} 
                                             theme="dracula" 
-                                            show={challenge.typeChallenge === "code" && !codeQuestionAnswered} 
+                                            show={challenge.exercises[questionNumber].type === "code" && !codeQuestionAnswered} 
                                         />  
                                         
                                         {
@@ -394,7 +415,7 @@ export default function ClassroomExercise({ navigation, route }) {
                             subtitle={`${(result * 100).toFixed(2)}%`}
                             message={result >= 0.5 ? "Parabéns, você foi aprovado!" : "Você foi reprovado, mas não desista! Estude e gabarite esse exercício!"}
                             xp={result >= 0.5 ? challenge.difficulty.valueXP : 0}
-                            showCard={showCard}
+                            showCard={showCard && !isLoading}
                             buttonText={result >= 0.5 ? "Fechar" : "Voltar ao início"}
                             onPressButton={result >= 0.5 ? closeCard : returnToChallengeList}
                             isPercentage={true}

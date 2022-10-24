@@ -23,6 +23,7 @@ import { dracula } from 'react-syntax-highlighter/styles/hljs';
 import { SocketContext } from '../../utils/Socket/socket';
 import UserScoreComponent from "../../components/PlayerVSPlayer/UserScoreComponent";
 import PvPResult from "../../components/PlayerVSPlayer/PvPResult";
+import LoadingComponent from "../../components/Loading/LoadingComponent";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -47,6 +48,7 @@ export default function PvPExercise({ navigation, route }) {exercises
     const [userXp, setUserXp] = useState(0);
     const [opponentXp, setOpponentXp] = useState(0);
     const [winner, setWinner] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getData() {
@@ -93,6 +95,8 @@ export default function PvPExercise({ navigation, route }) {exercises
                     if(opponent.data.user) {
                         setOpponent(opponent.data.user);
                     }
+
+                    setIsLoading(false);
                 }
             } catch (e) {
                 setError(e.response.data.message);
@@ -149,6 +153,7 @@ export default function PvPExercise({ navigation, route }) {exercises
 
     const socketEventChallengeFinished = () => {
         socket.on('challengeFinished', async () => {
+            setIsLoading(true);
             let userCorrect = userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
             let opponentCorrect = opponentAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
 
@@ -173,7 +178,8 @@ export default function PvPExercise({ navigation, route }) {exercises
             } catch(e) {
                 setError(e.response.data.message);
             }
-            
+
+            setIsLoading(false);
             setFinished(true);
         });
     }
@@ -240,6 +246,11 @@ export default function PvPExercise({ navigation, route }) {exercises
 
     return (
         <View style={styles.screenContainer}>
+            {
+                isLoading && (
+                    <LoadingComponent />
+                )
+            }
             {
                 exercises.length > 0 && (
                     <>

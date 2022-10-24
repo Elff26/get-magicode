@@ -15,11 +15,12 @@ import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AchievementCardComponent from '../../components/Card/AchievementCardComponent';
+import LoadingComponent from '../../components/Loading/LoadingComponent';
 
 export default function Achievement({ navigation }) {
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [currentRankType, setCurrentRankType] = useState("geral");
     const [dialogOpened, setDialogOpened] = useState(false);
     const [selectedAchievement, setSelectedAchievement] = useState({});
@@ -47,6 +48,7 @@ export default function Achievement({ navigation }) {
                         });
 
                         setAllAchievements(achievements);
+                        setIsLoading(false);
                         setUserAchievements(allUserAchievementsData.data.achievements);
                     }
                 }
@@ -73,6 +75,11 @@ export default function Achievement({ navigation }) {
 
     return (
         <View style={styles.screenContainer}>
+            {
+                isLoading && (
+                    <LoadingComponent />
+                )
+            }
             <Header backArrow={true} navigation={navigation} />
                 
             <Text style={styles.title}>

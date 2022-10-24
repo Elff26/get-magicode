@@ -72,7 +72,7 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user,
 
     async function acceptChallenge() {
         setError("");
-        socket.emit('acceptChallenge', roomNumber, user.userID);
+        socket.emit('acceptChallenge', roomNumber, user.userID, selectedTechnologyID);
     }
 
     return (

@@ -6,7 +6,7 @@ import ButtonComponent from '../Buttons/ButtonComponent';
 import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user, open, setOpenBottomSheet }) => {
+const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user, open, setOpenBottomSheet, setIsLoading }) => {
     const bottomSheetRef = useRef(null);
     const [error, setError] = useState('');
 
@@ -21,6 +21,7 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
         
     async function selectItem(userTechnology) {
         try {
+            setIsLoading(true);
             const result = await Axios.post('/ChangeTechnology', {
                 userTechnology: {
                     ...userTechnology,
@@ -39,6 +40,8 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
 
                 setCurrentTechnology(userTechnology);
             } 
+
+            setIsLoading(true);
         } catch(e) {
             setError(e.response.data.message);
         }

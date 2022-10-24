@@ -15,13 +15,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import TopThreeUsers from '../../components/Ranking/TopThreeUsers';
 import UserRank from '../../components/Ranking/UserRank';
 import Axios from '../../api/api';
+import LoadingComponent from '../../components/Loading/LoadingComponent';
 
 var width = Dimensions.get('window').width; 
 
 export default function Ranking({ navigation }) {
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [currentRankType, setCurrentRankType] = useState("general");
     const [topUsers, setTopUsers] = useState([]);
     const [otherUsers, setOtherUsers] = useState([]);
@@ -47,6 +48,8 @@ export default function Ranking({ navigation }) {
                     } else {
                         setTopUsers(ranking);
                     }
+
+                    setIsLoading(false);
                 }
             } catch(e) {
                 setError(e.response.data.message);
@@ -73,57 +76,64 @@ export default function Ranking({ navigation }) {
     }
 
     return (
-        
         <View style={styles.screenContainer}>
             <Header backArrow={true} navigation={navigation} arrowColor={Colors.WHITE_SAFE_COLOR} />
-                
+
             <Text style={styles.title}>
                 Ranking
             </Text>
 
-            <View style={styles.rankType}>
-                <TouchableOpacity style={[
-                        styles.rankTypeButton,
-                        currentRankType === 'general' ? styles.activeRankType : {}
-                    ]}
-                    onPress={onChangeToGeneralRanking}
-                >
-                    <Text style={styles.rankTypeText}>Geral</Text>
-                </TouchableOpacity>
+            {
+                isLoading && (
+                    <LoadingComponent />
+                )
+            }
+            <View>            
+                
 
-                <TouchableOpacity style={[
-                        styles.rankTypeButton,
-                        currentRankType === 'month' ? styles.activeRankType : {}
-                    ]}
-                    onPress={onChangeToMonthlyRanking}
+                <View style={styles.rankType}>
+                    <TouchableOpacity style={[
+                            styles.rankTypeButton,
+                            currentRankType === 'general' ? styles.activeRankType : {}
+                        ]}
+                        onPress={onChangeToGeneralRanking}
                     >
-                    <Text style={styles.rankTypeText}>Mensal</Text>
-                </TouchableOpacity>
-            </View>
+                        <Text style={styles.rankTypeText}>Geral</Text>
+                    </TouchableOpacity>
 
-            {
-                topUsers.length > 0 && (
-                    <TopThreeUsers 
-                        usersRank={topUsers}
-                    />
-                )
-            }
-            
-            {
-                otherUsers.length > 0 && (
-                    <FlatList
-                        data={otherUsers}
-                        contentContainerStyle={styles.otherUsersRanking}
-                        renderItem={(user) => (
-                            <UserRank 
-                                userRank={user.item}
-                                position={user.index + 4}
-                            />
-                        )}
-                    />
-                )
-            }
-            
+                    <TouchableOpacity style={[
+                            styles.rankTypeButton,
+                            currentRankType === 'month' ? styles.activeRankType : {}
+                        ]}
+                        onPress={onChangeToMonthlyRanking}
+                        >
+                        <Text style={styles.rankTypeText}>Mensal</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {
+                    topUsers.length > 0 && (
+                        <TopThreeUsers 
+                            usersRank={topUsers}
+                        />
+                    )
+                }
+                
+                {
+                    otherUsers.length > 0 && (
+                        <FlatList
+                            data={otherUsers}
+                            contentContainerStyle={styles.otherUsersRanking}
+                            renderItem={(user) => (
+                                <UserRank 
+                                    userRank={user.item}
+                                    position={user.index + 4}
+                                />
+                            )}
+                        />
+                    )
+                }
+            </View>
         </View>
     )
 }
@@ -132,7 +142,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
         backgroundColor: Colors.PRIMARY_COLOR,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center'
     },
 

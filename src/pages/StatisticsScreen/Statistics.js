@@ -18,6 +18,7 @@ import ProgressBar from '../../components/Statistics/ProgressBar';
 import InfoComponent from '../../components/Statistics/InfoComponent';
 import Axios from '../../api/api';
 import { useIsFocused } from "@react-navigation/native";
+import LoadingComponent from '../../components/Loading/LoadingComponent';
 
 
 export default function Statistics({ navigation }) {
@@ -25,7 +26,7 @@ export default function Statistics({ navigation }) {
 
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [numberOfClasses, setNumberOfClasses] = useState(0);
     const [numberOfAchievements, setNumberOfAchievements] = useState(0);
 
@@ -50,6 +51,8 @@ export default function Statistics({ navigation }) {
                 if(responseAchievements.data.achievements) {
                     setNumberOfAchievements(responseAchievements.data.achievements.length);
                 }
+
+                setIsLoading(false);
             } catch (e) {
                 setError(e.response.data.message);
             }
@@ -73,6 +76,12 @@ export default function Statistics({ navigation }) {
     return (
         
         <View style={styles.screenContainer}>
+            {
+                isLoading && (
+                    <LoadingComponent />
+                )
+            }
+            
             <Header backArrow={true} navigation={navigation}>
                 <TouchableOpacity onPress={goToProfileOptions} style={styles.settingsIcon}>
                     <Feather name='settings' color={Colors.TEXT_COLOR} size={32} />

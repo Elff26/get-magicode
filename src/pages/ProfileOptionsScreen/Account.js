@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
 import { 
-    KeyboardAvoidingView,
-    Platform,
     SafeAreaView,
     StyleSheet, 
     Text, 
-    TextInput, 
     View 
 } from 'react-native';
-import MaskInput from 'react-native-mask-input';
 
 import Colors from '../../utils/ColorPallete/Colors';
 import Header from '../../components/Header/HeaderComponent';
@@ -21,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
 import MaskTextComponent from '../../components/InputText/MaskTextComponent';
 import InputTextComponent from '../../components/InputText/InputTextComponent';
+import DateUtils from '../../utils/DateUtils';
 
 var width = Dimensions.get('window').width; 
 
@@ -41,7 +38,7 @@ export default function Account({navigation}) {
             setName(user.name);
             setEmail(user.email);
             setPhone(user.phone);
-            setBirthday(user.birthday);
+            setBirthday(DateUtils.dateConvertToBrasil(user.birthday));
         }
         getData();
     }, [])
@@ -72,7 +69,7 @@ export default function Account({navigation}) {
                 ...user,
                 name,
                 email,
-                birthday,
+                birthday: DateUtils.dateConvertToEUA(birthday),
                 phone
             }
 
