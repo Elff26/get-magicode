@@ -90,7 +90,6 @@ export default function ClassroomExercise({ navigation, route }) {
     useEffect(() => {
         async function verifyData() {
             try {
-                setIsLoading(true);
                 if(answered) {
                     let result = answers.filter((item) => item.isCorrect).length / challenge.exercises.length;
                     setResult(result);
@@ -106,20 +105,35 @@ export default function ClassroomExercise({ navigation, route }) {
                             setAnswered(false);
                         }
                     } else {
-                      const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
+                        setIsLoading(true);
+                        const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
     
-                      if(result.data.userChallenge) {
-                          const resultUserUpdated = await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                        if(result.data.userChallenge) {
+                            const resultUserUpdated = await Axios.post(`/AddExperienceToUser/${user.userID}`, {
                             xpGain: challenge.difficulty.valueXP
-                          });
+                            });
 
-                          setUser(resultUserUpdated.data.user);
-                          await AsyncStorage.mergeItem('@User', JSON.stringify(resultUserUpdated.data.user));
-                      }
+                            try {
+                                let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
+                                    technologyID: challenge.technology.technologyID
+                                });
+
+                                if(response.data.userAchievement) {
+                                    let achievements = await response.data.userAchievement.map((userAchievement) => userAchievement.achievement);
+
+                                    setAchievementsUnlocked(achievements);
+                                    setHasNewAchievement(true);
+                                    setIsLoading(false);
+                                }
+                            } catch(e) {
+                                setError(e.response.data.message);
+                            }
+
+                            setUser(resultUserUpdated.data.user);
+                            await AsyncStorage.mergeItem('@User', JSON.stringify(resultUserUpdated.data.user));
+                        }
                     }
                 } 
-
-                setIsLoading(false);
             } catch(e) {
                 setError(e.response.data.message);
             }
@@ -141,8 +155,6 @@ export default function ClassroomExercise({ navigation, route }) {
         } else {
             setQuestionNumber(questionNumber + 1);
         }
-
-        setIsLoading(false);
     }
 
     async function nextCodeQuestion() {
@@ -157,6 +169,7 @@ export default function ClassroomExercise({ navigation, route }) {
         } else {
             await runCode();
         }
+        setIsLoading(false);
     }
 
     async function nextQuizQuestion() {
@@ -175,23 +188,10 @@ export default function ClassroomExercise({ navigation, route }) {
                 }
 
                 if(questionNumber === numberOfExercises && !answered) {
-                    try {
-                        let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
-                            technologyID: challenge.technology.technologyID
-                        });
-
-                        if(response.data.userAchievement) {
-                            let achievements = await response.data.userAchievement.map((userAchievement) => userAchievement.achievement);
-
-                            setAchievementsUnlocked(achievements);
-                            setHasNewAchievement(true);
-                        }
-                    } catch(e) {
-                        setError(e.response.data.message);
-                    }
-
                     setAnswered(true);
                     setShowCard(true);
+                } else {
+                    setIsLoading(false);
                 }
             }
         } catch(e) {

@@ -41,6 +41,7 @@ const ListChallenges = ({ route, navigation }) => {
 
     useEffect(() => {
         async function getData() {
+            setIsLoading(true);
             var userData;
 
             if(routeParams.user) {
