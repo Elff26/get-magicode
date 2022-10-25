@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
     ScrollView,
@@ -22,12 +22,15 @@ import SyntaxHighlighter from 'react-native-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/styles/hljs';
 import CardChallengeFinishedComponent from "../../components/Card/CardChallengeFinishedComponent";
 import CardTipComponent from "../../components/Card/CardTipComponent";
-import AchievementUnlockedComponent from "../../components/Achievement/AchievementUnlockedComponent";
 import LoadingComponent from "../../components/Loading/LoadingComponent";
+import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
+
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function ClassroomExercise({ navigation, route }) {
+    const { unlockedAchievements, setUnlockedAchievements } = useContext(UnlockedAchievementsContext);
+
     const challengeID = route.params.challengeID;
 
     const [questionNumber, setQuestionNumber] = useState(0);
@@ -44,8 +47,6 @@ export default function ClassroomExercise({ navigation, route }) {
     const [codeQuestionAnswered, setCodeQuestionAnswered] = useState(false);
     const [currentTip, setCurrentTip] = useState(-1);
     const [showTipCard, setShowTipCard] = useState(false);
-    const [achievementsUnlocked, setAchievementsUnlocked] = useState([]);
-    const [hasNewAchievement, setHasNewAchievement] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     const tips = [
@@ -105,32 +106,32 @@ export default function ClassroomExercise({ navigation, route }) {
                             setAnswered(false);
                         }
                     } else {
-                        setIsLoading(true);
                         const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
     
                         if(result.data.userChallenge) {
                             const resultUserUpdated = await Axios.post(`/AddExperienceToUser/${user.userID}`, {
-                            xpGain: challenge.difficulty.valueXP
+                                xpGain: challenge.difficulty.valueXP
                             });
 
+                            if(resultUserUpdated.data.user) {
+                                setUser(resultUserUpdated.data.user);
+                                await AsyncStorage.mergeItem('@User', JSON.stringify(resultUserUpdated.data.user));
+                            }
+                            
+                            setIsLoading(false);
+                            
                             try {
                                 let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
                                     technologyID: challenge.technology.technologyID
                                 });
 
                                 if(response.data.userAchievement) {
-                                    let achievements = await response.data.userAchievement.map((userAchievement) => userAchievement.achievement);
-
-                                    setAchievementsUnlocked(achievements);
-                                    setHasNewAchievement(true);
-                                    setIsLoading(false);
+                                    setUnlockedAchievements(response.data.userAchievement.map((userAchievement) => userAchievement.achievement));
                                 }
                             } catch(e) {
                                 setError(e.response.data.message);
                             }
-
-                            setUser(resultUserUpdated.data.user);
-                            await AsyncStorage.mergeItem('@User', JSON.stringify(resultUserUpdated.data.user));
+                            
                         }
                     }
                 } 
@@ -146,14 +147,15 @@ export default function ClassroomExercise({ navigation, route }) {
         setIsLoading(true);
         checkIfIsComplete();
 
-        if(!answered) {
-            if(challenge.exercises[questionNumber].type === "code") {
-                await nextCodeQuestion();
-            } else if (challenge.exercises[questionNumber].type === "quiz") {
-                await nextQuizQuestion();
-            }
-        } else {
-            setQuestionNumber(questionNumber + 1);
+        if(answered) {
+            setIsLoading(false);
+            return setQuestionNumber(questionNumber + 1);
+        }
+
+        if(challenge.exercises[questionNumber].type === "code") {
+            await nextCodeQuestion();
+        } else if (challenge.exercises[questionNumber].type === "quiz") {
+            await nextQuizQuestion();
         }
     }
 
@@ -246,8 +248,7 @@ export default function ClassroomExercise({ navigation, route }) {
                         if(response.data.userAchievement) {
                             let achievements = await response.data.userAchievement.map((userAchievement) => userAchievement.achievement);
 
-                            setAchievementsUnlocked(achievements);
-                            setHasNewAchievement(true);
+                            setUnlockedAchievements(achievements);
                         }
                     } catch(e) {
                         setError(e.response.data.message);
@@ -421,14 +422,6 @@ export default function ClassroomExercise({ navigation, route }) {
                             isPercentage={true}
                             setShowCard={setShowCard}
                         />
-
-                        {
-                            hasNewAchievement && (
-                                achievementsUnlocked.map((achievement, index) => (
-                                    <AchievementUnlockedComponent key={achievement.achievementID} achievement={achievement} number={index + 1} />
-                                ))
-                            )
-                        }
 
                         <CardTipComponent 
                             showCard={showTipCard}

@@ -57,7 +57,6 @@ export default function ChooseTechnologies({ navigation }) {
                         await AsyncStorage.mergeItem('@User', JSON.stringify(response.data.user));
 
                         setUser(response.data.user);
-                        setIsLoading(false);
 
                         navigation.navigate('ListChallenges', {
                             params: {

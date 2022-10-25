@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming } from "react-native-reanimated";
+import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming } from "react-native-reanimated";
 import Colors from "../../utils/ColorPallete/Colors";
+import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
 
 export default function AchievementUnlockedComponent({ achievement, number }) {
+    const { unlockedAchievements, setUnlockedAchievements } = useContext(UnlockedAchievementsContext);
     const achievementState = useSharedValue(0);
     const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -17,10 +19,16 @@ export default function AchievementUnlockedComponent({ achievement, number }) {
                 withTiming(0, {
                     duration: 1000,
                     easing: Easing.bezier(0.34, 1.56, 0.64, 1)
+                }, () => {
+                    runOnJS(clearAchievements)()
                 })
             )}
         )
     }, [achievementState]);
+
+    const clearAchievements = () => {
+        setUnlockedAchievements([])
+    }
 
     const achievementAnimation = useAnimatedStyle(() => {
         return {

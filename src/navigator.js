@@ -9,22 +9,37 @@ import RegisterScreen from './pages/RegisterScreen/Register'
 import Login from './pages/LoginScreen/Login'
 import BottomTabComponent from './components/BottomMenu/BottomMenuComponent';
 import ThirdRegisterMoreInfo from './pages/RegisterScreen/ThirdRegisterMoreInfo';
+import React, { useMemo, useState } from 'react';
+import { UnlockedAchievementsContext } from './utils/contexts/UnlockedAchievementsContext';
+import ShowAchievementComponent from './components/Achievement/ShowAchievementComponent';
 
 const Stack = createNativeStackNavigator();
 
-const Navigator = () => (
-    <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
-            <Stack.Screen name='Home' component={Home}/>
-            <Stack.Screen name='Login' component={Login}/>
-            <Stack.Screen name='Register' component={RegisterScreen}/>
-            <Stack.Screen name='ThirdRegisterMorInfo' component={ThirdRegisterMoreInfo} />
-            <Stack.Screen name='BottomTabComponent' component={BottomTabComponent}/>
-            <Stack.Screen name='ForgotPasswordRecovery' component={ForgotPasswordRecovery} />
-            <Stack.Screen name='ForgotPasswordCode' component={ForgotPasswordCode} />
-            <Stack.Screen name='ForgotPasswordEmail' component={ForgotPasswordEmail} />
-        </Stack.Navigator>
-    </NavigationContainer>
-)
+const Navigator = () => {
+    const [unlockedAchievements, setUnlockedAchievements] = useState([]);
+    const unlockedAchievementsValue = useMemo(
+        () => ({ unlockedAchievements, setUnlockedAchievements }), 
+        [unlockedAchievements]
+      );
+
+    return (
+        <NavigationContainer>
+            <UnlockedAchievementsContext.Provider value={unlockedAchievementsValue}>
+                <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name='Home' component={Home}/>
+                    <Stack.Screen name='Login' component={Login}/>
+                    <Stack.Screen name='Register' component={RegisterScreen}/>
+                    <Stack.Screen name='ThirdRegisterMorInfo' component={ThirdRegisterMoreInfo} />
+                    <Stack.Screen name='BottomTabComponent' component={BottomTabComponent}/>
+                    <Stack.Screen name='ForgotPasswordRecovery' component={ForgotPasswordRecovery} />
+                    <Stack.Screen name='ForgotPasswordCode' component={ForgotPasswordCode} />
+                    <Stack.Screen name='ForgotPasswordEmail' component={ForgotPasswordEmail} />
+                </Stack.Navigator>
+
+                <ShowAchievementComponent />
+            </UnlockedAchievementsContext.Provider>
+        </NavigationContainer>
+    )
+}
 
 export default Navigator;

@@ -84,13 +84,18 @@ const ListChallenges = ({ route, navigation }) => {
     }, [route]);
 
     useEffect(() => {
-        if(routeParams && routeParams.params && routeParams.params.user) {
-            setUser(routeParams.params.user);
+        function updateUser() {
+            if(routeParams && routeParams.params && routeParams.params.user) {
+                setUser(routeParams.params.user);
+            }
         }
+
+        updateUser();
     }, [isFocused]);
 
     useEffect(() => {
         async function getChallenges() {
+            setIsLoading(true);
             if(currentTechnology && currentTechnology.technology) {
                 try {
                     const response = await Axios.get(`/FindChallengeByTechnologyAndDifficulty/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);

@@ -24,10 +24,12 @@ import { SocketContext } from '../../utils/Socket/socket';
 import UserScoreComponent from "../../components/PlayerVSPlayer/UserScoreComponent";
 import PvPResult from "../../components/PlayerVSPlayer/PvPResult";
 import LoadingComponent from "../../components/Loading/LoadingComponent";
+import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function PvPExercise({ navigation, route }) {exercises
+export default function PvPExercise({ navigation, route }) {
+    const { unlockedAchievements, setUnlockedAchievements } = useContext(UnlockedAchievementsContext);
     const socket = useContext(SocketContext);
     const roomNumber = route.params.roomNumber;
     
@@ -54,14 +56,6 @@ export default function PvPExercise({ navigation, route }) {exercises
         async function getData() {
             let user = JSON.parse(await AsyncStorage.getItem('@User'))
             socket.emit('randomizeExercises', roomNumber);
-            
-            let currentTech = user.technologies.filter(tech => tech.learning);
-
-            if(currentTech.length === 0) {
-                currentTech = user.technologies[0];
-            } else {
-                currentTech = currentTech[0];
-            }
 
             setUser(user);
         }
@@ -70,7 +64,7 @@ export default function PvPExercise({ navigation, route }) {exercises
     }, []);
 
     useEffect(() => {
-        socket.on('randomizedExercises', async (challenges, usersID, technologyName) => {
+        socket.on('randomizedExercises', async (challenges, usersID, technology) => {
             let allExercises = challenges.map((challenge) => {
                 let exercises = challenge.exercises.map((exercise) => {
                     return {
@@ -82,7 +76,7 @@ export default function PvPExercise({ navigation, route }) {exercises
                 return exercises;
             });
 
-            setCurrentTechnology(technologyName);
+            setCurrentTechnology(technology);
             setExercises(allExercises.flat());
             setNumberOfExercises(allExercises.flat().length);
             
@@ -175,6 +169,18 @@ export default function PvPExercise({ navigation, route }) {exercises
                         xpGain: 10
                     });
                 }
+
+                try {
+                    let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
+                        technologyID: currentTechnology.technologyID
+                    });
+
+                    if(response.data.userAchievement) {
+                        setUnlockedAchievements(response.data.userAchievement.map((userAchievement) => userAchievement.achievement));
+                    }
+                } catch(e) {
+                    setError(e.response.data.message);
+                }
             } catch(e) {
                 setError(e.response.data.message);
             }
@@ -214,7 +220,7 @@ export default function PvPExercise({ navigation, route }) {exercises
         try {
             let response = await Axios.post(`SendExerciseCode/${user.userID}/${exercises[questionNumber].exerciseID}`, {
                 userCode: code,
-                language: currentTechnology
+                language: currentTechnology.name
             });
 
             if(response.data.result) {
@@ -317,7 +323,7 @@ export default function PvPExercise({ navigation, route }) {exercises
 
                                             <CodeEditorComponent 
                                                 setCode={setCode} 
-                                                language={currentTechnology} 
+                                                language={currentTechnology.name} 
                                                 theme="dracula" 
                                                 show={exercises[questionNumber].type === "code" && !waitingOpponent} 
                                             />       
@@ -326,7 +332,7 @@ export default function PvPExercise({ navigation, route }) {exercises
                                                 (waitingOpponent && exercises[questionNumber].type === "code") && (
                                                     <>
                                                         <SyntaxHighlighter 
-                                                            language={currentTechnology} 
+                                                            language={currentTechnology.name} 
                                                             style={dracula}
                                                             highlighter={"hljs"}
                                                         >{code}</SyntaxHighlighter>
