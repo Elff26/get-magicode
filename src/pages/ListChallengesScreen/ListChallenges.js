@@ -100,13 +100,15 @@ const ListChallenges = ({ route, navigation }) => {
     }, [isFocused]);
 
     useEffect(() => {
+        let mounted = true;
+
         async function getChallenges() {
             setIsLoading(true);
             if(currentTechnology && currentTechnology.technology) {
                 try {
                     const response = await Axios.get(`/FindChallengeByTechnologyAndDifficulty/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
 
-                    if(response.data.challenges) {
+                    if(response.data.challenges && mounted) {
                         setChallenges(response.data.challenges);
             
                         const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnologyAndDifficulty/${user.userID}/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
@@ -117,15 +119,17 @@ const ListChallenges = ({ route, navigation }) => {
     
                             let challengeToDoTemp = userChallenges.findIndex((item) => !item.completed);
 
-                            if(challengeToDoTemp !== -1) { 
-                                setChallengeToDo(challengeToDoTemp);
-                            } else if(userChallengesLength < response.data.challenges.length) {
-                                setChallengeToDo(userChallengesLength);
-                            } else {
-                                setChallengeToDo(userChallengesLength - 1);
-                            }
+                            if(mounted) {
+                                if(challengeToDoTemp !== -1) { 
+                                    setChallengeToDo(challengeToDoTemp);
+                                } else if(userChallengesLength < response.data.challenges.length) {
+                                    setChallengeToDo(userChallengesLength);
+                                } else {
+                                    setChallengeToDo(userChallengesLength - 1);
+                                }
 
-                            setIsLoading(false);
+                                setIsLoading(false);
+                            }
                         }
                     }
                 } catch(e) {
@@ -135,10 +139,15 @@ const ListChallenges = ({ route, navigation }) => {
         }
 
         getChallenges();
+
+        return () => {
+            mounted = false;
+        }
     }, [currentTechnology, selectedDifficulty]);
 
     async function goToClassroomScreen(challenge) {
         setIsLoading(true);
+
         try {
             const response = await Axios.post(`InitChallenge/${user.userID}/${challenge.challengeID}`)
 
@@ -152,6 +161,7 @@ const ListChallenges = ({ route, navigation }) => {
                         challengeID: challenge.challengeID
                     });
                 }
+
                 setIsLoading(false);
             }
         } catch(e) {

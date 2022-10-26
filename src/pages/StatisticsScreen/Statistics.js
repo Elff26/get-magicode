@@ -58,7 +58,6 @@ export default function Statistics({ navigation }) {
                     setIsLoading(false);
                 }
             } catch (e) {
-                console.log("ASD");
                 setError(e.response.data.message);
             }
         }

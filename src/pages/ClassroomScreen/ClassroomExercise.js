@@ -83,6 +83,11 @@ export default function ClassroomExercise({ navigation, route }) {
                     let result = answers.filter((item) => item.isCorrect).length / challenge.exercises.length;
                     setResult(result);
 
+                    await Axios.post(`/Counter/${user.userID}`, {
+                        numberOfHits: answers.filter((item) => item.isCorrect).length,
+                        numberOfMistakes: challenge.exercises.length - answers.filter((item) => item.isCorrect).length
+                    });
+
                     if(result < 0.5) {
                         const response = await Axios.put(`DecreaseNumberOfLifes/${user.userID}`);
     
