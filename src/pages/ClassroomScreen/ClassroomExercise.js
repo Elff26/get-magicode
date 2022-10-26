@@ -48,33 +48,19 @@ export default function ClassroomExercise({ navigation, route }) {
     const [currentTip, setCurrentTip] = useState(-1);
     const [showTipCard, setShowTipCard] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
-    const tips = [
-        {
-            tipID: 1,
-            tipDescription: 'É um país da Europa'
-        },
-        {
-            tipID: 2,
-            tipDescription: 'Seu idioma é o Holandês'
-        },
-        {
-            tipID: 3,
-            tipDescription: 'Que país é esse?'
-        }
-    ]
+    const [tips, setTips] = useState([]);
 
     useEffect(() => {
         async function getData() {
             try {
               if(challengeID) {
                 const response = await Axios.get(`FindChallengeById/${challengeID}`);
-        
+                
                 if(response.data.challenge) {
-                  let challenge = response.data.challenge;
-                  
-                  setChallenge(challenge);
-                  setNumberOfExercises(challenge.exercises.length - 1);
+                    let challenge = response.data.challenge;
+
+                    setChallenge(challenge);
+                    setNumberOfExercises(challenge.exercises.length - 1);
                 }
       
                 setIsLoading(false);
@@ -89,6 +75,8 @@ export default function ClassroomExercise({ navigation, route }) {
     }, []);
 
     useEffect(() => {
+        let mounted = true;
+
         async function verifyData() {
             try {
                 if(answered) {
@@ -98,13 +86,14 @@ export default function ClassroomExercise({ navigation, route }) {
                     if(result < 0.5) {
                         const response = await Axios.put(`DecreaseNumberOfLifes/${user.userID}`);
     
-                        if(response.data.numberOfLifes) {
+                        if(response.data.numberOfLifes && mounted) {
                             user.numberOfLifes = response.data.numberOfLifes;
 
                             await AsyncStorage.mergeItem("@User", JSON.stringify(user));
                             setUser(user);
                             setAnswered(false);
                         }
+                        setIsLoading(false);
                     } else {
                         const result = await Axios.put(`FinishChallenge/${user.userID}/${challengeID}`);
     
@@ -114,11 +103,15 @@ export default function ClassroomExercise({ navigation, route }) {
                             });
 
                             if(resultUserUpdated.data.user) {
-                                setUser(resultUserUpdated.data.user);
+                                if(mounted) {
+                                    setUser(resultUserUpdated.data.user);
+                                }
                                 await AsyncStorage.mergeItem('@User', JSON.stringify(resultUserUpdated.data.user));
                             }
                             
-                            setIsLoading(false);
+                            if(mounted) {
+                                setIsLoading(false);
+                            }
                             
                             try {
                                 let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
@@ -140,11 +133,31 @@ export default function ClassroomExercise({ navigation, route }) {
             }
         }
 
-        verifyData()
+        verifyData();
+
+        return () => {
+            mounted = false;
+        }
     }, [answered]);
+
+    useEffect(() => {
+        if(!challenge) return;
+
+        async function getTips() {
+            const response = await Axios.get(`FindTipByExercise/${challenge.exercises[questionNumber].exerciseID}`);
+
+            if(response.data.classrooms) {
+                setTips(response.data.classrooms);
+            }
+        }
+
+        getTips();
+    }, [questionNumber, challenge]);
 
     async function goToNextQuestion() {
         setIsLoading(true);
+        setShowTipCard(false);
+        setCurrentTip(-1);
         checkIfIsComplete();
 
         if(answered) {
@@ -154,9 +167,10 @@ export default function ClassroomExercise({ navigation, route }) {
 
         if(challenge.exercises[questionNumber].type === "code") {
             await nextCodeQuestion();
+            setIsLoading(false);
         } else if (challenge.exercises[questionNumber].type === "quiz") {
             await nextQuizQuestion();
-        }
+        } 
     }
 
     async function nextCodeQuestion() {
@@ -171,7 +185,6 @@ export default function ClassroomExercise({ navigation, route }) {
         } else {
             await runCode();
         }
-        setIsLoading(false);
     }
 
     async function nextQuizQuestion() {
@@ -189,11 +202,11 @@ export default function ClassroomExercise({ navigation, route }) {
                     setQuestionNumber(questionNumber + 1);
                 }
 
+                setIsLoading(false);
                 if(questionNumber === numberOfExercises && !answered) {
+                    setIsLoading(true);
                     setAnswered(true);
                     setShowCard(true);
-                } else {
-                    setIsLoading(false);
                 }
             }
         } catch(e) {
@@ -280,6 +293,8 @@ export default function ClassroomExercise({ navigation, route }) {
     }
 
     function returnToPreviousQuestion() {
+        setShowTipCard(false);
+        setCurrentTip(-1);
         if (challenge.exercises[questionNumber].type === "quiz") {
             setChecked(answers[questionNumber - 1].alternativeID);
         }
@@ -423,12 +438,16 @@ export default function ClassroomExercise({ navigation, route }) {
                             setShowCard={setShowCard}
                         />
 
-                        <CardTipComponent 
-                            showCard={showTipCard}
-                            setShowCard={setShowTipCard}
-                            tip={tips[currentTip]}
-                            tipNumber={currentTip}
-                        />
+                        {
+                            tips.length > 0 && (
+                                <CardTipComponent 
+                                    showCard={showTipCard}
+                                    setShowCard={setShowTipCard}
+                                    tip={tips[currentTip]}
+                                    tipNumber={currentTip}
+                                />
+                            )
+                        }
                     </>
                 )
             }

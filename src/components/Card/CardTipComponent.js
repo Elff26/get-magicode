@@ -19,7 +19,7 @@ export default function CardTipComponent({ showCard, setShowCard, tip, tipNumber
 
                         <View>
                             <Text style={styles.info}>
-                                {tip.tipDescription}
+                                {tip.description}
                             </Text>
 
                             <View style={styles.separator} />

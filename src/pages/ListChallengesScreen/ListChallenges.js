@@ -40,6 +40,8 @@ const ListChallenges = ({ route, navigation }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        let mounted = true;
+
         async function getData() {
             setIsLoading(true);
             var userData;
@@ -53,7 +55,7 @@ const ListChallenges = ({ route, navigation }) => {
             try {
                 const responseDifficulties = await Axios.get('/FindAllDifficulties');
     
-                if(responseDifficulties.data.difficulties) {
+                if(responseDifficulties.data.difficulties && mounted) {
                     setDifficulties(responseDifficulties.data.difficulties);
                     setSelectedDifficulty(responseDifficulties.data.difficulties[0]);
                 }
@@ -61,7 +63,7 @@ const ListChallenges = ({ route, navigation }) => {
                 setError(e.response.data.message);
             }
 
-            if(userData) {
+            if(userData && mounted) {
                 setUser(userData);
 
                 if(!userData.technologies || userData.technologies.length == 0) {
@@ -81,6 +83,10 @@ const ListChallenges = ({ route, navigation }) => {
         }
 
         getData();
+
+        return () => {
+            mounted = false;
+        }
     }, [route]);
 
     useEffect(() => {

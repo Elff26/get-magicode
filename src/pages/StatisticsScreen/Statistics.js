@@ -31,6 +31,8 @@ export default function Statistics({ navigation }) {
     const [numberOfAchievements, setNumberOfAchievements] = useState(0);
 
     useEffect(() => {
+        let mounted = true;
+
         async function getData() {
             try {
                 let user = JSON.parse(await AsyncStorage.getItem('@User'))
@@ -38,27 +40,34 @@ export default function Statistics({ navigation }) {
                 const responseClasses = await Axios.get(`/CountAllClassrooms`);
                 const responseAchievements = await Axios.get(`/ListAchievementUserHave/${user.userID}`);
 
-                if(responseUser.data.user) {
+                if(responseUser.data.user && mounted) {
                     setUser(responseUser.data.user);
-                } else {
+                } else if(mounted) {
                     setUser(user);
                 }
 
-                if(responseClasses.data.numberOfClasses) {
+                if(responseClasses.data.numberOfClasses && mounted) {
                     setNumberOfClasses(responseClasses.data.numberOfClasses);
                 }
 
-                if(responseAchievements.data.achievements) {
+                if(responseAchievements.data.achievements && mounted) {
                     setNumberOfAchievements(responseAchievements.data.achievements.length);
                 }
 
-                setIsLoading(false);
+                if(mounted) {
+                    setIsLoading(false);
+                }
             } catch (e) {
+                console.log("ASD");
                 setError(e.response.data.message);
             }
         }
 
         getData();
+
+        return () => {
+            mounted = false;
+        }
     }, [isFocused]);
 
     function goToGoalScreen() {
