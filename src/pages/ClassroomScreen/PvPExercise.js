@@ -101,6 +101,7 @@ export default function PvPExercise({ navigation, route }) {
             socketEventOpponentAnwswer();
             socketEventGoToNextAnswer();
             socketEventChallengeFinished();
+            socketResetNextQuestion();
         }
 
         return () => {
@@ -108,8 +109,15 @@ export default function PvPExercise({ navigation, route }) {
             socket.off('goToNextQuestion');
             socket.off('challengeFinished');
             socket.off('randomizedExercises');
+            socket.off('resetNextQuestion');
         }
     }, [exercises, userAnswers, questionNumber, finished, opponent]);
+
+    const socketResetNextQuestion = () => {
+        socket.on('resetNextQuestion', () => {
+            socket.emit('resetUserNextQuestion');
+        });
+    }
 
     const socketEventOpponentAnwswer = () => {
         socket.on('opponentAnswer', (isCorrect) => {           

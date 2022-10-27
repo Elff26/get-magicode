@@ -19,7 +19,7 @@ export default function UserScoreFinishedComponent({ user, userAnswers, totalXp,
                         : { borderColor: Colors.SILVER_CROWN }]}
                 >
                     {
-                        totalXp > 0 && (
+                        winner === 1 && (
                             <FontAwesome5 name="crown" color={Colors.GOLDEN_CROWN} size={28} />
                         ) 
                     }
