@@ -14,6 +14,7 @@ import MaskInput from 'react-native-mask-input';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
 import Axios from '../../api/api';
+import DateUtils from '../../utils/DateUtils';
 
 export default function ThirdRegisterMoreInfo({ route, navigation }) {
     const routeParams = route;
@@ -40,7 +41,7 @@ export default function ThirdRegisterMoreInfo({ route, navigation }) {
         }
 
         const userData = {
-            birthday,
+            birthday: DateUtils.dateConvertToEUA(birthday),
             phone,
         }
 
