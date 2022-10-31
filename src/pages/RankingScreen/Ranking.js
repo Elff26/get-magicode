@@ -88,52 +88,49 @@ export default function Ranking({ navigation }) {
                     <LoadingComponent />
                 )
             }
-            <View>            
-                
+           
+            <View style={styles.rankType}>
+                <TouchableOpacity style={[
+                        styles.rankTypeButton,
+                        currentRankType === 'general' ? styles.activeRankType : {}
+                    ]}
+                    onPress={onChangeToGeneralRanking}
+                >
+                    <Text style={styles.rankTypeText}>Geral</Text>
+                </TouchableOpacity>
 
-                <View style={styles.rankType}>
-                    <TouchableOpacity style={[
-                            styles.rankTypeButton,
-                            currentRankType === 'general' ? styles.activeRankType : {}
-                        ]}
-                        onPress={onChangeToGeneralRanking}
+                <TouchableOpacity style={[
+                        styles.rankTypeButton,
+                        currentRankType === 'month' ? styles.activeRankType : {}
+                    ]}
+                    onPress={onChangeToMonthlyRanking}
                     >
-                        <Text style={styles.rankTypeText}>Geral</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[
-                            styles.rankTypeButton,
-                            currentRankType === 'month' ? styles.activeRankType : {}
-                        ]}
-                        onPress={onChangeToMonthlyRanking}
-                        >
-                        <Text style={styles.rankTypeText}>Mensal</Text>
-                    </TouchableOpacity>
-                </View>
-
-                {
-                    topUsers.length > 0 && (
-                        <TopThreeUsers 
-                            usersRank={topUsers}
-                        />
-                    )
-                }
-                
-                {
-                    otherUsers.length > 0 && (
-                        <FlatList
-                            data={otherUsers}
-                            contentContainerStyle={styles.otherUsersRanking}
-                            renderItem={(user) => (
-                                <UserRank 
-                                    userRank={user.item}
-                                    position={user.index + 4}
-                                />
-                            )}
-                        />
-                    )
-                }
+                    <Text style={styles.rankTypeText}>Mensal</Text>
+                </TouchableOpacity>
             </View>
+
+            {
+                topUsers.length > 0 && (
+                    <TopThreeUsers 
+                        usersRank={topUsers}
+                    />
+                )
+            }
+            
+            {
+                otherUsers.length > 0 && (
+                    <FlatList
+                        data={otherUsers}
+                        contentContainerStyle={styles.otherUsersRanking}
+                        renderItem={(user) => (
+                            <UserRank 
+                                userRank={user.item}
+                                position={user.index + 4}
+                            />
+                        )}
+                    />
+                )
+            }
         </View>
     )
 }

@@ -26,8 +26,7 @@ export default function({ usersRank }) {
                     />
                 )
             }
-           
-           {
+            {
                 usersRank.length > 2 && (
                     <UserTopRank
                         userRank={usersRank[2]}

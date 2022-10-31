@@ -26,18 +26,24 @@ export default function UserTopRank({ userRank, position }) {
     }, []); 
 
     return (
-        <View style={[styles.topUsersRank, position === 1 ? styles.topUserRank : {}]}>
-            <View style={styles.topUsersView}>
-                <FontAwesome5 name="crown" color={iconColor} size={28} />
-                <Image 
-                    style={styles.userImage}
-                    source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.imagem }}
-                />
-                <Text style={styles.rankTextPosition}>#{position}</Text>
-                <Text style={styles.rankTextName}>{userRank.user.name}</Text>
-                <Text style={styles.rankTextName}>{userRank.xp} XP</Text>
-            </View>
-        </View> 
+        <>
+            {
+                userRank.user && (
+                    <View style={[styles.topUsersRank, position === 1 ? styles.topUserRank : {}]}>
+                        <View style={styles.topUsersView}>
+                            <FontAwesome5 name="crown" color={iconColor} size={28} />
+                            <Image 
+                                style={styles.userImage}
+                                source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.imagem }}
+                            />
+                            <Text style={styles.rankTextPosition}>#{position}</Text>
+                            <Text style={styles.rankTextName}>{userRank.user.name}</Text>
+                            <Text style={styles.rankTextName}>{userRank.xp} XP</Text>
+                        </View>
+                    </View> 
+                )
+            }
+        </>
     )
 }
 

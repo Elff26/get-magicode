@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 
 import { 
+    ActivityIndicator,
     Image, 
     ScrollView,
     StyleSheet, 
@@ -28,6 +29,7 @@ export default function Statistics({ navigation }) {
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [imageIsLoading, setImageIsLoading] = useState(true);
     const [numberOfClasses, setNumberOfClasses] = useState(0);
     const [numberOfAchievements, setNumberOfAchievements] = useState(0);
     const [image, setImage] = useState(null);
@@ -41,14 +43,14 @@ export default function Statistics({ navigation }) {
                     setImage(`data:image;base64,${userImage.data.user}`);
                 }
     
-                setIsLoading(false);
+                setImageIsLoading(false);
             } catch(e) {
                 setError(e.response.data.message);
             }
         }
 
         if(user.userID && !image) {
-            setIsLoading(true);
+            setImageIsLoading(true);
             getData();
         }
     }, [user.userID]);
@@ -149,13 +151,24 @@ export default function Statistics({ navigation }) {
                     user.statistics && (
                         <ScrollView contentContainerStyle={styles.statisticsContent}>
                             <View style={styles.userInfo}>
-                                <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
-                                    <Image 
-                                        style={[styles.userImage, image ? {} : styles.userImageBorder]}
-                                        source={{ uri: image ? image : 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
-                                    ></Image>
-                                    <Text style={styles.userName}>{user.name}</Text>
-                                </TouchableOpacity>
+                                {
+                                    imageIsLoading ? (
+                                        <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
+                                            <View style={styles.userImage}>
+                                                <ActivityIndicator />
+                                            </View>
+                                        </TouchableOpacity>
+                                    ) : (
+                                        <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
+                                            <Image 
+                                                style={[styles.userImage, image ? {} : styles.userImageBorder]}
+                                                source={{ uri: image ? image : 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
+                                            ></Image>
+                                        </TouchableOpacity>
+                                    )
+                                }
+
+                                <Text style={styles.userName}>{user.name}</Text>
                             </View>
 
                             <ProgressBar 
@@ -267,7 +280,9 @@ const styles = StyleSheet.create({
     userImage: {
         width: 150,
         height: 150,
-        borderRadius: 75
+        borderRadius: 75,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 
     userImageBorder: {

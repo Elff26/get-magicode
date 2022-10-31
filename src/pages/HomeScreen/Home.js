@@ -20,6 +20,7 @@ import {
 } from '@env';
 import FacebookAuth from '../../utils/ThirdAuth/FacebookAuth';
 import GoogleAuth from '../../utils/ThirdAuth/GoogleAuth';
+import LoadingComponent from '../../components/Loading/LoadingComponent';
 
 const Home = ({ navigation }) => {
   const [error, setError] = useState("");
@@ -59,6 +60,7 @@ const Home = ({ navigation }) => {
 
   const checkToken = async (accessToken, url, userID) => {
     try {
+      setLoading(true);
       let result = await Axios.get(`${url}`, {
         headers: {
           accesstoken: accessToken,
@@ -75,6 +77,7 @@ const Home = ({ navigation }) => {
         await SecureStore.setItemAsync(SECURE_STORE_KEY, result.data.accessToken);
       }
   
+      setLoading(false);
       navigation.navigate('BottomTabComponent');
     } catch (error) {
       clearUserData();
@@ -83,12 +86,16 @@ const Home = ({ navigation }) => {
 
   const onGoogleAuthentication = async () => {
     setError("");
-    GoogleAuth(navigation, setError)
+    setLoading(true);
+    await GoogleAuth(navigation, setError, setLoading);
+    setLoading(false);
   }
 
   const onFacebookAuthentication = async () => {
     setError("");
-    FacebookAuth(navigation, setError);
+    setLoading(true);
+    await FacebookAuth(navigation, setError, setLoading);
+    setLoading(false);
   }
 
   function goToLogin() {
@@ -103,7 +110,7 @@ const Home = ({ navigation }) => {
     <View style={styles.screenContainer}>
       {
         loading && (
-          <ActivityIndicator></ActivityIndicator>
+          <LoadingComponent />
         )
       }
       {
