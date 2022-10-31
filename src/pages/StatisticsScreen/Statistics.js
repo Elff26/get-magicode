@@ -34,14 +34,17 @@ export default function Statistics({ navigation }) {
 
     useEffect(() => {
         async function getData() {
-            console.log('A');
-            const userImage = await Axios.get(`GetProfilePicture/${user.userID}`);
-            
-            if(userImage.data.user) {
-                setImage(`data:image;base64,${userImage.data.user}`);
-            }
+            try {
+                const userImage = await Axios.get(`GetProfilePicture/${user.userID}`);
 
-            setIsLoading(false);
+                if(userImage.data.user) {
+                    setImage(`data:image;base64,${userImage.data.user}`);
+                }
+    
+                setIsLoading(false);
+            } catch(e) {
+                setError(e.response.data.message);
+            }
         }
 
         if(user.userID && !image) {
