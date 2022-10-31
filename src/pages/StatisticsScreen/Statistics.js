@@ -19,6 +19,7 @@ import InfoComponent from '../../components/Statistics/InfoComponent';
 import Axios from '../../api/api';
 import { useIsFocused } from "@react-navigation/native";
 import LoadingComponent from '../../components/Loading/LoadingComponent';
+import * as ImagePicker from 'expo-image-picker';
 
 
 export default function Statistics({ navigation }) {
@@ -29,6 +30,25 @@ export default function Statistics({ navigation }) {
     const [isLoading, setIsLoading] = useState(true);
     const [numberOfClasses, setNumberOfClasses] = useState(0);
     const [numberOfAchievements, setNumberOfAchievements] = useState(0);
+    const [image, setImage] = useState(null);
+
+    useEffect(() => {
+        async function getData() {
+            console.log('A');
+            const userImage = await Axios.get(`GetProfilePicture/${user.userID}`);
+            
+            if(userImage.data.user) {
+                setImage(`data:image;base64,${userImage.data.user}`);
+            }
+
+            setIsLoading(false);
+        }
+
+        if(user.userID && !image) {
+            setIsLoading(true);
+            getData();
+        }
+    }, [user.userID]);
 
     useEffect(() => {
         let mounted = true;
@@ -81,6 +101,27 @@ export default function Statistics({ navigation }) {
         navigation.navigate('Achievement');
     }
 
+    const pickImage = async () => {
+        setIsLoading(true);
+        let imagePicked = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          base64: true,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 0.2,
+        });
+    
+        if (!imagePicked.cancelled) {
+            setImage(`data:image;base64,${imagePicked.base64}`);
+
+            await Axios.put(`/SaveProfilePicture/${user.userID}`, {
+                image: imagePicked.base64
+            });
+        }
+
+        setIsLoading(false);
+    };
+
     return (
         
         <View style={styles.screenContainer}>
@@ -105,11 +146,13 @@ export default function Statistics({ navigation }) {
                     user.statistics && (
                         <ScrollView contentContainerStyle={styles.statisticsContent}>
                             <View style={styles.userInfo}>
-                                <Image 
-                                    style={styles.userImage}
-                                    source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
-                                ></Image>
-                                <Text style={styles.userName}>{user.name}</Text>
+                                <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
+                                    <Image 
+                                        style={[styles.userImage, image ? {} : styles.userImageBorder]}
+                                        source={{ uri: image ? image : 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' }}
+                                    ></Image>
+                                    <Text style={styles.userName}>{user.name}</Text>
+                                </TouchableOpacity>
                             </View>
 
                             <ProgressBar 
@@ -213,12 +256,20 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
 
+    imageButton: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
     userImage: {
         width: 150,
         height: 150,
-        borderWidth: 1,
-        borderColor: Colors.BLACK,
         borderRadius: 75
+    },
+
+    userImageBorder: {
+        borderWidth: 1,
+        borderColor: Colors.BLACK
     },
 
     userName: {
