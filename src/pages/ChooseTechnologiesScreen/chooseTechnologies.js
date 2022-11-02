@@ -27,6 +27,7 @@ export default function ChooseTechnologies({ navigation }) {
     useEffect(() => {
         async function getData() {
             const response = await Axios.get("/ListAllTechnologies");
+
             if(response.data.technologies) {
                 setTechnologies(response.data.technologies);
                 setUser(JSON.parse(await AsyncStorage.getItem('@User')));

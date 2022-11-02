@@ -56,8 +56,10 @@ export default function Login({ route, navigation }) {
                 password
             });
 
-            if(response.data.user) {
-                await AsyncStorage.setItem('@User', JSON.stringify(response.data.user));
+            if(response.data.userInfo) {
+                await AsyncStorage.setItem('@User', JSON.stringify(response.data.userInfo.user));
+                await AsyncStorage.setItem('@Token', response.data.userInfo.token);
+
                 setIsLoading(false);
                 navigation.navigate('BottomTabComponent');
             }

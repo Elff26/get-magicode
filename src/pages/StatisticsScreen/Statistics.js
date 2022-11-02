@@ -60,7 +60,8 @@ export default function Statistics({ navigation }) {
 
         async function getData() {
             try {
-                let user = JSON.parse(await AsyncStorage.getItem('@User'))
+                let user = JSON.parse(await AsyncStorage.getItem('@User'));
+
                 const responseUser = await Axios.get(`/FindUserById/${user.userID}`);
                 const responseClasses = await Axios.get(`/CountAllClassrooms`);
                 const responseAchievements = await Axios.get(`/ListAchievementUserHave/${user.userID}`);
