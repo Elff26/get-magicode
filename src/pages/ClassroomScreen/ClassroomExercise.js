@@ -36,7 +36,7 @@ export default function ClassroomExercise({ navigation, route }) {
 
     const [questionNumber, setQuestionNumber] = useState(0);
     const [user, setUser] = useState();
-    const [code, setCode] = useState("//Seu código vai aqui! :)");
+    const [code, setCode] = useState("");
     const [challenge, setChallenge] = useState(null);
     const [error, setError] = useState('');
     const [checked, setChecked] = useState(0);
@@ -186,6 +186,7 @@ export default function ClassroomExercise({ navigation, route }) {
         }
 
         if(answered !== -1) {
+            setCode("")
             setIsLoading(false);
             setQuestionNumber(questionNumber + 1);
         } else {
@@ -419,9 +420,13 @@ export default function ClassroomExercise({ navigation, route }) {
                                 </Text>
                             </ButtonComponent>
 
-                            {
-                                questionNumber <= numberOfExercises && (
-                                    <ButtonComponent newStyle={{...styles.newStyleButton, backgroundColor: questionNumber === numberOfExercises ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR}} onPress={goToNextQuestion}>
+                            {(
+                                questionNumber <= numberOfExercises && (code !== "" || codeQuestionAnswered)) && (
+                                    <ButtonComponent 
+                                        newStyle={{...styles.newStyleButton, 
+                                            backgroundColor: questionNumber === numberOfExercises ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR
+                                        }} 
+                                        onPress={goToNextQuestion}>
                                         <Text style={styles.textButton}>
                                             <Feather 
                                                 name={questionNumber === numberOfExercises ? "check" : "chevron-right"} 

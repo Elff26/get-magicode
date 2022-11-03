@@ -8,6 +8,7 @@ import PvPCreateRoom from "./PvPCreateRoomComponent";
 import CardComponent from "../Card/CardComponent";
 import { Picker } from "@react-native-picker/picker";
 import Axios from '../../api/api';
+import { set } from "react-native-reanimated";
 
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
@@ -45,8 +46,13 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user,
         });
 
         socket.on('initChallenge', (roomNumber) => {
+            let challengeRoomNumber = roomNumber;
+
+            setCreatedRoomNumber("");
+            setRoomNumber("");
+            setSelectTechnology(0);
             navigation.navigate('PvPExercise', {
-                roomNumber
+                roomNumber: challengeRoomNumber
             });
         });
 
@@ -81,7 +87,7 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user,
                     <CardComponent showCard={showCard} setShowCard={setShowCard}>
                         <Text style={styles.pvpCardTitle}>Desafiar Jogadores</Text>
                         {
-                            !createdRoomNumber && !selectTechnology && (
+                            !createdRoomNumber && !selectTechnology ? (
                                 <View style={styles.pvpCardContent}>
                                     <PvPEnterRoom 
                                         acceptChallenge={acceptChallenge} 
@@ -99,11 +105,11 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user,
                                         </ButtonComponent>
                                     </View>
                                 </View>
-                            )
+                            ) : null
                         }
 
                         {
-                            !createdRoomNumber && selectTechnology && allTechnologies.length > 0 && (
+                            !createdRoomNumber && selectTechnology && allTechnologies.length > 0 ? (
                                 <View>
                                     <Picker
                                         selectedValue={selectedTechnologyID}
@@ -125,7 +131,7 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user,
                                         </ButtonComponent>
                                     </View>
                                 </View>
-                            )
+                            ) : null
                         }
 
                         {
