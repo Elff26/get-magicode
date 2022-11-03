@@ -24,6 +24,7 @@ import CardChallengeFinishedComponent from "../../components/Card/CardChallengeF
 import CardTipComponent from "../../components/Card/CardTipComponent";
 import LoadingComponent from "../../components/Loading/LoadingComponent";
 import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
+import ToastComponent from "../../components/Toast/ToastComponent";
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -172,7 +173,6 @@ export default function ClassroomExercise({ navigation, route }) {
 
         if(challenge.exercises[questionNumber].type === "code") {
             await nextCodeQuestion();
-            setIsLoading(false);
         } else if (challenge.exercises[questionNumber].type === "quiz") {
             await nextQuizQuestion();
         } 
@@ -186,6 +186,7 @@ export default function ClassroomExercise({ navigation, route }) {
         }
 
         if(answered !== -1) {
+            setIsLoading(false);
             setQuestionNumber(questionNumber + 1);
         } else {
             await runCode();
@@ -194,6 +195,11 @@ export default function ClassroomExercise({ navigation, route }) {
 
     async function nextQuizQuestion() {
         try {
+            if(!checked) {
+                setIsLoading(false);
+                return ToastComponent('Escolha uma opção!')
+            }
+
             let response = await Axios.get(`AlternativeIsCorrect/${checked}`);
 
             if(response.data) {
@@ -274,6 +280,9 @@ export default function ClassroomExercise({ navigation, route }) {
 
                     setAnswered(true);
                     setShowCard(true);
+                    setIsLoading(true);
+                } else {
+                    setIsLoading(false);
                 }
 
                 setCodeQuestionAnswered(true);
@@ -351,7 +360,6 @@ export default function ClassroomExercise({ navigation, route }) {
             {
                 challenge && (
                     <>
-                        
                         <ScrollView>
                                 <Header backArrow={true} navigation={navigation}>
                                     <TouchableOpacity style={styles.tipIcon} onPress={getATip}>
@@ -360,36 +368,41 @@ export default function ClassroomExercise({ navigation, route }) {
                                 </Header>
                                     <View style={styles.content}>
                                         <Text style={styles.title}>Questão {questionNumber + 1}</Text>
-
-                                        <RenderJsonContent content={challenge.exercises[questionNumber].description} />
-
-                                        <RenderAlternativesComponent 
-                                            alternatives={challenge.exercises[questionNumber].alternatives}
-                                            checked={checked}
-                                            setChecked={setChecked}
-                                            answered={answered}
-                                            show={challenge.exercises[questionNumber].type === "quiz"}
-                                        />
-                                        
-
-                                        <CodeEditorComponent 
-                                            setCode={setCode} 
-                                            language={challenge.technology.name} 
-                                            theme="dracula" 
-                                            show={challenge.exercises[questionNumber].type === "code" && !codeQuestionAnswered} 
-                                        />  
                                         
                                         {
-                                            codeQuestionAnswered && (
-                                                <SyntaxHighlighter 
-                                                    language={challenge.technology.name} 
-                                                    style={dracula}
-                                                    highlighter={"hljs"}
-                                                >{answers[questionNumber].code}</SyntaxHighlighter>
-                                            )
-                                        }  
+                                            challenge.exercises.length > 0 && (
+                                                <>
+                                                    <RenderJsonContent content={challenge.exercises[questionNumber].description} />
 
-                                        <OutputTerminal answer={codeQuestionAnswered ? answers[questionNumber].answer : null} />        
+                                                    <RenderAlternativesComponent 
+                                                        alternatives={challenge.exercises[questionNumber].alternatives}
+                                                        checked={checked}
+                                                        setChecked={setChecked}
+                                                        answered={answered}
+                                                        show={challenge.exercises[questionNumber].type === "quiz"}
+                                                    />
+
+                                                    <CodeEditorComponent 
+                                                        setCode={setCode} 
+                                                        language={challenge.technology.name} 
+                                                        theme="dracula" 
+                                                        show={challenge.exercises[questionNumber].type === "code" && !codeQuestionAnswered} 
+                                                    />  
+
+                                                    {
+                                                        codeQuestionAnswered && (
+                                                            <SyntaxHighlighter 
+                                                                language={challenge.technology.name} 
+                                                                style={dracula}
+                                                                highlighter={"hljs"}
+                                                            >{answers[questionNumber].code}</SyntaxHighlighter>
+                                                        )
+                                                    }  
+
+                                                    <OutputTerminal answer={codeQuestionAnswered ? answers[questionNumber].answer : null} />        
+                                                </>
+                                            )
+                                        }
                                     </View>
                         </ScrollView>
 

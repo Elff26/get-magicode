@@ -8,27 +8,38 @@ import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import Colors from '../../utils/ColorPallete/Colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CardLifeComponent from '../Card/CardLifeComponent';
+import Axios from '../../api/api';
+import { useIsFocused } from '@react-navigation/native';
 
-export default function LifeCompoenent({ numberOfLifes }) {
+export default function LifeCompoenent({ userID, numberOfLifes }) {
+    const isFocused = useIsFocused();
     const [lifeArray, setLifeArray] = useState([]);
     const [showCard, setShowCard] = useState(false);
 
     useEffect(() => {
-        let i = 0;
-        let lifes = [];
+        async function getData() {
+            let result = await Axios.get(`/GetNumberOfLife/${userID}`);
 
-        while(i < 5) {
-            if(i < numberOfLifes) {
-                lifes.push(1);
-            } else {
-                lifes.push(0);
+            if(result.data.numberOfLifes != undefined) {
+                let i = 0;
+                let lifes = [];
+
+                while(i < 5) {
+                    if(i < result.data.numberOfLifes) {
+                        lifes.push(1);
+                    } else {
+                        lifes.push(0);
+                    }
+        
+                    i++;
+                }
+        
+                setLifeArray(lifes);
             }
-
-            i++;
         }
 
-        setLifeArray(lifes);
-    }, [numberOfLifes]);
+        getData();
+    }, [userID, isFocused, numberOfLifes]);
 
     return (
         <TouchableOpacity style={styles.lifeComponentBar} onPress={() => setShowCard(true)}>
@@ -42,7 +53,7 @@ export default function LifeCompoenent({ numberOfLifes }) {
                 })
             }
 
-            <CardLifeComponent showCard={showCard} setShowCard={setShowCard} numberOfLifes={numberOfLifes} />
+            <CardLifeComponent showCard={showCard} setShowCard={setShowCard} numberOfLifes={lifeArray.length} />
         </TouchableOpacity>
     )
 }

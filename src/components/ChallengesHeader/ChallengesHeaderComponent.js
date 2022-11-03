@@ -5,11 +5,11 @@ import {
 import ChooseTechnologyComponent from '../ChooseTechnology/ChooseTechnologyComponent';
 import LifeCompoenent from '../Life/LifeComponent'
 
-export default function ChallengesHeaderComponent({ navigation, openBottomSheet, setOpenBottomSheet, currentTechnology, numberOfLifes }) {
+export default function ChallengesHeaderComponent({ navigation, openBottomSheet, setOpenBottomSheet, currentTechnology, userID, numberOfLifes }) {
     return (
         <View style={styles.header}>
             <ChooseTechnologyComponent navigation={navigation} openBottomSheet={openBottomSheet} setOpenBottomSheet={setOpenBottomSheet} currentTechnology={currentTechnology} />
-            <LifeCompoenent numberOfLifes={numberOfLifes} />
+            <LifeCompoenent userID={userID} numberOfLifes={numberOfLifes} />
         </View>
     )
 }

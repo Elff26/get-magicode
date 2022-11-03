@@ -184,6 +184,7 @@ const ListChallenges = ({ route, navigation }) => {
                         openBottomSheet={openBottomSheet} 
                         setOpenBottomSheet={setOpenBottomSheet} 
                         currentTechnology={currentTechnology}
+                        userID={user.userID}
                         numberOfLifes={user.numberOfLifes}
                     />
                 )
@@ -220,7 +221,7 @@ const ListChallenges = ({ route, navigation }) => {
                         renderItem={({ item, index }) => (
                             <View key={item.challengeID} style={styles.challengesGroup}>
                                 <PathSide index={index} completed={index < challengeToDo} animated={challengeToDo === index ? true : false} todo={challengeToDo}>
-                                    <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index)}>
+                                    <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index) || user.numberOfLifes <= 0}>
                                         <AnimatedButtonGroupComponent item={item} animated={challengeToDo === index ? true : false} />
                                         
                                         <Text>{item.name}</Text>
