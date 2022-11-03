@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
-  ActivityIndicator,
   StyleSheet, 
   Text, 
   TouchableOpacity, 
@@ -28,12 +27,13 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     async function getData() {
-      let accessToken = await SecureStore.getItemAsync(SECURE_STORE_KEY);
+      let token = await AsyncStorage.getItem('@Token');
+      let externalAccessToken = await SecureStore.getItemAsync(SECURE_STORE_KEY);
       let service = await AsyncStorage.getItem('@Service');
       let user = JSON.parse(await AsyncStorage.getItem('@User'));
 
       if(user) {
-        if(accessToken && service) {
+        if(externalAccessToken && service) {
           let url = "";
 
           if(service === 'google') {
@@ -44,8 +44,10 @@ const Home = ({ navigation }) => {
             return clearUserData();
           }
 
-          checkToken(accessToken, url, user.userID);
-        }
+          checkToken(externalAccessToken, url, user.userID);
+        } else if(token && user) {
+          return getUser(user);
+        } 
       }
     }
 
@@ -58,25 +60,41 @@ const Home = ({ navigation }) => {
     await AsyncStorage.clear();
   }
 
-  const checkToken = async (accessToken, url, userID) => {
+  const getUser = async (user) => {
     try {
       setLoading(true);
+    
+      let userResponse = await Axios.get(`FindUserById/${user.userID}`);
+  
+      if(userResponse.data.user) {
+        await AsyncStorage.mergeItem('@User', JSON.stringify(userResponse.data.user));
+  
+        setLoading(false);
+        navigation.navigate('BottomTabComponent');
+      }
+    } catch(e) {
+      clearUserData();
+    }
+    
+  }
+
+  const checkToken = async (externalAccessToken, url, userID) => {
+    try {
+      setLoading(true);
+
       let result = await Axios.get(`${url}`, {
         headers: {
-          accesstoken: accessToken,
+          externalaccesstoken: externalAccessToken,
           userid: userID
         }
       });
   
-      if(!result) {
+      if(!result.data) {
         throw new Error('Não autorizado');
       }      
-
-      if(result.data.accessToken) {
-        await SecureStore.deleteItemAsync(SECURE_STORE_KEY);
-        await SecureStore.setItemAsync(SECURE_STORE_KEY, result.data.accessToken);
-      }
   
+      await AsyncStorage.setItem('@Token', result.data.userInfo.token);
+
       setLoading(false);
       navigation.navigate('BottomTabComponent');
     } catch (error) {

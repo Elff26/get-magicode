@@ -21,12 +21,14 @@ export default async function FacebookAuth(navigation, setError) {
           facebookCode: authResponse.params.code
         });
 
-        if(response.data.user && response.data.token) {
-          let token = response.data.token;
-          let user = response.data.user;
+        if(response.data.userInfo.user && response.data.userInfo.externalToken && response.data.userInfo.token) {
+          let externalToken = response.data.userInfo.externalToken;
+          let token = response.data.userInfo.token;
+          let user = response.data.userInfo.user;
 
-          await SecureStore.setItemAsync(SECURE_STORE_KEY, token);
+          await SecureStore.setItemAsync(SECURE_STORE_KEY, externalToken);
           await AsyncStorage.setItem("@Service", 'facebook');
+          await AsyncStorage.setItem("@Token", token);
           
           if(!user.phone || !user.birthday) {
             navigation.navigate('ThirdRegisterMorInfo', {
@@ -35,8 +37,8 @@ export default async function FacebookAuth(navigation, setError) {
 
             return;
           }
-          
-          await AsyncStorage.setItem('@User', JSON.stringify(response.data.user));
+
+          await AsyncStorage.setItem('@User', JSON.stringify(response.data.userInfo.user));
           navigation.navigate('BottomTabComponent');
         }
       }
