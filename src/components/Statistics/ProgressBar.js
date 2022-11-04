@@ -6,7 +6,7 @@ import {
 } from "react-native";
 import Colors from "../../utils/ColorPallete/Colors";
 
-export default function ProgressBar({ title, currentData, maxData, newStyle, showIcon }) {
+export default function ProgressBar({ title, currentData, maxData, newStyle, showIcon, userLevel }) {
     return (
         <View style={[styles.progressBarComponent, newStyle]}>
             <Text style={styles.progressBarTitle}>{title}</Text>
@@ -15,7 +15,7 @@ export default function ProgressBar({ title, currentData, maxData, newStyle, sho
                     showIcon && (
                         <View style={{ justifyContent: 'center', alignItems: 'center', zIndex: 2, position: 'absolute', margin: -20 }}>
                             <FontAwesome5 name="certificate" size={45} color={Colors.PRIMARY_COLOR} />
-                            <Text style={{ fontSize: 24, fontWeight: 'bold', color: Colors.WHITE_SAFE_COLOR, position: 'absolute' }}>1</Text>
+                            <Text style={{ fontSize: 24, fontWeight: 'bold', color: Colors.WHITE_SAFE_COLOR, position: 'absolute' }}>{userLevel}</Text>
                         </View>
                     )
                 }

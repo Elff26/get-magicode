@@ -176,6 +176,7 @@ export default function Statistics({ navigation }) {
                                 currentData={user.statistics.currentXp}
                                 maxData={user.statistics.level.valueXp}
                                 showIcon={true}
+                                userLevel={user.statistics.level.levelNumber}
                             />
 
                             <View style={styles.infoContent}>

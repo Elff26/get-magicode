@@ -421,7 +421,7 @@ export default function ClassroomExercise({ navigation, route }) {
                             </ButtonComponent>
 
                             {(
-                                questionNumber <= numberOfExercises && (code !== "" || codeQuestionAnswered)) && (
+                                questionNumber <= numberOfExercises && ((code !== "" || codeQuestionAnswered) || challenge.exercises[questionNumber].type === "quiz")) && (
                                     <ButtonComponent 
                                         newStyle={{...styles.newStyleButton, 
                                             backgroundColor: questionNumber === numberOfExercises ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR
