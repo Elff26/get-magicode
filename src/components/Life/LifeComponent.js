@@ -18,23 +18,28 @@ export default function LifeCompoenent({ userID, numberOfLifes }) {
 
     useEffect(() => {
         async function getData() {
-            let result = await Axios.get(`/GetNumberOfLife/${userID}`);
+            try {
+                await Axios.put(`/AddUserLife/${userID}`);
+                let result = await Axios.get(`/GetNumberOfLife/${userID}`);
 
-            if(result.data.numberOfLifes != undefined) {
-                let i = 0;
-                let lifes = [];
+                if(result.data.numberOfLifes != undefined) {
+                    let i = 0;
+                    let lifes = [];
 
-                while(i < 5) {
-                    if(i < result.data.numberOfLifes) {
-                        lifes.push(1);
-                    } else {
-                        lifes.push(0);
+                    while(i < 5) {
+                        if(i < result.data.numberOfLifes) {
+                            lifes.push(1);
+                        } else {
+                            lifes.push(0);
+                        }
+            
+                        i++;
                     }
-        
-                    i++;
+            
+                    setLifeArray(lifes);
                 }
-        
-                setLifeArray(lifes);
+            } catch(e) {
+                console.log(e);
             }
         }
 
