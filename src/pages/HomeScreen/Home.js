@@ -73,6 +73,7 @@ const Home = ({ navigation }) => {
         navigation.navigate('BottomTabComponent');
       }
     } catch(e) {
+      setLoading(false);
       clearUserData();
     }
     

@@ -257,7 +257,7 @@ export default function ClassroomExercise({ navigation, route }) {
                 let result = response.data.result;
 
                 if(result.isCorrect) {
-                    await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                    let a = await Axios.post(`/AddExperienceToUser/${user.userID}`, {
                         xpGain: challenge.difficulty.valueXP
                     });
                 }
@@ -299,7 +299,7 @@ export default function ClassroomExercise({ navigation, route }) {
         allAnswers.push({
             exerciseID: challenge.exercises[questionNumber].exerciseID,
             isCorrect: answer.isCorrect,
-            answer,
+            response: answer,
             answered: true,
             code
         });
@@ -379,7 +379,7 @@ export default function ClassroomExercise({ navigation, route }) {
                                                         alternatives={challenge.exercises[questionNumber].alternatives}
                                                         checked={checked}
                                                         setChecked={setChecked}
-                                                        answered={answered}
+                                                        answered={answered && !isLoading}
                                                         show={challenge.exercises[questionNumber].type === "quiz"}
                                                     />
 
@@ -400,7 +400,7 @@ export default function ClassroomExercise({ navigation, route }) {
                                                         )
                                                     }  
 
-                                                    <OutputTerminal answer={codeQuestionAnswered ? answers[questionNumber].answer : null} />        
+                                                    <OutputTerminal answers={codeQuestionAnswered ? answers[questionNumber].response : null} />        
                                                 </>
                                             )
                                         }

@@ -1,26 +1,35 @@
-import { useEffect, useState } from "react";
 import { 
+    Dimensions,
+    ScrollView,
     StyleSheet, 
     Text,
     View
 } from "react-native";
 import Colors from "../../utils/ColorPallete/Colors";
 
-export default function OutputTerminal({ answer }) {
+const width = Dimensions.get('window').width;
+
+export default function OutputTerminal({ answers }) {
     return (
         <>
         {
-            answer && (
-                <>
-                    <Text>Output: </Text>
-                    <View style={styles.terminal}>
-                        <Text style={styles.textTerminal}>{answer.output}</Text>
-
-                        <View style={styles.separator}></View>
-                        <Text style={styles.textTerminal}>Tempo de CPU: {answer.cpuTime}</Text>
-                        <Text style={styles.textTerminal}>Memória: {answer.memory}</Text>
-                    </View>
-                </>
+            answers && (
+                <ScrollView contentContainerStyle={styles.outputs} horizontal={true}>
+                    {
+                        answers.jdoodleResponse.map((answer, index) => (
+                            <View key={index}>
+                                <Text style={styles.textStyle}>Output {index + 1}: </Text>
+                                <View style={styles.terminal}>
+                                    <Text style={styles.textTerminal}>{answer.output}</Text>
+            
+                                    <View style={styles.separator}></View>
+                                    <Text style={styles.textTerminal}>Tempo de CPU: {answer.cpuTime}</Text>
+                                    <Text style={styles.textTerminal}>Memória: {answer.memory}</Text>
+                                </View>
+                            </View>
+                        ))
+                    }
+                </ScrollView>
             )
         }
         </>
@@ -28,12 +37,17 @@ export default function OutputTerminal({ answer }) {
 }
 
 const styles = StyleSheet.create({
+    outputs: {
+        flexDirection: 'row'
+    },
+
     terminal: {
-        width: "95%",
+        width: width - 50,
         backgroundColor: Colors.BLACK,
-        borderRadius: 10,
+        borderRadius: 5,
         padding: 15,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginHorizontal: 5
     },
 
     textTerminal: {
@@ -42,5 +56,11 @@ const styles = StyleSheet.create({
 
     separator: {
         marginVertical: 10
-    }
+    },
+
+    textStyle: {
+        color: Colors.TEXT_COLOR,
+        fontSize: 18,
+        marginLeft: 5
+    },
 })

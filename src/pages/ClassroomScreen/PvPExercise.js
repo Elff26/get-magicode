@@ -199,6 +199,12 @@ export default function PvPExercise({ navigation, route }) {
     }
 
     async function goToNextQuestion() {
+        if(waitingOpponent) {
+            return;
+        }
+
+        setIsLoading(true);
+
         let isCorrect = false;
 
         if(exercises[questionNumber].type === "code") {
@@ -207,6 +213,7 @@ export default function PvPExercise({ navigation, route }) {
             isCorrect = await nextQuizQuestion();
         }
 
+        setIsLoading(false);
         socket.emit('answered', roomNumber, isCorrect);
     }
 
@@ -215,7 +222,7 @@ export default function PvPExercise({ navigation, route }) {
             let response = await Axios.get(`AlternativeIsCorrect/${checked}`);
 
             if(response.data) {
-                saveAnswers(response.data.alternativeIsCorrect);
+                saveAnswers(response.data.alternativeIsCorrect, null);
             }
 
             return response.data.alternativeIsCorrect;
@@ -232,7 +239,7 @@ export default function PvPExercise({ navigation, route }) {
             });
 
             if(response.data.result) {
-                saveAnswers(response.data.result.isCorrect);
+                saveAnswers(response.data.result.isCorrect, response.data.result);
             }
 
             return response.data.result.isCorrect;
@@ -241,10 +248,11 @@ export default function PvPExercise({ navigation, route }) {
         }
     }
 
-    function saveAnswers(isCorrect) {
+    function saveAnswers(isCorrect, answer) {
         setUserAnswers([...userAnswers, {
             exerciseID: exercises[questionNumber].exerciseID,
-            isCorrect
+            isCorrect: isCorrect,
+            response: answer,
         }]);
 
         if(isCorrect) {
@@ -344,9 +352,11 @@ export default function PvPExercise({ navigation, route }) {
                                                             style={dracula}
                                                             highlighter={"hljs"}
                                                         >{code}</SyntaxHighlighter>
+                                                        
+                                                        <OutputTerminal answers={userAnswers[questionNumber] ? userAnswers[questionNumber].response : null} />
                                                     </>
                                                 )
-                                            } 
+                                            }
                                         </View>
                                     </ScrollView>
 
