@@ -34,7 +34,7 @@ export default function UserTopRank({ userRank, position }) {
                             <FontAwesome5 name="crown" color={iconColor} size={28} />
                             <Image 
                                 style={styles.userImage}
-                                source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.imagem }}
+                                source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : `data:image;base64,${userRank.user.image}` }}
                             />
                             <Text style={styles.rankTextPosition}>#{position}</Text>
                             <Text style={styles.rankTextName}>{userRank.user.name}</Text>

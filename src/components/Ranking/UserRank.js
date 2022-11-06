@@ -16,7 +16,7 @@ export default function UserRank({ userRank, position }) {
                         <View style={styles.userView}>
                             <Image 
                                 style={styles.userImage}
-                                source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : userRank.user.image }}
+                                source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : `data:image;base64,${userRank.user.image}` }}
                             />
                             <Text numberOfLines={1} style={styles.rankText}>#{position} - {userRank.user.name}</Text>
                         </View>
