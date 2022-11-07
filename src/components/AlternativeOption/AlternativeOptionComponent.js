@@ -18,7 +18,7 @@ export default function AlternativeOptionComponent({ value, label, status, chang
                 status={status}
                 onPress={() => changeChecked(value)}
             />
-            <Text style={styles.goalText}>{alternativeText}</Text>
+            <Text style={styles.alternativeText}>{alternativeText}</Text>
         </View>
     )
 }
@@ -31,16 +31,11 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
 
-    goalText: {
+    alternativeText: {
         fontSize: 18,
         color:Colors.TEXT_COLOR,
         textAlign: 'auto',
         flexWrap: 'wrap',
         maxWidth: '90%'
-   },
-
-   alternativeText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
    }
 })

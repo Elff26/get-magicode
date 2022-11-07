@@ -74,7 +74,8 @@ export default function SetAGoal({navigation}) {
                                 />
                                 <Text style={styles.goalText}>{item.name}</Text>
                             </View>
-                                <Text style={styles.goalXP}>{item.value}XP por dia</Text>
+                            
+                            <Text style={styles.goalXP}>{item.value}XP por dia</Text>
                         </View>
                         )
                     }
@@ -123,23 +124,22 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.WHITE_SAFE_COLOR
    },
    goalItem: {
-        width: '100%',
+        with: '100%', 
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        backgoundColor:"#444"
    },
    goalText: {
-        fontSize: 19,
-        marginBottom: 15,
+        fontSize: 18,
         color:Colors.TEXT_COLOR,
-        textAlignVertical: 'center'
+        textAlign: 'auto',
+        flexWrap: 'wrap',
+        maxWidth: '90%'
    },
    goalXP: {
         color: Colors.RADIO_TEXT,
         fontSize: 19,
-        marginRight: 110,
-        marginBottom: 15,
         textAlignVertical: 'center',    
    },
    viewRadio: {
@@ -150,5 +150,6 @@ const styles = StyleSheet.create({
    },
    goalRadio: {
         flexDirection: 'row',
+        alignItems: 'center'
    }
 });

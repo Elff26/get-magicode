@@ -25,11 +25,13 @@ import UserScoreComponent from "../../components/PlayerVSPlayer/UserScoreCompone
 import PvPResult from "../../components/PlayerVSPlayer/PvPResult";
 import LoadingComponent from "../../components/Loading/LoadingComponent";
 import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
+import { GoalContext } from "../../utils/contexts/GoalContext";
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function PvPExercise({ navigation, route }) {
     const { unlockedAchievements, setUnlockedAchievements } = useContext(UnlockedAchievementsContext);
+    const { goal, setGoal } = useContext(GoalContext);
     const socket = useContext(SocketContext);
     const roomNumber = route.params.roomNumber;
     
@@ -176,6 +178,14 @@ export default function PvPExercise({ navigation, route }) {
                     await Axios.post(`/AddExperienceToUser/${user.userID}`, {
                         xpGain: 10
                     });
+                }
+
+                let resultCompletedGoal = await Axios.put(`/CompletedGoal/${user.userID}`);
+
+                if(resultCompletedGoal.data.response) {
+                    if(resultCompletedGoal.data.response.isComplete) {
+                        setGoal(resultCompletedGoal.data.response);
+                    }
                 }
 
                 try {

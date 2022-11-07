@@ -36,7 +36,7 @@ const Register = ({ navigation }) => {
         setIsLoading(true);
         setSubmited(true);
 
-        if(!name || !email || !birthday || !phone || !password || !regEmail(email)) {
+        if(!name || !email || !birthday || !phone || !regPassword(password) || !regEmail(email)) {
             setIsLoading(false);
             return;
         }
@@ -86,6 +86,10 @@ const Register = ({ navigation }) => {
 
     function regEmail(email) {
         return (/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/gi).test(email);
+    }
+
+    function regPassword(password) {
+        return RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$').test(password);
     }
 
     return(
@@ -170,6 +174,16 @@ const Register = ({ navigation }) => {
                     {
                         (password.trim() === '' && submited) && (
                             <Text style={styles.errorText}>Password is required</Text>
+                        )
+                    }
+                    {
+                        (password.trim() !== '' && !(regPassword(password)) && submited) && (
+                            <>
+                                <Text style={styles.errorText}>Weak password</Text>
+                                <Text style={styles.errorText}>At least 1 letter uppercase and lowercase</Text>
+                                <Text style={styles.errorText}>At least 1 digit and 1 special character</Text>
+                                <Text style={styles.errorText}>Minimum 8 characteres</Text>
+                            </>
                         )
                     }
                 </InputTextComponent>   

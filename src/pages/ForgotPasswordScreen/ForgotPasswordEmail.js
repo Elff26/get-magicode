@@ -68,9 +68,6 @@ export default function ForgotPasswordEmail({navigation}) {
                         <Text style={styles.textSendButton}>Enviar</Text>
                     </ButtonComponent>
                 </View>
-                <View>
-                    <Text>Reenviar código - 15s</Text>
-                </View>
             </View>   
         </View>
     );
@@ -81,7 +78,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.WHITE_SAFE_COLOR,
         alignItems: 'center',
-        justifyContent: 'space-between',
         padding: 15,
         marginBottom: 10
     },
@@ -93,8 +89,9 @@ const styles = StyleSheet.create({
     },
 
     form:{
+        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
 
     textSendButton:{

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import {
     FlatList,
     Platform,
@@ -22,9 +22,11 @@ import { useIsFocused } from '@react-navigation/native';
 import PvPInviteCard from '../../components/PlayerVSPlayer/PvPInviteCard';
 import { Picker } from '@react-native-picker/picker';
 import LoadingComponent from '../../components/Loading/LoadingComponent';
+import { LifeContext } from '../../utils/contexts/LifeContext';
 
 const ListChallenges = ({ route, navigation }) => {
     const flatListRef = useRef();
+    const { life, setLife } = useContext(LifeContext);
 
     const routeParams = route;
     const isFocused = useIsFocused();
@@ -185,7 +187,6 @@ const ListChallenges = ({ route, navigation }) => {
                         setOpenBottomSheet={setOpenBottomSheet} 
                         currentTechnology={currentTechnology}
                         userID={user.userID}
-                        numberOfLifes={user.numberOfLifes}
                     />
                 )
             }
@@ -221,7 +222,7 @@ const ListChallenges = ({ route, navigation }) => {
                         renderItem={({ item, index }) => (
                             <View key={item.challengeID} style={styles.challengesGroup}>
                                 <PathSide index={index} completed={index < challengeToDo} animated={challengeToDo === index ? true : false} todo={challengeToDo}>
-                                    <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index) || user.numberOfLifes <= 0}>
+                                    <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index) || life <= 0}>
                                         <AnimatedButtonGroupComponent item={item} animated={challengeToDo === index ? true : false} />
                                         
                                         <Text>{item.name}</Text>

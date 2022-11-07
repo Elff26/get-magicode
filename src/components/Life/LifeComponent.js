@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     StyleSheet,
     View
@@ -10,8 +10,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import CardLifeComponent from '../Card/CardLifeComponent';
 import Axios from '../../api/api';
 import { useIsFocused } from '@react-navigation/native';
+import { LifeContext } from '../../utils/contexts/LifeContext';
 
-export default function LifeCompoenent({ userID, numberOfLifes }) {
+export default function LifeCompoenent({ userID }) {
+    const { life, setLife } = useContext(LifeContext);
+
     const isFocused = useIsFocused();
     const [lifeArray, setLifeArray] = useState([]);
     const [showCard, setShowCard] = useState(false);
@@ -22,10 +25,13 @@ export default function LifeCompoenent({ userID, numberOfLifes }) {
                 await Axios.put(`/AddUserLife/${userID}`);
                 let result = await Axios.get(`/GetNumberOfLife/${userID}`);
 
+                
                 if(result.data.numberOfLifes != undefined) {
+                    setLife(result.data.numberOfLifes);
+
                     let i = 0;
                     let lifes = [];
-
+                    
                     while(i < 5) {
                         if(i < result.data.numberOfLifes) {
                             lifes.push(1);
@@ -44,7 +50,7 @@ export default function LifeCompoenent({ userID, numberOfLifes }) {
         }
 
         getData();
-    }, [userID, isFocused, numberOfLifes]);
+    }, [userID, isFocused, life]);
 
     return (
         <TouchableOpacity style={styles.lifeComponentBar} onPress={() => setShowCard(true)}>
@@ -58,7 +64,7 @@ export default function LifeCompoenent({ userID, numberOfLifes }) {
                 })
             }
 
-            <CardLifeComponent showCard={showCard} setShowCard={setShowCard} numberOfLifes={lifeArray.length} />
+            <CardLifeComponent showCard={showCard} setShowCard={setShowCard} />
         </TouchableOpacity>
     )
 }

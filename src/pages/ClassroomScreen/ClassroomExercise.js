@@ -25,12 +25,14 @@ import CardTipComponent from "../../components/Card/CardTipComponent";
 import LoadingComponent from "../../components/Loading/LoadingComponent";
 import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
 import ToastComponent from "../../components/Toast/ToastComponent";
+import { GoalContext } from "../../utils/contexts/GoalContext";
 
 
 const windowWidth = Dimensions.get('window').width;
 
 export default function ClassroomExercise({ navigation, route }) {
     const { unlockedAchievements, setUnlockedAchievements } = useContext(UnlockedAchievementsContext);
+    const { goal, setGoal } = useContext(GoalContext);
 
     const challengeID = route.params.challengeID;
 
@@ -107,12 +109,21 @@ export default function ClassroomExercise({ navigation, route }) {
                             const resultUserUpdated = await Axios.post(`/AddExperienceToUser/${user.userID}`, {
                                 xpGain: challenge.difficulty.valueXP
                             });
-
+                            
                             if(resultUserUpdated.data.user) {
                                 if(mounted) {
                                     setUser(resultUserUpdated.data.user);
                                 }
+
                                 await AsyncStorage.mergeItem('@User', JSON.stringify(resultUserUpdated.data.user));
+                            }
+
+                            let resultCompletedGoal = await Axios.put(`/CompletedGoal/${user.userID}`);
+
+                            if(resultCompletedGoal.data.response) {
+                                if(resultCompletedGoal.data.response.isComplete && mounted) {
+                                    setGoal(resultCompletedGoal.data.response);
+                                }
                             }
                             
                             if(mounted) {
@@ -147,13 +158,17 @@ export default function ClassroomExercise({ navigation, route }) {
     }, [answered]);
 
     useEffect(() => {
-        if(!challenge) return;
+        if(!challenge || challenge.exercises.length <= 0) return;
 
         async function getTips() {
-            const response = await Axios.get(`FindTipByExercise/${challenge.exercises[questionNumber].exerciseID}`);
-
-            if(response.data.classrooms) {
-                setTips(response.data.classrooms);
+            try {
+                const response = await Axios.get(`FindTipByExercise/${challenge.exercises[questionNumber].exerciseID}`);
+    
+                if(response.data.classrooms) {
+                    setTips(response.data.classrooms);
+                }
+            } catch(e) {
+                setError(e.response.data.message);
             }
         }
 
@@ -388,7 +403,7 @@ export default function ClassroomExercise({ navigation, route }) {
                                                         language={challenge.technology.name} 
                                                         theme="dracula" 
                                                         show={challenge.exercises[questionNumber].type === "code" && !codeQuestionAnswered} 
-                                                    />  
+                                                    /> 
 
                                                     {
                                                         codeQuestionAnswered && (
@@ -420,22 +435,25 @@ export default function ClassroomExercise({ navigation, route }) {
                                 </Text>
                             </ButtonComponent>
 
-                            {(
-                                questionNumber <= numberOfExercises && ((code !== "" || codeQuestionAnswered) || challenge.exercises[questionNumber].type === "quiz")) && (
-                                    <ButtonComponent 
-                                        newStyle={{...styles.newStyleButton, 
-                                            backgroundColor: questionNumber === numberOfExercises ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR
-                                        }} 
-                                        onPress={goToNextQuestion}>
-                                        <Text style={styles.textButton}>
-                                            <Feather 
-                                                name={questionNumber === numberOfExercises ? "check" : "chevron-right"} 
-                                                color={questionNumber === numberOfExercises ? Colors.GREEN_CHECK_ICON : Colors.WHITE_SAFE_COLOR} size={32} 
-                                            />
-                                        </Text>
-                                    </ButtonComponent>
+                            {
+                                challenge.exercises.length > 0 && (
+                                    (questionNumber <= numberOfExercises && ((code !== "" || codeQuestionAnswered) || challenge.exercises[questionNumber].type === "quiz")) && (
+                                        <ButtonComponent 
+                                            newStyle={{...styles.newStyleButton, 
+                                                backgroundColor: questionNumber === numberOfExercises ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR
+                                            }} 
+                                            onPress={goToNextQuestion}>
+                                            <Text style={styles.textButton}>
+                                                <Feather 
+                                                    name={questionNumber === numberOfExercises ? "check" : "chevron-right"} 
+                                                    color={questionNumber === numberOfExercises ? Colors.GREEN_CHECK_ICON : Colors.WHITE_SAFE_COLOR} size={32} 
+                                                />
+                                            </Text>
+                                        </ButtonComponent>
+                                    )
                                 )
                             }
+                            
 
                             {
                                 answered && (

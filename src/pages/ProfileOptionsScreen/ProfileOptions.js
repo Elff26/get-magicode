@@ -51,10 +51,6 @@ export default function ProfileOptions({navigation}) {
                 <View>
                     <Text style={styles.titleLogo}>Configurações</Text> 
 
-                    <TouchableOpacity style={styles.optionButton} onPress={goToSetAGoal}>
-                        <Text style={styles.bottonText}>Notificações</Text>
-                        <Feather name='chevron-right' color={Colors.TEXT_COLOR} size={32} />
-                    </TouchableOpacity>
                     <TouchableOpacity style={styles.optionButton} onPress={goToPrivacyAndSecurityScreen}>
                         <Text style={styles.bottonText}>Privacidade e Segurança</Text>
                         <Feather name='chevron-right' color={Colors.TEXT_COLOR} size={32} />

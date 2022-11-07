@@ -12,6 +12,9 @@ import ThirdRegisterMoreInfo from './pages/RegisterScreen/ThirdRegisterMoreInfo'
 import React, { useMemo, useState } from 'react';
 import { UnlockedAchievementsContext } from './utils/contexts/UnlockedAchievementsContext';
 import ShowAchievementComponent from './components/Achievement/ShowAchievementComponent';
+import { LifeContext } from './utils/contexts/LifeContext';
+import { GoalContext } from './utils/contexts/GoalContext';
+import ShowCompletedGoalComponent from './components/Goal/ShowCompletedGoalComponent';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,22 +25,39 @@ const Navigator = () => {
         [unlockedAchievements]
       );
 
+    const [life, setLife] = useState(0);
+    const lifeValue = useMemo(
+          () => ({ life, setLife }), 
+          [life]
+        );
+
+    const [goal, setGoal] = useState({});
+    const goalValue = useMemo(
+            () => ({ goal, setGoal }), 
+            [goal]
+        );
+
     return (
         <NavigationContainer>
-            <UnlockedAchievementsContext.Provider value={unlockedAchievementsValue}>
-                <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name='Home' component={Home}/>
-                    <Stack.Screen name='Login' component={Login}/>
-                    <Stack.Screen name='Register' component={RegisterScreen}/>
-                    <Stack.Screen name='ThirdRegisterMorInfo' component={ThirdRegisterMoreInfo} />
-                    <Stack.Screen name='BottomTabComponent' component={BottomTabComponent}/>
-                    <Stack.Screen name='ForgotPasswordRecovery' component={ForgotPasswordRecovery} />
-                    <Stack.Screen name='ForgotPasswordCode' component={ForgotPasswordCode} />
-                    <Stack.Screen name='ForgotPasswordEmail' component={ForgotPasswordEmail} />
-                </Stack.Navigator>
+            <LifeContext.Provider value={lifeValue}>
+                <UnlockedAchievementsContext.Provider value={unlockedAchievementsValue}>
+                    <GoalContext.Provider value={goalValue}>
+                        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+                            <Stack.Screen name='Home' component={Home}/>
+                            <Stack.Screen name='Login' component={Login}/>
+                            <Stack.Screen name='Register' component={RegisterScreen}/>
+                            <Stack.Screen name='ThirdRegisterMorInfo' component={ThirdRegisterMoreInfo} />
+                            <Stack.Screen name='BottomTabComponent' component={BottomTabComponent}/>
+                            <Stack.Screen name='ForgotPasswordRecovery' component={ForgotPasswordRecovery} />
+                            <Stack.Screen name='ForgotPasswordCode' component={ForgotPasswordCode} />
+                            <Stack.Screen name='ForgotPasswordEmail' component={ForgotPasswordEmail} />
+                        </Stack.Navigator>
 
-                <ShowAchievementComponent />
-            </UnlockedAchievementsContext.Provider>
+                        <ShowAchievementComponent />
+                        <ShowCompletedGoalComponent isComplete={goal.isComplete} />
+                    </GoalContext.Provider>
+                </UnlockedAchievementsContext.Provider>
+            </LifeContext.Provider>
         </NavigationContainer>
     )
 }
