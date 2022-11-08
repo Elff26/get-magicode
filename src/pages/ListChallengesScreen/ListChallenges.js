@@ -105,14 +105,13 @@ const ListChallenges = ({ route, navigation }) => {
         let mounted = true;
 
         async function getChallenges() {
+            setChallenges([]);
             setIsLoading(true);
             if(currentTechnology && currentTechnology.technology) {
                 try {
                     const response = await Axios.get(`/FindChallengeByTechnologyAndDifficulty/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
 
                     if(response.data.challenges && mounted) {
-                        setChallenges(response.data.challenges);
-            
                         const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnologyAndDifficulty/${user.userID}/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
 
                         if(responseUserChallenges.data.userChallenges) {
@@ -127,8 +126,10 @@ const ListChallenges = ({ route, navigation }) => {
                                 } else if(userChallengesLength < response.data.challenges.length) {
                                     setChallengeToDo(userChallengesLength);
                                 } else {
-                                    setChallengeToDo(userChallengesLength - 1);
+                                    setChallengeToDo(null);
                                 }
+
+                                setChallenges(response.data.challenges);
 
                                 setIsLoading(false);
                             }
@@ -206,7 +207,7 @@ const ListChallenges = ({ route, navigation }) => {
             </View>
 
             {
-                challengeToDo != null && (
+                challengeToDo != null && challenges.length > 0 && (
                     <FlatList 
                         extraData={user}
                         ref={flatListRef}

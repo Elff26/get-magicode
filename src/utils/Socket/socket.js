@@ -5,7 +5,7 @@ import {
     URL
 } from '@env';
 
-export const socket = io(URL || "http://192.168.15.9:3000", {
+export const socket = io(URL || "http://192.168.15.2:3000", {
     transports: ['websocket']
 });
 
