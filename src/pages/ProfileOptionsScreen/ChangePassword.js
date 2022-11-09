@@ -36,11 +36,15 @@ export default function ChangePassword({navigation}) {
         getData();
     }, []);
 
+    function regPassword(password) {
+        return RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$').test(password);
+    }
+
     async function changeUserPassword() {
         setSubmited(true);
         setIsLoading(true);
 
-        if(password && newPassword) {
+        if(password && newPassword && regPassword(newPassword)) {
             try {
                 if (user != null) {
                     const response = await Axios.put('/ChangePassword/' + user.userID, {
@@ -98,6 +102,16 @@ export default function ChangePassword({navigation}) {
                         {
                             (newPassword.trim() === '' && submited) && (
                                 <Text style={styles.errorText}>New password is required</Text>
+                            )
+                        }
+                        {
+                            (newPassword.trim() !== '' && !(regPassword(newPassword)) && submited) && (
+                                <>
+                                    <Text style={styles.errorText}>Weak password</Text>
+                                    <Text style={styles.errorText}>At least 1 letter uppercase and lowercase</Text>
+                                    <Text style={styles.errorText}>At least 1 digit and 1 special character</Text>
+                                    <Text style={styles.errorText}>Minimum 8 characteres</Text>
+                                </>
                             )
                         }
                     </InputTextComponent>

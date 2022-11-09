@@ -52,8 +52,14 @@ export default function Account({navigation}) {
                 
                 if(response.data.message) {
                     setIsLoading(false);
-                    navigation.navigate('Login', {
-                        deletedUser: true
+                    navigation.reset({
+                        index: 0,
+                        routes: [{
+                            name: 'Home',
+                            params: {
+                                deletedUser: true
+                            }
+                        }]
                     });
                 }
             }
