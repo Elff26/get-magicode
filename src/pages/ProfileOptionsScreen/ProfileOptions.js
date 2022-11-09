@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import Colors from '../../utils/ColorPallete/Colors';
@@ -8,11 +8,10 @@ import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import { Dimensions } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import ToastComponent from '../../components/Toast/ToastComponent';
 
 import { 
     SECURE_STORE_KEY
-  } from '@env';
+} from '@env';
 
 var width = Dimensions.get('window').width; 
 
@@ -27,16 +26,13 @@ export default function ProfileOptions({navigation}) {
 
     async function logout() {
         await AsyncStorage.clear();
-        await SecureStore.deleteItemAsync(SECURE_STORE_KEY).then(() => {
-            navigation.reset({
-                index: 0,
-                routes: [{
-                    name: 'Home'
-                }]
-            });
-        })
-        .catch(e => {
-            ToastComponent('Erro ao deslogar da aplicação. Tente novamente mais tarde!');
+        await SecureStore.deleteItemAsync(SECURE_STORE_KEY);
+
+        navigation.reset({
+            index: 0,
+            routes: [{
+                name: 'Home'
+            }]
         });
     }
 

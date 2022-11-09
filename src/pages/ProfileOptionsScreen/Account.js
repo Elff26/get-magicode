@@ -18,6 +18,11 @@ import ToastComponent from '../../components/Toast/ToastComponent';
 import MaskTextComponent from '../../components/InputText/MaskTextComponent';
 import InputTextComponent from '../../components/InputText/InputTextComponent';
 import DateUtils from '../../utils/DateUtils';
+import * as SecureStore from 'expo-secure-store';
+
+import { 
+    SECURE_STORE_KEY
+} from '@env';
 
 var width = Dimensions.get('window').width; 
 
@@ -47,15 +52,17 @@ export default function Account({navigation}) {
         try {
             if (user != null) {
                 setIsLoading(true);
-                
+
                 const response = await Axios.delete('/DeleteUser/' + user.userID);
                 
                 if(response.data.message) {
                     setIsLoading(false);
+                    await AsyncStorage.clear();
+                    await SecureStore.deleteItemAsync(SECURE_STORE_KEY);
                     navigation.reset({
                         index: 0,
                         routes: [{
-                            name: 'Home',
+                            name: 'Login',
                             params: {
                                 deletedUser: true
                             }
