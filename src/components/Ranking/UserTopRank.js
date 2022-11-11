@@ -37,7 +37,7 @@ export default function UserTopRank({ userRank, position }) {
                                 source={{ uri: !userRank.user.image ? 'https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png' : `data:image;base64,${userRank.user.image}` }}
                             />
                             <Text style={styles.rankTextPosition}>#{position}</Text>
-                            <Text style={styles.rankTextName}>{userRank.user.name}</Text>
+                            <Text numberOfLines={2} style={styles.rankTextName}>{userRank.user.name}</Text>
                             <Text style={styles.rankTextName}>{userRank.xp} XP</Text>
                         </View>
                     </View> 
@@ -49,20 +49,20 @@ export default function UserTopRank({ userRank, position }) {
 
 const styles = StyleSheet.create({
     topUsersRank: {
-        width: width / 4,
+        width: width / 3.7,
         justifyContent: 'center',
         alignSelf: 'flex-end',
         alignItems: 'center',
         backgroundColor: Colors.FOOTER_BACKGROUND_COLOR,
         padding: 6,
         margin: 5,
-        height: 180,
+        height: "80%",
         borderRadius: 5
     },
 
     topUserRank: {
         width: width / 3,
-        height: 220
+        height: "95%"
     },
 
     topUsersView: {

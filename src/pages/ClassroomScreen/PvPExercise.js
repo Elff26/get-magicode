@@ -19,7 +19,7 @@ import RenderAlternativesComponent from "../../components/QuizExercise/RenderAlt
 import ButtonComponent from "../../components/Buttons/ButtonComponent";
 import OutputTerminal from "../../components/OutputTerminal/OutputTerminal";
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/styles/hljs';
 import { SocketContext } from '../../utils/Socket/socket';
 import UserScoreComponent from "../../components/PlayerVSPlayer/UserScoreComponent";
 import PvPResult from "../../components/PlayerVSPlayer/PvPResult";
@@ -359,7 +359,7 @@ export default function PvPExercise({ navigation, route }) {
                                                     <>
                                                         <SyntaxHighlighter 
                                                             language={currentTechnology.name} 
-                                                            style={dracula}
+                                                            style={atomOneDark}
                                                             highlighter={"hljs"}
                                                         >{code}</SyntaxHighlighter>
                                                         

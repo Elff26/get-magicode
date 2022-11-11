@@ -19,7 +19,7 @@ import RenderAlternativesComponent from "../../components/QuizExercise/RenderAlt
 import ButtonComponent from "../../components/Buttons/ButtonComponent";
 import OutputTerminal from "../../components/OutputTerminal/OutputTerminal";
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/styles/hljs';
 import CardChallengeFinishedComponent from "../../components/Card/CardChallengeFinishedComponent";
 import CardTipComponent from "../../components/Card/CardTipComponent";
 import LoadingComponent from "../../components/Loading/LoadingComponent";
@@ -409,7 +409,7 @@ export default function ClassroomExercise({ navigation, route }) {
                                                         codeQuestionAnswered && (
                                                             <SyntaxHighlighter 
                                                                 language={challenge.technology.name} 
-                                                                style={dracula}
+                                                                style={atomOneDark}
                                                                 highlighter={"hljs"}
                                                             >{answers[questionNumber].code}</SyntaxHighlighter>
                                                         )

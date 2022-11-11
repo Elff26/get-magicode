@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { FlatList, StyleSheet,Text, View} from "react-native";
+import { 
+    FlatList, 
+    StyleSheet, 
+    Text, 
+    TouchableOpacity,
+    View
+} from "react-native";
 
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Colors from "../../utils/ColorPallete/Colors";
@@ -8,6 +14,7 @@ import { RadioButton } from 'react-native-paper';
 import Axios from "../../api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ToastComponent from "../../components/Toast/ToastComponent";
+import LoadingComponent from "../../components/Loading/LoadingComponent";
 
 export default function SetAGoal({navigation}) {
     const [checked, setChecked] = useState(0);
@@ -18,10 +25,12 @@ export default function SetAGoal({navigation}) {
 
     useEffect(() => {
         async function getData() {
+            setIsLoading(true);
             const response = await Axios.get('/ListAllGoals');
             if(response.data.goals) {
                 setGoal(response.data.goals);
                 setUser(JSON.parse(await AsyncStorage.getItem('@User')));
+                setIsLoading(false);
             }
         }
         getData();
@@ -53,38 +62,45 @@ export default function SetAGoal({navigation}) {
 
     return ( 
         <View style={styles.allPagesSetGoal}>
+            {
+                isLoading && (
+                    <LoadingComponent />
+                )
+            }
+
             <Header backArrow={true} navigation={navigation} />
 
             <View style={styles.screenContainerSetGoal}>
                 <View>
                     <Text style={styles.homeTitleSetGoal}>Estabeleça uma meta</Text>
                 </View>
-
-                <FlatList 
-                    contentContainerStyle={styles.viewRadio}
-                    data={goal}
-                    renderItem={({ item }) =>(
-                        <View style={styles.goalItem}>
-                            <View style={styles.goalRadio}>
-                                <RadioButton
-                                    key={item.goalID}
-                                    value={item.goalID}
-                                    status={checked === item.goalID ? 'checked' : 'unchecked'}
-                                    onPress={() => setChecked(item.goalID)}
-                                />
-                                <Text style={styles.goalText}>{item.name}</Text>
-                            </View>
-                            
-                            <Text style={styles.goalXP}>{item.value}XP por dia</Text>
-                        </View>
-                        )
-                    }
-                />
+                
+                <View style={styles.viewRadio}>
+                    <FlatList 
+                        contentContainerStyle={styles.goalItens}
+                        data={goal}
+                        renderItem={({ item }) =>(
+                                <TouchableOpacity activeOpacity={0.5} style={styles.goalItem} onPress={() => setChecked(item.goalID)}>
+                                    <View style={styles.goalRadio}>
+                                        <RadioButton
+                                            key={item.goalID}
+                                            value={item.goalID}
+                                            status={checked === item.goalID ? 'checked' : 'unchecked'}
+                                            onPress={() => setChecked(item.goalID)}
+                                        />
+                                        <Text style={styles.goalText}>{item.name}</Text>
+                                    </View>
+                                    
+                                    <Text style={styles.goalXP}>{item.value}XP por dia</Text>
+                                </TouchableOpacity>
+                            )
+                        }
+                    />
+                </View>
 
                 <View style={styles.formSetGoal}>
                     <ButtonComponent newStyle={styles.buttonSetGoal} 
-                        onPress={associateUserToGoal}
-                        isLoading={isLoading}>
+                        onPress={associateUserToGoal}>
                         <Text style={styles.textSetGoalButton}>Estabelecer meta</Text>
                     </ButtonComponent>
                 </View>
@@ -96,60 +112,76 @@ export default function SetAGoal({navigation}) {
 const styles = StyleSheet.create({
     screenContainerSetGoal: {
         flex: 1,
+        width: "100%",
         backgroundColor: Colors.WHITE_SAFE_COLOR,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         padding: 15,
         marginBottom: 10
     },
+
     homeTitleSetGoal: {
         color: Colors.PRIMARY_COLOR,
         fontSize: 30,
         textAlign: 'center'
     },
-   formSetGoal:{
+
+    formSetGoal:{
         justifyContent: 'center',
         alignItems: 'center'
-   },
-   textSetGoalButton:{
+    },
+
+    textSetGoalButton:{
         color: Colors.WHITE_SAFE_COLOR
-   },
-   buttonSetGoal: {
+    },
+
+    buttonSetGoal: {
         width: 198,
         height: 49,
         borderRadius: 20
-   },
-   allPagesSetGoal:{
+    },
+
+    allPagesSetGoal:{
         flex: 1,
         backgroundColor: Colors.WHITE_SAFE_COLOR
-   },
-   goalItem: {
-        with: '100%', 
+    },
+
+    goalItens: {
+        flexGrow: 1,
+        justifyContent: "center"
+    }, 
+
+    goalItem: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgoundColor:"#444"
-   },
-   goalText: {
-        fontSize: 18,
+        backgoundColor: Colors.BLACK,
+        marginVertical: 10
+    },
+
+    goalText: {
+        fontSize: 22,
         color:Colors.TEXT_COLOR,
         textAlign: 'auto',
         flexWrap: 'wrap',
         maxWidth: '90%'
-   },
-   goalXP: {
+    },
+
+    goalXP: {
         color: Colors.RADIO_TEXT,
         fontSize: 19,
         textAlignVertical: 'center',    
-   },
-   viewRadio: {
+    },
+
+    viewRadio: {
         flex: 1,
-        width: '100%',
+        width: "90%",
         justifyContent: 'center',
         alignContent: "center"
-   },
-   goalRadio: {
+    }, 
+
+    goalRadio: {
         flexDirection: 'row',
         alignItems: 'center'
-   }
+    }
 });

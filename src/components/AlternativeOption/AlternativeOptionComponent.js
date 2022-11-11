@@ -1,5 +1,6 @@
 import { 
     StyleSheet, 
+    TouchableOpacity,
     Text,
     View
 } from "react-native";
@@ -10,7 +11,7 @@ import Colors from '../../utils/ColorPallete/Colors';
 
 export default function AlternativeOptionComponent({ value, label, status, changeChecked, alternativeText, disabled }) {
     return (
-        <View style={styles.goalRadio}>
+        <TouchableOpacity activeOpacity={0.5} style={styles.goalRadio} onPress={() => changeChecked(value)}>
             <RadioButton
                 disabled={disabled}
                 value={value}
@@ -19,7 +20,7 @@ export default function AlternativeOptionComponent({ value, label, status, chang
                 onPress={() => changeChecked(value)}
             />
             <Text style={styles.alternativeText}>{alternativeText}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 

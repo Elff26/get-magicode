@@ -34,7 +34,7 @@ const ListChallenges = ({ route, navigation }) => {
     const [challengeToDo, setChallengeToDo] = useState(null);
     const [challenges, setChallenges] = useState();
     const [difficulties, setDifficulties] = useState([]);
-    const [selectedDifficulty, setSelectedDifficulty] = useState();
+    const [selectedDifficultyID, setSelectedDifficultyID] = useState();
     const [openBottomSheet, setOpenBottomSheet] = useState(false);
     const [currentTechnology, setCurrentTechnology] = useState(null);
     const [error, setError] = useState("");
@@ -59,7 +59,14 @@ const ListChallenges = ({ route, navigation }) => {
     
                 if(responseDifficulties.data.difficulties && mounted) {
                     setDifficulties(responseDifficulties.data.difficulties);
-                    setSelectedDifficulty(responseDifficulties.data.difficulties[0]);
+
+                    let difficultyID = Number(await AsyncStorage.getItem("@Difficulty"));
+
+                    if(!difficultyID) {
+                        difficultyID = responseDifficulties.data.difficulties[0].difficultyID;
+                    }
+                    
+                    setSelectedDifficultyID(difficultyID);
                 }
             } catch(e) {
                 setError(e.response.data.message);
@@ -109,10 +116,10 @@ const ListChallenges = ({ route, navigation }) => {
             setIsLoading(true);
             if(currentTechnology && currentTechnology.technology) {
                 try {
-                    const response = await Axios.get(`/FindChallengeByTechnologyAndDifficulty/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
+                    const response = await Axios.get(`/FindChallengeByTechnologyAndDifficulty/${currentTechnology.technology.technologyID}/${selectedDifficultyID}`);
 
                     if(response.data.challenges && mounted) {
-                        const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnologyAndDifficulty/${user.userID}/${currentTechnology.technology.technologyID}/${selectedDifficulty.difficultyID}`);
+                        const responseUserChallenges = await Axios.get(`/FindUserChallengeByTechnologyAndDifficulty/${user.userID}/${currentTechnology.technology.technologyID}/${selectedDifficultyID}`);
 
                         if(responseUserChallenges.data.userChallenges) {
                             let userChallenges = responseUserChallenges.data.userChallenges;
@@ -146,7 +153,7 @@ const ListChallenges = ({ route, navigation }) => {
         return () => {
             mounted = false;
         }
-    }, [currentTechnology, selectedDifficulty]);
+    }, [currentTechnology, selectedDifficultyID]);
 
     async function goToClassroomScreen(challenge) {
         setIsLoading(true);
@@ -172,6 +179,23 @@ const ListChallenges = ({ route, navigation }) => {
         } 
     }
 
+    async function changeDifficulty(difficultyID) {
+        await AsyncStorage.setItem("@Difficulty", String(difficultyID));
+        setSelectedDifficultyID(difficultyID);
+    }
+
+    const renderChallengeItem = ({ item, index }) => (
+        <View key={item.challengeID} style={styles.challengesGroup}>
+            <PathSide index={index} completed={index < challengeToDo} animated={challengeToDo === index ? true : false} todo={challengeToDo}>
+                <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index) || life <= 0}>
+                    <AnimatedButtonGroupComponent item={item} animated={challengeToDo === index ? true : false} />
+                    
+                    <Text>{item.name}</Text>
+                </TouchableOpacity>   
+            </PathSide>
+        </View>
+    )
+
     return (
         <View style={[styles.screenContainer, openBottomSheet ? styles.backgroundWhenBottomSheetIsOpen : {}]}>
             {
@@ -192,19 +216,23 @@ const ListChallenges = ({ route, navigation }) => {
                 )
             }
 
-            <View style={styles.pickerConteiner}>
-                <Picker 
-                    style={styles.picker}
-                    selectedValue={selectedDifficulty}
-                    onValueChange={(itemValue) => setSelectedDifficulty(itemValue)}
-                >
-                    {
-                        difficulties.map((difficulty) => (
-                            <Picker.Item style={styles.pickerItem} key={difficulty.difficultyID} label={difficulty.description} value={difficulty} />
-                        ))
-                    }
-                </Picker>
-            </View>
+            {
+                selectedDifficultyID && (
+                    <View style={styles.pickerConteiner}>
+                        <Picker 
+                            style={styles.picker}
+                            selectedValue={selectedDifficultyID}
+                            onValueChange={(itemValue) => changeDifficulty(itemValue)}
+                        >
+                            {
+                                difficulties.map((difficulty) => (
+                                    <Picker.Item style={styles.pickerItem} key={difficulty.difficultyID} label={difficulty.description} value={difficulty.difficultyID} />
+                                ))
+                            }
+                        </Picker>
+                    </View>
+                )
+            }
 
             {
                 challengeToDo != null && challenges.length > 0 && (
@@ -220,17 +248,7 @@ const ListChallenges = ({ route, navigation }) => {
                         }}
                         onScrollToIndexFailed={() => {}}
                         inverted={true}
-                        renderItem={({ item, index }) => (
-                            <View key={item.challengeID} style={styles.challengesGroup}>
-                                <PathSide index={index} completed={index < challengeToDo} animated={challengeToDo === index ? true : false} todo={challengeToDo}>
-                                    <TouchableOpacity style={styles.challengeItem} onPress={() => goToClassroomScreen(item)} disabled={!(index < challengeToDo || challengeToDo === index) || life <= 0}>
-                                        <AnimatedButtonGroupComponent item={item} animated={challengeToDo === index ? true : false} />
-                                        
-                                        <Text>{item.name}</Text>
-                                    </TouchableOpacity>   
-                                </PathSide>
-                            </View>
-                        )}
+                        renderItem={renderChallengeItem}
                     />  
                 )
             }

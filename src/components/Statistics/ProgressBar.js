@@ -10,15 +10,15 @@ export default function ProgressBar({ title, currentData, maxData, newStyle, sho
     return (
         <View style={[styles.progressBarComponent, newStyle]}>
             <Text style={styles.progressBarTitle}>{title}</Text>
+            {
+                showIcon && (
+                    <View style={styles.starStyle}>
+                        <FontAwesome5 name="certificate" size={45} color={Colors.PRIMARY_COLOR} />
+                        <Text style={{ fontSize: 24, fontWeight: 'bold', color: Colors.WHITE_SAFE_COLOR, position: 'absolute' }}>{userLevel}</Text>
+                    </View>
+                )
+            }
             <View style={styles.progressBar}>
-                {
-                    showIcon && (
-                        <View style={{ justifyContent: 'center', alignItems: 'center', zIndex: 2, position: 'absolute', margin: -20 }}>
-                            <FontAwesome5 name="certificate" size={45} color={Colors.PRIMARY_COLOR} />
-                            <Text style={{ fontSize: 24, fontWeight: 'bold', color: Colors.WHITE_SAFE_COLOR, position: 'absolute' }}>{userLevel}</Text>
-                        </View>
-                    )
-                }
                 <View style={[styles.progress, { width: (currentData / maxData) * 100 + "%" }]}></View>
                 <Text style={styles.progressBarText}>{currentData}/{maxData}</Text>
             </View>
@@ -34,6 +34,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
 
+    starStyle: {
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        zIndex: 2, 
+        margin: -20
+    },
+
     progressBarTitle: {
         alignSelf: 'center',
         fontSize: 20,
@@ -47,7 +54,8 @@ const styles = StyleSheet.create({
         height: 25,
         justifyContent: 'center',
         borderWidth: 1,
-        borderColor: Colors.BOTTOM_SHEET_SCREEN_BACKGROUND
+        borderColor: Colors.BOTTOM_SHEET_SCREEN_BACKGROUND,
+        overflow: 'hidden'
     },
 
     progress: {

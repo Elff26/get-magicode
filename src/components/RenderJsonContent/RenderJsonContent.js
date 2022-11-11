@@ -5,7 +5,7 @@ import {
     View
 } from 'react-native';
 import SyntaxHighlighter from 'react-native-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/styles/hljs';
+import { atomOneDark } from 'react-syntax-highlighter/styles/hljs';
 import Colors from '../../utils/ColorPallete/Colors';
 
 export default function RenderJsonContent({ content }) {
@@ -24,7 +24,7 @@ export default function RenderJsonContent({ content }) {
                                 item[0].includes("code")  && (
                                     <SyntaxHighlighter 
                                     language='javascript' 
-                                    style={docco}
+                                    style={atomOneDark}
                                     highlighter={"hljs"}
                                     >{item[1]}</SyntaxHighlighter>
                                 )
