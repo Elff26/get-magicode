@@ -16,6 +16,7 @@ import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import ToastComponent from '../../components/Toast/ToastComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Messages from '../../utils/Messages';
 
 export default function ChooseTechnologies({ navigation }) {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -78,7 +79,7 @@ export default function ChooseTechnologies({ navigation }) {
         if(selectedItems.length < 2) {
             setSelectedItems([...selectedItems, technology]);
         } else {
-            ToastComponent('Selecione no máximo 2 tecnologias!');
+            ToastComponent(Messages.TECHNOLOGY_MAXIMUM_NUMBER);
         }
     }
 

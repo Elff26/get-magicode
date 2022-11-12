@@ -21,7 +21,6 @@ export default function Achievement({ navigation }) {
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [currentRankType, setCurrentRankType] = useState("geral");
     const [dialogOpened, setDialogOpened] = useState(false);
     const [selectedAchievement, setSelectedAchievement] = useState({});
     const [allAchievements, setAllAchievements] = useState([]);

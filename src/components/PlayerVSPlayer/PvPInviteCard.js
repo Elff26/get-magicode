@@ -9,6 +9,7 @@ import CardComponent from "../Card/CardComponent";
 import { Picker } from "@react-native-picker/picker";
 import Axios from '../../api/api';
 import { set } from "react-native-reanimated";
+import Messages from "../../utils/Messages";
 
 const widthScreen = Dimensions.get('window').width;
 const heightScreen = Dimensions.get('window').height;
@@ -57,7 +58,7 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user,
         });
 
         socket.on('roomNotExists', () => {
-            setError("Sala não existe");
+            setError(Messages.ROOM_NOT_FOUND);
         });
 
         return () => {

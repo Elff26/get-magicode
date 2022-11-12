@@ -10,6 +10,7 @@ import {
   REDIRECT_URI,
   SECURE_STORE_KEY
 } from '@env';
+import Messages from '../Messages';
 
 export default async function GoogleAuth(navigation, setError) {
     try {
@@ -46,6 +47,6 @@ export default async function GoogleAuth(navigation, setError) {
             }
         }
     } catch (error) {
-        setError("Erro ao tentar se conectar ao Google!");
+        setError(Messages.GOOGLE_LOGIN_ERROR);
     }
 }

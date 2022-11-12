@@ -7,6 +7,7 @@ import Header from '../../components/Header/HeaderComponent';
 import Axios from "../../api/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import InputTextComponent from "../../components/InputText/InputTextComponent";
+import Messages from "../../utils/Messages";
 
 export default function ForgotPasswordRecovery({navigation}) {
     const [userID, setUserID] = useState("");
@@ -26,29 +27,37 @@ export default function ForgotPasswordRecovery({navigation}) {
 
     async function backToLogin() {
         setIsLoading(true);
+        setSubmited(true);
 
         try {
-            if(password && confirmPassword && password === confirmPassword) {
-    
-                const response = await Axios.put(`/UpdateUser/${userID}`, {
-                    user: {
-                        password
-                    }
-                });
+            if(!password || confirmPassword && password !== confirmPassword || !regPassword(password)) {
+                setIsLoading(false);
                 
-                if(response.data.user) {    
-                    setIsLoading(false);
-                    
-                    navigation.navigate('Login', {
-                        passwordRecovered: true
-                    });
+                return;
+            }
+
+            const response = await Axios.put(`/UpdateUser/${userID}`, {
+                user: {
+                    password
                 }
+            });
+            
+            if(response.data.user) {    
+                setIsLoading(false);
+                
+                navigation.navigate('Login', {
+                    passwordRecovered: true
+                });
             }
         } catch(e) {
             setError(e.response.data.message);
         }
 
         setIsLoading(false);
+    }
+
+    function regPassword(password) {
+        return RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$').test(password);
     }
 
     return ( 
@@ -70,7 +79,7 @@ export default function ForgotPasswordRecovery({navigation}) {
                     >
                         {
                             (password.trim() === '' && submited) && (
-                                <Text style={styles.errorText}>Password is required</Text>
+                                <Text style={styles.errorText}>{Messages.PASSWORD_IS_REQUIRED}</Text>
                             )
                         }
                     </InputTextComponent>
@@ -88,7 +97,12 @@ export default function ForgotPasswordRecovery({navigation}) {
                     >
                         {
                             (confirmPassword.trim() === '' && submited) || (confirmPassword !== password) && (
-                                <Text style={styles.errorText}>password and password confirmation do not match</Text>
+                                <Text style={styles.errorText}>{Messages.CONFIRM_PASSWORD_NOT_MATCH}</Text>
+                            )
+                        }
+                        {
+                            (password.trim() !== '' && !(regPassword(password)) && submited) && (
+                                <Text style={styles.errorText}>{Messages.PASSWORD_WEAK_TEXT}</Text>
                             )
                         }
                     </InputTextComponent>

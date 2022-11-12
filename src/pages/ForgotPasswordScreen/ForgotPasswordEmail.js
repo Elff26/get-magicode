@@ -7,6 +7,7 @@ import Colors from "../../utils/ColorPallete/Colors";
 import Header from '../../components/Header/HeaderComponent';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import InputTextComponent from "../../components/InputText/InputTextComponent";
+import Messages from "../../utils/Messages";
 
 
 export default function ForgotPasswordEmail({navigation}) {
@@ -57,7 +58,7 @@ export default function ForgotPasswordEmail({navigation}) {
                     >
                         {
                             (email.trim() === '' && submited) && (
-                                <Text style={styles.errorText}>Email is required</Text>
+                                <Text style={styles.errorText}>{Messages.EMAIL_IS_REQUIRED}</Text>
                             )
                         }
                     </InputTextComponent>

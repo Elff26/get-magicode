@@ -26,6 +26,7 @@ import LoadingComponent from "../../components/Loading/LoadingComponent";
 import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
 import ToastComponent from "../../components/Toast/ToastComponent";
 import { GoalContext } from "../../utils/contexts/GoalContext";
+import Messages from "../../utils/Messages";
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -177,7 +178,7 @@ export default function ClassroomExercise({ navigation, route }) {
 
     async function goToNextQuestion() {
         if(!code && !codeQuestionAnswered && challenge.exercises[questionNumber].type === "code") {
-            return ToastComponent('Digite o seu código e depois envie!');
+            return ToastComponent(Messages.CODE_EMPTY);
         }
 
         if(result !== null && result < 0.5) {
@@ -221,7 +222,7 @@ export default function ClassroomExercise({ navigation, route }) {
         try {
             if(!checked) {
                 setIsLoading(false);
-                return ToastComponent('Escolha uma opção!')
+                return ToastComponent(Messages.CHOOSE_AN_OPTION)
             }
 
             let response = await Axios.get(`AlternativeIsCorrect/${checked}`);
@@ -478,7 +479,7 @@ export default function ClassroomExercise({ navigation, route }) {
                         <CardChallengeFinishedComponent
                             title="Resultado"
                             subtitle={`${(result * 100).toFixed(2)}%`}
-                            message={result >= 0.5 ? "Parabéns, você foi aprovado!" : "Você foi reprovado, mas não desista! Estude e gabarite esse exercício!"}
+                            message={result >= 0.5 ? Messages.MESSAGE_EXERCISE_SUCCESSFULLY : Messages.MESSAGE_EXERCISE_FAILED}
                             xp={result >= 0.5 ? challenge.difficulty.valueXP : 0}
                             showCard={showCard && !isLoading}
                             buttonText={"Fechar"}

@@ -19,6 +19,7 @@ import GoogleAuth from '../../utils/ThirdAuth/GoogleAuth';
 import FacebookAuth from '../../utils/ThirdAuth/FacebookAuth';
 import { LogBox } from "react-native";
 import DateUtils from '../../utils/DateUtils';
+import Messages from '../../utils/Messages';
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
 const Register = ({ navigation }) => {
@@ -108,7 +109,7 @@ const Register = ({ navigation }) => {
                 >
                     {
                         (name.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Name is required</Text>
+                            <Text style={styles.errorText}>{Messages.NAME_IS_REQUIRED}</Text>
                         )
                     }
                 </InputTextComponent>     
@@ -125,12 +126,12 @@ const Register = ({ navigation }) => {
                 >
                     {
                         (email.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Email is required</Text>
+                            <Text style={styles.errorText}>{Messages.EMAIL_IS_REQUIRED}</Text>
                         )
                     }
                     {
                         (email.trim() !== '' && !(regEmail(email)) && submited) && (
-                            <Text style={styles.errorText}>Invalid email</Text>
+                            <Text style={styles.errorText}>{Messages.INVALID_EMAIL}</Text>
                         )
                     }
                 </InputTextComponent>      
@@ -144,13 +145,13 @@ const Register = ({ navigation }) => {
                 >
                     {
                         (birthday.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Birthday is required</Text>
+                            <Text style={styles.errorText}>{Messages.BIRTHDAY_IS_REQUIRED}</Text>
                         )
                     }
                 </MaskTextComponent>
 
                 <MaskTextComponent 
-                    placeholder='Telefone'
+                    placeholder='Celular'
                     onChangeText={(masked, unmasked) => setPhone(unmasked)}
                     value={phone}
                     mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
@@ -159,7 +160,7 @@ const Register = ({ navigation }) => {
                 >
                     {
                         (phone.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Phone is required</Text>
+                            <Text style={styles.errorText}>{Messages.PHONE_IS_REQUIRED}</Text>
                         )
                     }
                 </MaskTextComponent>            
@@ -173,17 +174,12 @@ const Register = ({ navigation }) => {
                 >
                     {
                         (password.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Password is required</Text>
+                            <Text style={styles.errorText}>{Messages.PASSWORD_IS_REQUIRED}</Text>
                         )
                     }
                     {
                         (password.trim() !== '' && !(regPassword(password)) && submited) && (
-                            <>
-                                <Text style={styles.errorText}>Weak password</Text>
-                                <Text style={styles.errorText}>At least 1 letter uppercase and lowercase</Text>
-                                <Text style={styles.errorText}>At least 1 digit and 1 special character</Text>
-                                <Text style={styles.errorText}>Minimum 8 characteres</Text>
-                            </>
+                            <Text style={styles.errorText}>{Messages.PASSWORD_WEAK_TEXT}</Text>
                         )
                     }
                 </InputTextComponent>   

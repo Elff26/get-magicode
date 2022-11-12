@@ -15,6 +15,7 @@ import ButtonComponent from '../../components/Buttons/ButtonComponent';
 import Header from '../../components/Header/HeaderComponent';
 import Axios from '../../api/api';
 import DateUtils from '../../utils/DateUtils';
+import Messages from '../../utils/Messages';
 
 export default function ThirdRegisterMoreInfo({ route, navigation }) {
     const routeParams = route;
@@ -85,7 +86,7 @@ export default function ThirdRegisterMoreInfo({ route, navigation }) {
                                 />
                                 {
                                     (birthday.trim() === '' && submited) && (
-                                        <Text style={styles.errorText}>Birthday is required</Text>
+                                        <Text style={styles.errorText}>{Messages.BIRTHDAY_IS_REQUIRED}</Text>
                                     )
                                 }
                             </>
@@ -104,7 +105,7 @@ export default function ThirdRegisterMoreInfo({ route, navigation }) {
                                 />
                                 {
                                     (phone.trim() === '' && submited) && (
-                                        <Text style={styles.errorText}>Phone is required</Text>
+                                        <Text style={styles.errorText}>{Messages.PHONE_IS_REQUIRED}</Text>
                                     )
                                 }
                             </>

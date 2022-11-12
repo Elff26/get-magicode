@@ -9,6 +9,7 @@ import {
   REDIRECT_URI,
   SECURE_STORE_KEY
 } from '@env';
+import Messages from '../Messages';
 
 export default async function FacebookAuth(navigation, setError) {
     try {
@@ -43,6 +44,6 @@ export default async function FacebookAuth(navigation, setError) {
         }
       }
     } catch(e) {
-      setError("Erro ao tentar se conectar ao Facebook!");
+      setError(Messages.FACEBOOK_LOGIN_ERROR);
     }
 }

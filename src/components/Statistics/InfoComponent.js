@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 
     infoText: {
         color: Colors.TEXT_COLOR,
-        fontSize: 22,
+        fontSize: 20,
         textAlign: 'center'
     }
 })

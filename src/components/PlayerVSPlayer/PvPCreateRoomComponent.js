@@ -7,6 +7,7 @@ import ButtonComponent from "../Buttons/ButtonComponent";
 import * as Clipboard from 'expo-clipboard';
 import ToastComponent from "../Toast/ToastComponent";
 import Colors from "../../utils/ColorPallete/Colors";
+import Messages from "../../utils/Messages";
 
 export default function PvPCreateRoom({ createdRoomNumber, setCreatedRoomNumber }) {
     async function returnToCode() {
@@ -15,7 +16,7 @@ export default function PvPCreateRoom({ createdRoomNumber, setCreatedRoomNumber 
 
     async function copyCodeToClipboard() {
         await Clipboard.setStringAsync(createdRoomNumber);
-        ToastComponent('Copiado com sucesso');
+        ToastComponent(Messages.SUCCESSFULLY_COPIED);
     }
 
     return (

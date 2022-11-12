@@ -35,6 +35,7 @@ export default function ForgotPasswordCode({navigation}) {
                 });
 
                 if(response.data) {
+                    await AsyncStorage.setItem("@Token", response.data.token);
                     navigation.navigate('ForgotPasswordRecovery');
                 }
             } catch(e) {

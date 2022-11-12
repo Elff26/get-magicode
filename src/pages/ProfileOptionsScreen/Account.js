@@ -23,6 +23,7 @@ import * as SecureStore from 'expo-secure-store';
 import { 
     SECURE_STORE_KEY
 } from '@env';
+import Messages from '../../utils/Messages';
 
 var width = Dimensions.get('window').width; 
 
@@ -104,7 +105,7 @@ export default function Account({navigation}) {
                         await AsyncStorage.mergeItem('@User', JSON.stringify(user));
 
                         setIsLoading(false);
-                        ToastComponent('Dados atualizados com sucesso!');
+                        ToastComponent(Messages.DATA_UPDATED);
                     }
                     setIsLoading(false);
                 }

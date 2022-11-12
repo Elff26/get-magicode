@@ -14,7 +14,7 @@ function codeEditorHTML(theme, language) {
             </style>
         </head>
         <body>
-            <div id="editor" onChange="update()">// Aqui vai seu código :)</div>
+            <div id="editor" onChange="update()"></div>
                 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.7.1/ace.js" integrity="sha512-FKkEO4RZEQjFmU1hoUYdx6HJLdpHpNzgWspgnQCxx7OOkDVz4kiGJxR97yWc5bzjwcCpJC/CRCiQzuoGYAChhQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             <script>

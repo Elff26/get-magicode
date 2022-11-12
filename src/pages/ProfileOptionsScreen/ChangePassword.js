@@ -16,6 +16,7 @@ import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
 import InputTextComponent from '../../components/InputText/InputTextComponent';
+import Messages from '../../utils/Messages';
 
 var width = Dimensions.get('window').width; 
 
@@ -53,7 +54,7 @@ export default function ChangePassword({navigation}) {
                     });
 
                     if(response.data.user) {   
-                        ToastComponent('Senha atualizada com sucesso!');
+                        ToastComponent(Messages.PASSWORD_UPDATED);
                         setPassword('');
                         setNewPassword('');
                         setSubmited(false);
@@ -87,7 +88,7 @@ export default function ChangePassword({navigation}) {
                     >
                         {
                             (password.trim() === '' && submited) && (
-                                <Text style={styles.errorText}>Password is required</Text>
+                                <Text style={styles.errorText}>{Messages.PASSWORD_IS_REQUIRED}</Text>
                             )
                         }
                     </InputTextComponent>
@@ -101,17 +102,12 @@ export default function ChangePassword({navigation}) {
                     >
                         {
                             (newPassword.trim() === '' && submited) && (
-                                <Text style={styles.errorText}>New password is required</Text>
+                                <Text style={styles.errorText}>{Messages.NEW_PASSWORD_IS_REQUIRED}</Text>
                             )
                         }
                         {
                             (newPassword.trim() !== '' && !(regPassword(newPassword)) && submited) && (
-                                <>
-                                    <Text style={styles.errorText}>Weak password</Text>
-                                    <Text style={styles.errorText}>At least 1 letter uppercase and lowercase</Text>
-                                    <Text style={styles.errorText}>At least 1 digit and 1 special character</Text>
-                                    <Text style={styles.errorText}>Minimum 8 characteres</Text>
-                                </>
+                                <Text style={styles.errorText}>{Messages.PASSWORD_WEAK_TEXT}</Text>
                             )
                         }
                     </InputTextComponent>

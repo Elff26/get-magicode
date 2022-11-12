@@ -15,6 +15,7 @@ import Axios from '../../api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
 import InputTextComponent from '../../components/InputText/InputTextComponent';
+import Messages from '../../utils/Messages';
 
 export default function Login({ route, navigation }) {
     const routeParams = route;
@@ -26,16 +27,17 @@ export default function Login({ route, navigation }) {
 
     useEffect(() => {
         if(routeParams.params) {
+            console.log(routeParams.params, Messages.USER_CREATED)
             if(routeParams.params.userRegistered) {
-                ToastComponent('Usuário criado com sucesso!');
+                ToastComponent(Messages.USER_CREATED);
             }
     
             if(routeParams.params.deletedUser) {
-                ToastComponent('Usuário deletado com sucesso!');
+                ToastComponent(Messages.USER_DELETED);
             }
 
             if(routeParams.params.passwordRecovered) {
-                ToastComponent('Senha atualizada com sucesso!');
+                ToastComponent(Messages.USER_UPDATED);
             }
         }
     }, []);
@@ -94,7 +96,7 @@ export default function Login({ route, navigation }) {
                 >
                     {
                         (email.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Email is required</Text>
+                            <Text style={styles.errorText}>{Messages.EMAIL_IS_REQUIRED}</Text>
                         )
                     }
                 </InputTextComponent>
@@ -108,7 +110,7 @@ export default function Login({ route, navigation }) {
                 >
                     {
                         (password.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>Password is required</Text>
+                            <Text style={styles.errorText}>{Messages.PASSWORD_IS_REQUIRED}</Text>
                         )
                     }
                 </InputTextComponent>
