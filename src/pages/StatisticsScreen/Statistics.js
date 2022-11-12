@@ -29,6 +29,7 @@ export default function Statistics({ navigation }) {
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingBackground, setIsLoadingBackground] = useState(false);
     const [imageIsLoading, setImageIsLoading] = useState(true);
     const [numberOfClasses, setNumberOfClasses] = useState(0);
     const [numberOfAchievements, setNumberOfAchievements] = useState(0);
@@ -60,6 +61,7 @@ export default function Statistics({ navigation }) {
 
         async function getData() {
             try {
+                setIsLoadingBackground(true);
                 let user = JSON.parse(await AsyncStorage.getItem('@User'));
 
                 const responseUser = await Axios.get(`/FindUserById/${user.userID}`);
@@ -82,6 +84,7 @@ export default function Statistics({ navigation }) {
 
                 if(mounted) {
                     setIsLoading(false);
+                    setIsLoadingBackground(false);
                 }
             } catch (e) {
                 setError(e.response.data.message);
@@ -214,11 +217,11 @@ export default function Statistics({ navigation }) {
                             />
                         </ScrollView>
                     )
-                }
-
+                } 
+        
                 <View style={styles.buttonGroup}>
                     <ButtonComponent newStyle={styles.newStyleButton} 
-                        onPress={goToGoalScreen}>
+                        onPress={goToGoalScreen} isLoading={isLoadingBackground}>
                         <Text style={styles.textButton}>Ajustar meta</Text>
                     </ButtonComponent>
                 </View>

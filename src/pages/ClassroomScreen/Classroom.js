@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Axios from '../../api/api';
 import ButtonComponent from '../../components/Buttons/ButtonComponent';
@@ -7,8 +7,11 @@ import Header from '../../components/Header/HeaderComponent';
 import LoadingComponent from '../../components/Loading/LoadingComponent';
 import RenderJsonContent from '../../components/RenderJsonContent/RenderJsonContent';
 import Colors from '../../utils/ColorPallete/Colors';
+import { UnlockedAchievementsContext } from '../../utils/contexts/UnlockedAchievementsContext';
 
 export default function Classroom({ navigation, route }) {
+  const { unlockedAchievements, setUnlockedAchievements } = useContext(UnlockedAchievementsContext);
+
   const challengeID = route.params.challengeID;
   const [user, setUser] = useState();
   const [error, setError] = useState('');
@@ -67,6 +70,24 @@ export default function Classroom({ navigation, route }) {
 
           return item;
         })
+
+        await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+            xpGain: challenge.difficulty.valueXP
+        });
+
+        try {
+          let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
+              technologyID: challenge.technology.technologyID
+          });
+
+          if(response.data.userAchievement) {
+              let achievements = await response.data.userAchievement.map((userAchievement) => userAchievement.achievement);
+
+              setUnlockedAchievements(achievements);
+          }
+        } catch(e) {
+            setError(e.response.data.message);
+        }
 
         await AsyncStorage.mergeItem('@User', JSON.stringify(newUser));
 

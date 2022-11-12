@@ -45,7 +45,7 @@ export default function ClassroomExercise({ navigation, route }) {
     const [answers, setAnswers] = useState([]);
     const [answered, setAnswered] = useState(false);
     const [showCard, setShowCard] = useState(false);
-    const [result, setResult] = useState(0);
+    const [result, setResult] = useState(null);
     const [numberOfExercises, setNumberOfExercises] = useState(0);
     const [codeQuestionAnswered, setCodeQuestionAnswered] = useState(false);
     const [currentTip, setCurrentTip] = useState(-1);
@@ -176,6 +176,14 @@ export default function ClassroomExercise({ navigation, route }) {
     }, [questionNumber, challenge]);
 
     async function goToNextQuestion() {
+        if(!code && !codeQuestionAnswered && challenge.exercises[questionNumber].type === "code") {
+            return ToastComponent('Digite o seu código e depois envie!');
+        }
+
+        if(result !== null && result < 0.5) {
+            return returnToChallengeList();
+        }
+
         setIsLoading(true);
         setShowTipCard(false);
         setCurrentTip(-1);
@@ -272,7 +280,7 @@ export default function ClassroomExercise({ navigation, route }) {
                 let result = response.data.result;
 
                 if(result.isCorrect) {
-                    let a = await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                    await Axios.post(`/AddExperienceToUser/${user.userID}`, {
                         xpGain: challenge.difficulty.valueXP
                     });
                 }
@@ -437,7 +445,7 @@ export default function ClassroomExercise({ navigation, route }) {
 
                             {
                                 challenge.exercises.length > 0 && (
-                                    (questionNumber <= numberOfExercises && ((code !== "" || codeQuestionAnswered) || challenge.exercises[questionNumber].type === "quiz")) && (
+                                    questionNumber <= numberOfExercises && (
                                         <ButtonComponent 
                                             newStyle={{...styles.newStyleButton, 
                                                 backgroundColor: questionNumber === numberOfExercises ? Colors.LIGHT_GREEN : Colors.PRIMARY_COLOR
@@ -473,8 +481,8 @@ export default function ClassroomExercise({ navigation, route }) {
                             message={result >= 0.5 ? "Parabéns, você foi aprovado!" : "Você foi reprovado, mas não desista! Estude e gabarite esse exercício!"}
                             xp={result >= 0.5 ? challenge.difficulty.valueXP : 0}
                             showCard={showCard && !isLoading}
-                            buttonText={result >= 0.5 ? "Fechar" : "Voltar ao início"}
-                            onPressButton={result >= 0.5 ? closeCard : returnToChallengeList}
+                            buttonText={"Fechar"}
+                            onPressButton={closeCard}
                             isPercentage={true}
                             setShowCard={setShowCard}
                         />
