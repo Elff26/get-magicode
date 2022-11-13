@@ -21,7 +21,8 @@ const Messages = {
     PASSWORD_IS_REQUIRED: "Senha é obrigatória!",
     NEW_PASSWORD_IS_REQUIRED: "Nova senha é obrigatória!",
     CONFIRM_PASSWORD_NOT_MATCH: "Senha e confirmação de senha não estão iguais!",
-    PASSWORD_WEAK_TEXT: "Senha fraca!\nPelo menos 1 letra maiúscula e minúscula\nPelo menos 1 dígito e caractere especial\nNo mínimo 8 caracteres"
+    PASSWORD_WEAK_TEXT: "Senha fraca!\nPelo menos 1 letra maiúscula e minúscula\nPelo menos 1 dígito e caractere especial\nNo mínimo 8 caracteres",
+    PHONE_MINIMUM_DIGITS: "Celular inválido!",
 }
 
 export default Messages;

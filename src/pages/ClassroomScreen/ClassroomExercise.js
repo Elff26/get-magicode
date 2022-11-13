@@ -53,6 +53,7 @@ export default function ClassroomExercise({ navigation, route }) {
     const [showTipCard, setShowTipCard] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [tips, setTips] = useState([]);
+    const [hasCodeExercise, setHasCodeExercise] = useState(false);
 
     useEffect(() => {
         async function getData() {
@@ -196,6 +197,7 @@ export default function ClassroomExercise({ navigation, route }) {
         }
 
         if(challenge.exercises[questionNumber].type === "code") {
+            setHasCodeExercise(true);
             await nextCodeQuestion();
         } else if (challenge.exercises[questionNumber].type === "quiz") {
             await nextQuizQuestion();
@@ -482,8 +484,8 @@ export default function ClassroomExercise({ navigation, route }) {
                             message={result >= 0.5 ? Messages.MESSAGE_EXERCISE_SUCCESSFULLY : Messages.MESSAGE_EXERCISE_FAILED}
                             xp={result >= 0.5 ? challenge.difficulty.valueXP : 0}
                             showCard={showCard && !isLoading}
-                            buttonText={"Fechar"}
-                            onPressButton={closeCard}
+                            buttonText={result >= 0.5 || hasCodeExercise ? "Fechar" : "Voltar ao início"}
+                            onPressButton={result >= 0.5 || hasCodeExercise ? closeCard : returnToChallengeList}
                             isPercentage={true}
                             setShowCard={setShowCard}
                         />
