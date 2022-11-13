@@ -27,7 +27,6 @@ export default function Login({ route, navigation }) {
 
     useEffect(() => {
         if(routeParams.params) {
-            console.log(routeParams.params, Messages.USER_CREATED)
             if(routeParams.params.userRegistered) {
                 ToastComponent(Messages.USER_CREATED);
             }

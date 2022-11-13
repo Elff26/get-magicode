@@ -5,6 +5,7 @@ import {
     ScrollView,
     StyleSheet, 
     Text,
+    TouchableOpacity,
     View
 } from "react-native";
 
@@ -26,6 +27,7 @@ import PvPResult from "../../components/PlayerVSPlayer/PvPResult";
 import LoadingComponent from "../../components/Loading/LoadingComponent";
 import { UnlockedAchievementsContext } from "../../utils/contexts/UnlockedAchievementsContext";
 import { GoalContext } from "../../utils/contexts/GoalContext";
+import CardComponent from "../../components/Card/CardComponent";
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -53,6 +55,8 @@ export default function PvPExercise({ navigation, route }) {
     const [opponentXp, setOpponentXp] = useState(0);
     const [winner, setWinner] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [opponentLeave, setOpponentLeave] = useState(false);
+    const [showLeaveCard, setShowLeaveCard] = useState(false);
 
     useEffect(() => {
         async function getData() {
@@ -104,6 +108,7 @@ export default function PvPExercise({ navigation, route }) {
             socketEventGoToNextAnswer();
             socketEventChallengeFinished();
             socketResetNextQuestion();
+            socketEventOpponentLeave();
         }
 
         return () => {
@@ -112,6 +117,7 @@ export default function PvPExercise({ navigation, route }) {
             socket.off('challengeFinished');
             socket.off('randomizedExercises');
             socket.off('resetNextQuestion');
+            socket.off('opponentLeaveRoom');
         }
     }, [exercises, userAnswers, questionNumber, finished, opponent]);
 
@@ -158,23 +164,15 @@ export default function PvPExercise({ navigation, route }) {
     const socketEventChallengeFinished = () => {
         socket.on('challengeFinished', async () => {
             setIsLoading(true);
-            let userCorrect = userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
-            let opponentCorrect = opponentAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
-
-            if(userCorrect > opponentCorrect) {
-                setWinner(1);
-            } else if(userCorrect < opponentCorrect) {
-                setWinner(0);
-            } else {
-                setWinner(-1);
-            }
+            
+            const { userCorrect, opponentCorrect } = checkWinner();
 
             try {
-                if(userCorrect > opponentCorrect) {
+                if(userCorrect > opponentCorrect || opponentLeave) {
                     await Axios.post(`/AddExperienceToUser/${user.userID}`, {
                         xpGain: userXp
                     });
-                } else if(userCorrect === opponentCorrect) {
+                } else if(userCorrect === opponentCorrect && !opponentLeave) {
                     await Axios.post(`/AddExperienceToUser/${user.userID}`, {
                         xpGain: 10
                     });
@@ -208,6 +206,54 @@ export default function PvPExercise({ navigation, route }) {
         });
     }
 
+    const socketEventOpponentLeave = () => {
+        socket.on('opponentLeaveRoom', async () => {           
+            setOpponentLeave(true);
+            setFinished(true);
+            setWinner(1);
+
+            await Axios.post(`/AddExperienceToUser/${user.userID}`, {
+                xpGain: userXp <= 0 ? 10 : userXp
+            });
+
+            let resultCompletedGoal = await Axios.put(`/CompletedGoal/${user.userID}`);
+
+            if(resultCompletedGoal.data.response) {
+                if(resultCompletedGoal.data.response.isComplete) {
+                    setGoal(resultCompletedGoal.data.response);
+                }
+            }
+
+            try {
+                let response = await Axios.put(`/AssociateUserToAchievement/${user.userID}`, {
+                    technologyID: currentTechnology.technologyID
+                });
+
+                if(response.data.userAchievement) {
+                    setUnlockedAchievements(response.data.userAchievement.map((userAchievement) => userAchievement.achievement));
+                }
+            } catch(e) {
+                setError(e.response.data.message);
+            }
+        });
+    }
+
+
+    function checkWinner() {
+        let userCorrect = userAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
+        let opponentCorrect = opponentAnswers.reduce((previousValue, answer) => answer.isCorrect ? previousValue + 1 : previousValue, 0);
+
+        if(userCorrect > opponentCorrect) {
+            setWinner(1);
+        } else if(userCorrect < opponentCorrect) {
+            setWinner(0);
+        } else {
+            setWinner(-1);
+        }
+
+        return { userCorrect, opponentCorrect }
+    }
+    
     async function goToNextQuestion() {
         if(waitingOpponent) {
             return;
@@ -276,6 +322,16 @@ export default function PvPExercise({ navigation, route }) {
         navigation.goBack();
     }
 
+    function leaveRoom() {
+        socket.emit('leaveRoom', roomNumber);
+        socket.emit('exitRoom');
+        navigation.goBack();
+    }
+
+    function confirmLeaveRoom() {
+        setShowLeaveCard(true);
+    }
+
     return (
         <View style={styles.screenContainer}>
             {
@@ -295,7 +351,7 @@ export default function PvPExercise({ navigation, route }) {
                                             userAnswers={userAnswers}
                                             opponent={opponent}
                                             opponentAnswers={opponentAnswers}
-                                            questionNumber={questionNumber}
+                                            opponentLeave={opponentLeave}
                                             winner={winner}
                                             userXp={userXp}
                                             opponentXp={opponentXp}
@@ -371,7 +427,7 @@ export default function PvPExercise({ navigation, route }) {
                                     </ScrollView>
 
                                     <View style={styles.buttonGroup}>
-                                        <ButtonComponent newStyle={styles.newStyleButtonCancel} onPress={quitTest}>
+                                        <ButtonComponent newStyle={styles.newStyleButtonCancel} onPress={confirmLeaveRoom}>
                                             <Text style={styles.textButton}>
                                                 <Feather name="x" color={Colors.ERROR_COLOR} size={32} />
                                             </Text>
@@ -403,6 +459,17 @@ export default function PvPExercise({ navigation, route }) {
                     </>
                 )
             }
+
+            <CardComponent showCard={showLeaveCard} setShowCard={setShowLeaveCard}>
+                <Text style={styles.confirmLeaveRoomText}>Deseja mesmo desistir?</Text>
+                <View style={styles.separator} />
+                <ButtonComponent onPress={leaveRoom}>
+                    <Text style={styles.textButton}>Sim</Text>
+                </ButtonComponent>
+                <ButtonComponent onPress={() => setShowLeaveCard(false)}>
+                    <Text style={styles.textButton}>Não</Text>
+                </ButtonComponent>
+            </CardComponent>
         </View>
     )
 }
@@ -512,5 +579,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
-    }    
+    },
+
+    confirmLeaveRoomText: {
+        fontSize: 22,
+        color: Colors.TEXT_COLOR,
+        textAlign: 'center'
+    },
+
+    separator: {
+        width: '100%',
+        borderWidth: 0.5,
+        borderColor: Colors.PRIMARY_COLOR,
+        marginVertical: 10
+    }
 })
