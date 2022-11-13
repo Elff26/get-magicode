@@ -6,7 +6,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Axios = axios.create({
-    baseURL: "http://192.168.15.12:3000"
+    baseURL: URL || "http://192.168.15.12:3000"
 });
 
 Axios.interceptors.request.use(async (request) => {
