@@ -87,7 +87,6 @@ export default function Account({navigation}) {
                 phone
             }
 
-            console.log(DateUtils.dateConvertToEUA(birthday))
             try {
                 if (user != null) {
                     const response = await Axios.put('/UpdateUser/' + user.userID, {
