@@ -31,16 +31,16 @@ export default function ThirdRegisterMoreInfo({ route, navigation }) {
         setIsLoading(true);
         setSubmited(true);
 
-        if(!birthday && !routeParams.params.hasBirthday) {
+        if((!birthday || birthday.length !== 10) && !routeParams.params.hasBirthday) {
             setIsLoading(false);
             return;
         }
 
-        if(!phone && !routeParams.params.hasPhone) {
+        if((!phone || phone.length !== 11) && !routeParams.params.hasPhone) {
             setIsLoading(false);
             return;
         }
-
+        
         const userData = {
             birthday: DateUtils.dateConvertToEUA(birthday),
             phone,
@@ -89,6 +89,11 @@ export default function ThirdRegisterMoreInfo({ route, navigation }) {
                                         <Text style={styles.errorText}>{Messages.BIRTHDAY_IS_REQUIRED}</Text>
                                     )
                                 }
+                                {
+                                    (birthday.trim() !== '' && birthday.length !== 10 && submited) && (
+                                        <Text style={styles.errorText}>{Messages.BIRTHDAY_MINIMUM_DIGITS}</Text>
+                                    )
+                                }
                             </>
                         )
                     }
@@ -106,6 +111,11 @@ export default function ThirdRegisterMoreInfo({ route, navigation }) {
                                 {
                                     (phone.trim() === '' && submited) && (
                                         <Text style={styles.errorText}>{Messages.PHONE_IS_REQUIRED}</Text>
+                                    )
+                                }
+                                {
+                                    (phone.trim() !== '' && phone.length !== 11 && submited) && (
+                                        <Text style={styles.errorText}>{Messages.PHONE_MINIMUM_DIGITS}</Text>
                                     )
                                 }
                             </>

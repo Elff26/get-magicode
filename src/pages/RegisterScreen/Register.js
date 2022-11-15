@@ -40,7 +40,7 @@ const Register = ({ navigation }) => {
         setIsLoading(true);
         setSubmited(true);
 
-        if(!name || !email || !birthday || !phone || phone.length !== 11 || !regPassword(password) || !regEmail(email)) {
+        if(!name || !email || !birthday || birthday.length !== 10 || !phone || phone.length !== 11 || !regPassword(password) || !regEmail(email)) {
             setIsLoading(false);
             return;
         }
@@ -151,6 +151,11 @@ const Register = ({ navigation }) => {
                         {
                             (birthday.trim() === '' && submited) && (
                                 <Text style={styles.errorText}>{Messages.BIRTHDAY_IS_REQUIRED}</Text>
+                            )
+                        }
+                        {
+                            (birthday.trim() !== '' && birthday.length !== 10 && submited) && (
+                                <Text style={styles.errorText}>{Messages.BIRTHDAY_MINIMUM_DIGITS}</Text>
                             )
                         }
                     </MaskTextComponent>

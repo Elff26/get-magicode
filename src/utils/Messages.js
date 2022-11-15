@@ -23,6 +23,7 @@ const Messages = {
     CONFIRM_PASSWORD_NOT_MATCH: "Senha e confirmação de senha não estão iguais!",
     PASSWORD_WEAK_TEXT: "Senha fraca!\nPelo menos 1 letra maiúscula e minúscula\nPelo menos 1 dígito e caractere especial\nNo mínimo 8 caracteres",
     PHONE_MINIMUM_DIGITS: "Celular inválido!",
+    BIRTHDAY_MINIMUM_DIGITS: "Data de nascimento inválida!",
 }
 
 export default Messages;
