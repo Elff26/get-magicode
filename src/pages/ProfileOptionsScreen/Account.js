@@ -87,6 +87,7 @@ export default function Account({navigation}) {
                 phone
             }
 
+            console.log(DateUtils.dateConvertToEUA(birthday))
             try {
                 if (user != null) {
                     const response = await Axios.put('/UpdateUser/' + user.userID, {
@@ -94,15 +95,14 @@ export default function Account({navigation}) {
                     });
     
                     if(response.data.user) {
-                        let user = response.data.user;
+                        let userUpdated = response.data.user
+                        setUser(userUpdated);
+                        setName(userUpdated.name);
+                        setEmail(userUpdated.email);
+                        setPhone(userUpdated.phone);
+                        setBirthday(DateUtils.dateConvertToBrasil(userUpdated.birthday));
 
-                        setUser(user);
-                        setName(user.name);
-                        setEmail(user.email);
-                        setPhone(user.phone);
-                        setBirthday(user.birthday);
-
-                        await AsyncStorage.mergeItem('@User', JSON.stringify(user));
+                        await AsyncStorage.mergeItem('@User', JSON.stringify(userUpdated));
 
                         setIsLoading(false);
                         ToastComponent(Messages.DATA_UPDATED);
