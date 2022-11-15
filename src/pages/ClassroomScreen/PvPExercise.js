@@ -119,7 +119,7 @@ export default function PvPExercise({ navigation, route }) {
             socket.off('resetNextQuestion');
             socket.off('opponentLeaveRoom');
         }
-    }, [exercises, userAnswers, questionNumber, finished, opponent]);
+    }, [exercises, userAnswers, questionNumber, finished, opponent, opponentAnswers]);
 
     const socketResetNextQuestion = () => {
         socket.on('resetNextQuestion', () => {

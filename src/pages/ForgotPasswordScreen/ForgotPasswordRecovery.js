@@ -63,10 +63,12 @@ export default function ForgotPasswordRecovery({navigation}) {
     return ( 
         <View style={styles.allPagesRecovery}>
             <Header backArrow={true} navigation={navigation} />
+            
+            <View>
+                <Text style={styles.titleRecovery}>Recuperação de senha</Text>
+            </View>
+
             <View style={styles.screenContainerRecovery}>
-                <View>
-                    <Text style={styles.titleRecovery}>Recuperação de senha</Text>
-                </View>
                 <View style={styles.formRecovery}>
                     <Text style={styles.descriptionRecovery}>Informe sua nova senha:</Text>
 
@@ -96,7 +98,7 @@ export default function ForgotPasswordRecovery({navigation}) {
                         icon='lock'
                     >
                         {
-                            (confirmPassword.trim() === '' && submited) || (confirmPassword !== password) && (
+                            (confirmPassword.trim() === '' || confirmPassword !== password) && submited && (
                                 <Text style={styles.errorText}>{Messages.CONFIRM_PASSWORD_NOT_MATCH}</Text>
                             )
                         }
@@ -124,8 +126,12 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.WHITE_SAFE_COLOR
    },
 
+   screenContainerRecovery: {
+       flex: 1,
+       justifyContent: 'center'
+   },
+
    formRecovery:{
-        marginTop: 100,
         justifyContent: 'center',
         textAlign: 'center',
         alignItems: 'center'

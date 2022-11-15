@@ -96,104 +96,107 @@ const Register = ({ navigation }) => {
     return(
         <KeyboardAvoidingView style={styles.main}>
             <ScrollView behavior={Platform.OS === "ios" ? "padding" : "height"} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps={'handled'}>
-                <Header backArrow={true} navigation={navigation} />
+                <View style={styles.header}>
+                    <Header backArrow={true} navigation={navigation} />
 
-                <Text style={styles.title}>Cadastre-se</Text>
-
+                    <Text style={styles.title}>Cadastre-se</Text>
+                </View>
             
-                <InputTextComponent
-                    placeholder='Nome Completo'
-                    onChangeText={setName}
-                    value={name}
-                    icon='user'
-                >
-                    {
-                        (name.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>{Messages.NAME_IS_REQUIRED}</Text>
-                        )
-                    }
-                </InputTextComponent>     
+                <View style={styles.formRegister}>
+                    <InputTextComponent
+                        placeholder='Nome Completo'
+                        onChangeText={setName}
+                        value={name}
+                        icon='user'
+                    >
+                        {
+                            (name.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>{Messages.NAME_IS_REQUIRED}</Text>
+                            )
+                        }
+                    </InputTextComponent>     
 
-                <InputTextComponent
-                    placeholder='Email'
-                    onChangeText={setEmail}
-                    value={email}
-                    autoComplete="email"
-                    keyboardType="email-address"
-                    textContentType='emailAddress'
-                    autoCapitalize='none'
-                    icon='mail'
-                >
-                    {
-                        (email.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>{Messages.EMAIL_IS_REQUIRED}</Text>
-                        )
-                    }
-                    {
-                        (email.trim() !== '' && !(regEmail(email)) && submited) && (
-                            <Text style={styles.errorText}>{Messages.INVALID_EMAIL}</Text>
-                        )
-                    }
-                </InputTextComponent>      
+                    <InputTextComponent
+                        placeholder='Email'
+                        onChangeText={setEmail}
+                        value={email}
+                        autoComplete="email"
+                        keyboardType="email-address"
+                        textContentType='emailAddress'
+                        autoCapitalize='none'
+                        icon='mail'
+                    >
+                        {
+                            (email.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>{Messages.EMAIL_IS_REQUIRED}</Text>
+                            )
+                        }
+                        {
+                            (email.trim() !== '' && !(regEmail(email)) && submited) && (
+                                <Text style={styles.errorText}>{Messages.INVALID_EMAIL}</Text>
+                            )
+                        }
+                    </InputTextComponent>      
 
-                <MaskTextComponent 
-                    placeholder='Data de Nascimento'
-                    onChangeText={(masked, unmasked) => setBirthday(masked)}
-                    value={birthday}
-                    mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-                    icon='calendar'
-                >
-                    {
-                        (birthday.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>{Messages.BIRTHDAY_IS_REQUIRED}</Text>
-                        )
-                    }
-                </MaskTextComponent>
+                    <MaskTextComponent 
+                        placeholder='Data de Nascimento'
+                        onChangeText={(masked, unmasked) => setBirthday(masked)}
+                        value={birthday}
+                        mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+                        icon='calendar'
+                    >
+                        {
+                            (birthday.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>{Messages.BIRTHDAY_IS_REQUIRED}</Text>
+                            )
+                        }
+                    </MaskTextComponent>
 
-                <MaskTextComponent 
-                    placeholder='Celular'
-                    onChangeText={(masked, unmasked) => setPhone(unmasked)}
-                    value={phone}
-                    mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                    keyboardType="phone-pad"
-                    icon='phone'
-                >
-                    {
-                        (phone.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>{Messages.PHONE_IS_REQUIRED}</Text>
-                        )
-                    }
-                    {
-                        (phone.trim() !== '' && phone.length !== 11 && submited) && (
-                            <Text style={styles.errorText}>{Messages.PHONE_MINIMUM_DIGITS}</Text>
-                        )
-                    }
-                </MaskTextComponent>            
+                    <MaskTextComponent 
+                        placeholder='Celular'
+                        onChangeText={(masked, unmasked) => setPhone(unmasked)}
+                        value={phone}
+                        mask={['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+                        keyboardType="phone-pad"
+                        icon='phone'
+                    >
+                        {
+                            (phone.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>{Messages.PHONE_IS_REQUIRED}</Text>
+                            )
+                        }
+                        {
+                            (phone.trim() !== '' && phone.length !== 11 && submited) && (
+                                <Text style={styles.errorText}>{Messages.PHONE_MINIMUM_DIGITS}</Text>
+                            )
+                        }
+                    </MaskTextComponent>            
 
-                <InputTextComponent
-                    placeholder='Senha'
-                    secureTextEntry={true}
-                    onChangeText={setPassword}
-                    value={password}
-                    icon='lock'
-                >
-                    {
-                        (password.trim() === '' && submited) && (
-                            <Text style={styles.errorText}>{Messages.PASSWORD_IS_REQUIRED}</Text>
-                        )
-                    }
-                    {
-                        (password.trim() !== '' && !(regPassword(password)) && submited) && (
-                            <Text style={styles.errorText}>{Messages.PASSWORD_WEAK_TEXT}</Text>
-                        )
-                    }
-                </InputTextComponent>   
+                    <InputTextComponent
+                        placeholder='Senha'
+                        secureTextEntry={true}
+                        onChangeText={setPassword}
+                        value={password}
+                        icon='lock'
+                    >
+                        {
+                            (password.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>{Messages.PASSWORD_IS_REQUIRED}</Text>
+                            )
+                        }
+                        {
+                            (password.trim() !== '' && !(regPassword(password)) && submited) && (
+                                <Text style={styles.errorText}>{Messages.PASSWORD_WEAK_TEXT}</Text>
+                            )
+                        }
+                    </InputTextComponent>   
 
-                <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
-                    <Text style={styles.buttonText}>Criar Conta</Text>
-                </ButtonComponent>
+                    <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
+                        <Text style={styles.buttonText}>Criar Conta</Text>
+                    </ButtonComponent>
 
-                <Text style={styles.errorText}>{error}</Text>
+                    <Text style={styles.errorText}>{error}</Text>
+                </View>
 
                 <View style={styles.viewLoginOptions}>
                     <Text style={styles.simpleText}>Ou entre com: </Text>
@@ -221,16 +224,26 @@ const styles = StyleSheet.create({
     },
 
     scrollContent: {
+        flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-around',
         paddingBottom: 30
     },
 
+    header: {
+        width: '100%'
+    },
+
     title:{
         alignSelf: 'center',
         fontSize: 34,
         color: Colors.PRIMARY_COLOR
+    },
+
+    formRegister: {
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 
     button: {

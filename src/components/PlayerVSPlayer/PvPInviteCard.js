@@ -26,7 +26,7 @@ export default function PvPInviteCard({ showCard, setShowCard, navigation, user,
     useEffect(() => {
         async function getData() {
             try {
-                let resultTechs = await Axios.get('/ListAllTechnologies');
+                let resultTechs = await Axios.get('/ListAllTechnologiesWithExercise');
 
                 if(resultTechs.data.technologies) {
                     setAllTechnologies(resultTechs.data.technologies);

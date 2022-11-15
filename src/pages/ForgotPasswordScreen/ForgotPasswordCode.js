@@ -49,14 +49,15 @@ export default function ForgotPasswordCode({navigation}) {
     return ( 
         <View style={styles.allPagesCode}>
             <Header backArrow={true} navigation={navigation} />
+
+            <View style={{marginTop:10}}>
+                <Text style={styles.titleCode}>Esqueci minha senha</Text>
+            </View>
+
             <View style={styles.screenContainerCode}>
-                
-                <View style={{marginTop:10}}>
-                    <Text style={styles.titleCode}>Esqueci minha senha</Text>
-                </View>
+                <Text style={styles.descriptionCode}>Informe o código que foi enviado no seu email</Text>
+
                 <View style={styles.formCode}>
-                    <Text style={styles.descriptionCode}>Informe o código que foi enviado no seu email</Text>
-  
                     <InputTextComponent
                         placeholder= "Código"
                         value={code}
@@ -84,7 +85,8 @@ const styles = StyleSheet.create({
     screenContainerCode: {
         flex: 1,
         backgroundColor:  Colors.WHITE_SAFE_COLOR,
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 
     titleCode: {
@@ -94,11 +96,9 @@ const styles = StyleSheet.create({
     },
 
     formCode:{
-        marginTop: 100,
         justifyContent: 'center',
         textAlign: 'center',
         alignItems: 'center',
-        padding: 5
     },
 
     textValidationButton:{

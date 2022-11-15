@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
+  Image,
   StyleSheet, 
   Text, 
   TouchableOpacity, 
@@ -137,7 +138,7 @@ const Home = ({ navigation }) => {
           <>
             <View style={styles.appContent}>
               <View style={styles.logoContainer}>
-                <Text style={styles.logoText}>Logo</Text>
+                <Image source={require('../../../assets/logo.png')} style={styles.image} />
               </View>
 
               <View style={styles.homeText}>
@@ -194,10 +195,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 240,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: Colors.PRIMARY_COLOR
+    height: 300
   },
 
   logoText: {
@@ -242,5 +240,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center'
+  },
+
+  image: {
+    height: 300,
+    resizeMode: 'contain'
   }
 });
