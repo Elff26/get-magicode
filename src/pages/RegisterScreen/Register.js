@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { 
+    Dimensions,
     KeyboardAvoidingView,
     ScrollView,
     StyleSheet, 
@@ -21,6 +22,8 @@ import { LogBox } from "react-native";
 import DateUtils from '../../utils/DateUtils';
 import Messages from '../../utils/Messages';
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+
+const heightScreen = Dimensions.get('screen').height;
 
 const Register = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -94,7 +97,7 @@ const Register = ({ navigation }) => {
     }
 
     return(
-        <KeyboardAvoidingView style={styles.main}>
+        <KeyboardAvoidingView enabled={false} style={styles.main}>
             <ScrollView behavior={Platform.OS === "ios" ? "padding" : "height"} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps={'handled'}>
                 <View style={styles.header}>
                     <Header backArrow={true} navigation={navigation} />
@@ -198,7 +201,7 @@ const Register = ({ navigation }) => {
                     <Text style={styles.errorText}>{error}</Text>
                 </View>
 
-                <View style={styles.viewLoginOptions}>
+                <View>
                     <Text style={styles.simpleText}>Ou entre com: </Text>
                     <View style={styles.loginOptions}>
                         <TouchableOpacity onPress={onFacebookAuthentication}>
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     },
 
     scrollContent: {
-        flex: 1,
+        height: heightScreen - 30,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-around',
@@ -271,10 +274,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         alignItems: 'center'
-    },
-
-    viewLoginOptions:{
-        marginTop: '10%'
     },
     
     errorText: {
