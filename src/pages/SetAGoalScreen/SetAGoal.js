@@ -51,7 +51,7 @@ export default function SetAGoal({navigation}) {
                         setUser(response.data.user);
                         ToastComponent('Meta autalizada com sucesso!');
                         setIsLoading(false);
-                        navigation.navigate('ProfileOptions');
+                        navigation.navigate('Statistics');
                     }
                 }
             } catch(e) {

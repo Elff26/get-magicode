@@ -76,7 +76,7 @@ export default function Login({ route, navigation }) {
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.allPagesCode}> 
-            <Header backArrow={true} navigation={navigation} />
+            <Header backArrow={true} navigation={navigation} screenToReturn={() => navigation.navigate('Home')} />
             
             <View style={styles.principalView}>
                 <Text style={styles.titleLogo}>Get MagiCode</Text>

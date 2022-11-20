@@ -140,7 +140,7 @@ export default function Statistics({ navigation }) {
                 )
             }
             
-            <Header backArrow={true} navigation={navigation}>
+            <Header backArrow={true} navigation={navigation} screenToReturn={() => navigation.navigate('Statistics')}>
                 <TouchableOpacity onPress={goToProfileOptions} style={styles.settingsIcon}>
                     <Feather name='settings' color={Colors.TEXT_COLOR} size={32} />
                 </TouchableOpacity>
