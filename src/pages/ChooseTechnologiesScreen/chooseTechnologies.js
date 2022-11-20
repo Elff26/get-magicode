@@ -24,6 +24,7 @@ export default function ChooseTechnologies({ navigation }) {
     const [user, setUser] = useState({});
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [finished, setFinished] = useState(false);
 
     useEffect(() => {
         async function getData() {
@@ -36,6 +37,16 @@ export default function ChooseTechnologies({ navigation }) {
         }
         getData();
     }, []);
+
+    useEffect(() => {
+        if(finished && user) {
+            navigation.navigate('ListChallenges', {
+                params: {
+                    user
+                }
+            });
+        }
+    }, [finished]);
 
     async function associateUserToTechnology () {
         if(selectedItems.length > 0) {
@@ -56,15 +67,11 @@ export default function ChooseTechnologies({ navigation }) {
                     });
                     
                     if(response.data.user) {
+                        setUser(response.data.user);
+                       
                         await AsyncStorage.mergeItem('@User', JSON.stringify(response.data.user));
 
-                        setUser(response.data.user);
-
-                        navigation.navigate('ListChallenges', {
-                            params: {
-                                user: response.data.user
-                            }
-                        });
+                        setFinished(true);
                     }
                 }
             } catch(e) {

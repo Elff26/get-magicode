@@ -76,6 +76,7 @@ const ListChallenges = ({ route, navigation }) => {
                 setUser(userData);
 
                 if(!userData.technologies || userData.technologies.length == 0) {
+                    setIsLoading(false);
                     return navigation.navigate('ChooseTechnologies');
                 } 
 
@@ -205,83 +206,86 @@ const ListChallenges = ({ route, navigation }) => {
             }
 
             {
-                currentTechnology && (
-                    <ChallengesHeaderComponent 
-                        navigation={navigation} 
-                        openBottomSheet={openBottomSheet} 
-                        setOpenBottomSheet={setOpenBottomSheet} 
-                        currentTechnology={currentTechnology}
-                        userID={user.userID}
-                    />
+                (challengeToDo != null && challenges.length > 0) && (
+                    <>
+                        {
+                            currentTechnology && (
+                                <ChallengesHeaderComponent 
+                                    navigation={navigation} 
+                                    openBottomSheet={openBottomSheet} 
+                                    setOpenBottomSheet={setOpenBottomSheet} 
+                                    currentTechnology={currentTechnology}
+                                    userID={user.userID}
+                                />
+                            )
+                        }
+            
+                        {
+                            selectedDifficultyID && (
+                                <View style={styles.pickerConteiner}>
+                                    <Picker 
+                                        style={styles.picker}
+                                        selectedValue={selectedDifficultyID}
+                                        onValueChange={(itemValue) => changeDifficulty(itemValue)}
+                                    >
+                                        {
+                                            difficulties.map((difficulty) => (
+                                                <Picker.Item style={styles.pickerItem} key={difficulty.difficultyID} label={difficulty.description} value={difficulty.difficultyID} />
+                                            ))
+                                        }
+                                    </Picker>
+                                </View>
+                            )
+                        }
+            
+                        <FlatList 
+                            extraData={user}
+                            ref={flatListRef}
+                            style={styles.challenges}
+                            data={challenges}
+                            onContentSizeChange={() => {
+                                if (challengeToDo && challengeToDo > 1) {
+                                    flatListRef.current.scrollToIndex({  index: challengeToDo });
+                                }
+                            }}
+                            onScrollToIndexFailed={() => {}}
+                            inverted={true}
+                            renderItem={renderChallengeItem}
+                        />  
+            
+                        <TouchableOpacity style={styles.versusButton} onPress={() => setShowPvPCard(!showPvPCard)}>
+                            <MaterialCommunityIcons name="sword-cross" size={28} color={Colors.RED_COLOR_DEFAULT} />
+                        </TouchableOpacity>
+            
+                        {
+                            currentTechnology && (
+                                <PvPInviteCard 
+                                    showCard={showPvPCard} 
+                                    setShowCard={setShowPvPCard} 
+                                    navigation={navigation} 
+                                    user={user} 
+                                    currentTechnology={currentTechnology}
+                                />
+                            )
+                        }
+            
+                        {
+                            (user && user.technologies && user.technologies.length > 0) && (
+                                <BottomSheetTechnologiesComponent 
+                                    setCurrentTechnology={setCurrentTechnology} 
+                                    setUser={setUser} 
+                                    user={user} 
+                                    navigation={navigation} 
+                                    open={openBottomSheet} 
+                                    setOpenBottomSheet={setOpenBottomSheet} 
+                                    setIsLoading={setIsLoading}
+                                />
+                            )
+                        }
+                    </>
                 )
             }
-
-            {
-                selectedDifficultyID && (
-                    <View style={styles.pickerConteiner}>
-                        <Picker 
-                            style={styles.picker}
-                            selectedValue={selectedDifficultyID}
-                            onValueChange={(itemValue) => changeDifficulty(itemValue)}
-                        >
-                            {
-                                difficulties.map((difficulty) => (
-                                    <Picker.Item style={styles.pickerItem} key={difficulty.difficultyID} label={difficulty.description} value={difficulty.difficultyID} />
-                                ))
-                            }
-                        </Picker>
-                    </View>
-                )
-            }
-
-            {
-                challengeToDo != null && challenges.length > 0 && (
-                    <FlatList 
-                        extraData={user}
-                        ref={flatListRef}
-                        style={styles.challenges}
-                        data={challenges}
-                        onContentSizeChange={() => {
-                            if (challengeToDo && challengeToDo > 1) {
-                                flatListRef.current.scrollToIndex({  index: challengeToDo });
-                            }
-                        }}
-                        onScrollToIndexFailed={() => {}}
-                        inverted={true}
-                        renderItem={renderChallengeItem}
-                    />  
-                )
-            }
-
-            <TouchableOpacity style={styles.versusButton} onPress={() => setShowPvPCard(!showPvPCard)}>
-                <MaterialCommunityIcons name="sword-cross" size={28} color={Colors.RED_COLOR_DEFAULT} />
-            </TouchableOpacity>
-
-            {
-                currentTechnology && (
-                    <PvPInviteCard 
-                        showCard={showPvPCard} 
-                        setShowCard={setShowPvPCard} 
-                        navigation={navigation} 
-                        user={user} 
-                        currentTechnology={currentTechnology}
-                    />
-                )
-            }
-
-            {
-                (user && user.technologies && user.technologies.length > 0) && (
-                    <BottomSheetTechnologiesComponent 
-                        setCurrentTechnology={setCurrentTechnology} 
-                        setUser={setUser} 
-                        user={user} 
-                        navigation={navigation} 
-                        open={openBottomSheet} 
-                        setOpenBottomSheet={setOpenBottomSheet} 
-                        setIsLoading={setIsLoading}
-                    />
-                )
-            }
+            
         </View>
     )
 }

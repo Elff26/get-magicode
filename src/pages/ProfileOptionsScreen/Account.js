@@ -47,7 +47,11 @@ export default function Account({navigation}) {
             setBirthday(DateUtils.dateConvertToBrasil(user.birthday));
         }
         getData();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+
+    }, []);
     
     async function deleteAccount() {
         try {
@@ -57,23 +61,30 @@ export default function Account({navigation}) {
                 const response = await Axios.delete('/DeleteUser/' + user.userID);
                 
                 if(response.data.message) {
-                    setIsLoading(false);
                     await AsyncStorage.clear();
-                    await SecureStore.deleteItemAsync(SECURE_STORE_KEY);
-                    navigation.reset({
-                        index: 0,
-                        routes: [{
-                            name: 'Login',
-                            params: {
-                                deletedUser: true
-                            }
-                        }]
+                    SecureStore.deleteItemAsync(SECURE_STORE_KEY).then(() => {
+                        returnToHome();
+                    }).catch(() => {
+                        returnToHome();
                     });
                 }
             }
         } catch(e) {
             setError(e.response.data.message);
         }
+    }
+
+    function returnToHome() {
+        setIsLoading(false);
+        navigation.reset({
+            index: 0,
+            routes: [{
+                name: 'Login',
+                params: {
+                    deletedUser: true
+                }
+            }]
+        });
     }
 
     async function editAccount() {

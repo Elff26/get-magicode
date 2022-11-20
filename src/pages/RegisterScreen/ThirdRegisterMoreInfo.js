@@ -42,8 +42,8 @@ export default function ThirdRegisterMoreInfo({ route, navigation }) {
         }
         
         const userData = {
-            birthday: DateUtils.dateConvertToEUA(birthday),
-            phone,
+            birthday: birthday ? DateUtils.dateConvertToEUA(birthday) : undefined,
+            phone: phone ? phone : undefined,
         }
 
         try {

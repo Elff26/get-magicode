@@ -10,9 +10,9 @@ const DateUtils = {
         let separatedDate = date.split('-');
         let data = new Date(Number(separatedDate[0]), Number(separatedDate[1]) - 1, Number(separatedDate[2]));
 
-        let day = data.getDate();
+        let day = ('0' + data.getDate()).slice(-2);
         let month = ('0' + (data.getMonth() + 1)).slice(-2);
-        let year = data.getFullYear()
+        let year = data.getFullYear();
 
         return day + "/" + month + "/" + year;
     }
