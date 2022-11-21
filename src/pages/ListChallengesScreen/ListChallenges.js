@@ -200,6 +200,9 @@ const ListChallenges = ({ route, navigation }) => {
     return (
         <View style={[styles.screenContainer, openBottomSheet ? styles.backgroundWhenBottomSheetIsOpen : {}]}>
             {
+                console.log(openBottomSheet)
+            }
+            {
                 isLoading && (
                     <LoadingComponent />
                 )

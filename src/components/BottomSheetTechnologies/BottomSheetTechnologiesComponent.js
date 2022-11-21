@@ -41,6 +41,7 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
                 setCurrentTechnology(userTechnology);
             } 
 
+            setOpenBottomSheet(false);
             setIsLoading(true);
         } catch(e) {
             setError(e.response.data.message);
