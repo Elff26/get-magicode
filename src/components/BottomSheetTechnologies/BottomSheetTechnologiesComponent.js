@@ -48,6 +48,7 @@ const BottomSheetComponent = ({ navigation, setCurrentTechnology, setUser, user,
     }
 
     function changeTechnologies() {
+        setOpenBottomSheet(false);
         navigation.navigate('ChooseTechnologies')
     }
 
