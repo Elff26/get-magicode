@@ -3,7 +3,7 @@ import Colors from "../../utils/ColorPallete/Colors"
 
 export default function ButtonComponent({ newStyle, onPress, children, isLoading = false, disabled }) {
     return (
-        <TouchableOpacity onPress={onPress} style={[styles.button, newStyle]} disabled={isLoading | disabled}>
+        <TouchableOpacity onPress={onPress} style={[styles.button, newStyle]} disabled={isLoading || disabled ? true : false}>
         {
             isLoading && (
                 <ActivityIndicator />
