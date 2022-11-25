@@ -1,13 +1,17 @@
+import { useState } from 'react';
 import { 
     StyleSheet, 
     TextInput, 
+    TouchableOpacity,
     View 
 } from 'react-native';
 
 import Colors from '../../utils/ColorPallete/Colors';
 import { Feather } from '@expo/vector-icons';
 
-export default function InputTextComponent({ children, ...props }) {
+export default function InputTextComponent({ secure, children, ...props }) {
+    const [showPassword, setShowPassword] = useState(false);
+
     return (
         <>
             <View style={styles.textInputContent}>
@@ -16,10 +20,19 @@ export default function InputTextComponent({ children, ...props }) {
                 </View>
                 <View style={styles.inputData}>
                     <TextInput
+                        secureTextEntry={secure && !showPassword}
                         style={styles.textInput}
                         {...props}
                     />
                 </View>
+                {
+                    secure ? (
+                        <TouchableOpacity style={styles.inputIconAbsolute} onPress={() => setShowPassword(!showPassword)}>
+                            <Feather name={showPassword ? "eye-off" : "eye" } color={Colors.TEXT_COLOR} size={24} />
+                        </TouchableOpacity>
+                    )
+                    : null
+                }
             </View>
             {children}
         </>
@@ -56,5 +69,11 @@ const styles = StyleSheet.create({
     errorText: {
         color: Colors.ERROR_COLOR,
         textAlign: 'center'
+    },
+
+    inputIconAbsolute: {
+        marginHorizontal: 5,
+        position: 'absolute',
+        right: 10
     }
 })

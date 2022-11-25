@@ -101,9 +101,9 @@ export default function Login({ route, navigation }) {
                 </InputTextComponent>
 
                 <InputTextComponent
+                    secure={true}
                     onChangeText={setPassword}
                     value={password}
-                    secureTextEntry={true}
                     placeholder='Senha'
                     icon='lock'
                 >

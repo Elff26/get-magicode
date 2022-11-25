@@ -80,10 +80,10 @@ export default function ChangePassword({navigation}) {
 
                 <View>
                     <InputTextComponent
+                        secure={true}
                         value={password}
                         onChangeText={setPassword}
                         placeholder="Confirme sua senha"
-                        secureTextEntry={true}
                         icon='lock'
                     >
                         {
@@ -94,10 +94,10 @@ export default function ChangePassword({navigation}) {
                     </InputTextComponent>
 
                     <InputTextComponent
+                        secure={true}
                         value={newPassword}
                         onChangeText={setNewPassword}
                         placeholder="Digite a nova senha"
-                        secureTextEntry={true}
                         icon='lock'
                     >
                         {

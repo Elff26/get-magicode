@@ -31,6 +31,7 @@ const Register = ({ navigation }) => {
     const [birthday, setBirthday] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [submited, setSubmited] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +41,7 @@ const Register = ({ navigation }) => {
         setIsLoading(true);
         setSubmited(true);
 
-        if(!name || !email || !birthday || birthday.length !== 10 || !phone || phone.length !== 11 || !regPassword(password) || !regEmail(email)) {
+        if(!name || !email || !birthday || birthday.length !== 10 || !phone || phone.length !== 11 || !regPassword(password) || !regEmail(email) || password !== confirmPassword) {
             setIsLoading(false);
             return;
         }
@@ -181,8 +182,8 @@ const Register = ({ navigation }) => {
                     </MaskTextComponent>            
 
                     <InputTextComponent
+                        secure={true}
                         placeholder='Senha'
-                        secureTextEntry={true}
                         onChangeText={setPassword}
                         value={password}
                         icon='lock'
@@ -198,6 +199,25 @@ const Register = ({ navigation }) => {
                             )
                         }
                     </InputTextComponent>   
+
+                    <InputTextComponent
+                        secure={true}
+                        placeholder='Confirmar senha'
+                        onChangeText={setConfirmPassword}
+                        value={confirmPassword}
+                        icon='lock'
+                    >
+                        {
+                            (confirmPassword.trim() === '' && submited) && (
+                                <Text style={styles.errorText}>{Messages.CONFIRM_PASSWORD_IS_REQUIRED}</Text>
+                            )
+                        }
+                        {
+                            (confirmPassword.trim() !== '' && confirmPassword !== password) && (
+                                <Text style={styles.errorText}>{Messages.CONFIRM_PASSWORD_NOT_MATCH}</Text>
+                            )
+                        }
+                    </InputTextComponent>
 
                     <ButtonComponent newStyle={styles.button} onPress={registerUser} isLoading={isLoading}>
                         <Text style={styles.buttonText}>Criar Conta</Text>
@@ -228,11 +248,10 @@ export default Register
 const styles = StyleSheet.create({
     main:{
         flex: 1,       
-        backgroundColor: Colors.WHITE_SAFE_COLOR,
+        backgroundColor: Colors.WHITE_SAFE_COLOR
     },
 
     scrollContent: {
-        height: heightScreen - 30,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-around',

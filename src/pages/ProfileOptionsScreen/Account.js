@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToastComponent from '../../components/Toast/ToastComponent';
 import MaskTextComponent from '../../components/InputText/MaskTextComponent';
 import InputTextComponent from '../../components/InputText/InputTextComponent';
+import CardComponent from "../../components/Card/CardComponent";
 import DateUtils from '../../utils/DateUtils';
 import * as SecureStore from 'expo-secure-store';
 
@@ -36,6 +37,7 @@ export default function Account({navigation}) {
     const [error, setError] = useState(false);
     const [user, setUser] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
     useEffect(() => {
         async function getData() {
@@ -194,12 +196,26 @@ export default function Account({navigation}) {
                             width: width - 20, 
                             backgroundColor: Colors.BUTTON_VERSUS_BACKGROUND 
                         }}
-                        isLoading={isLoading}>
-                        <Text style={styles.bottonText} onPress={deleteAccount}>Excluir conta</Text>
+                        isLoading={isLoading}
+                        onPress={() => setShowDeleteAccount(true)}>
+                        <Text style={styles.bottonText}>Excluir conta</Text>
                     </ButtonComponent>
                 </View>
                 
             </View>
+
+            <CardComponent showCard={showDeleteAccount} setShowCard={setShowDeleteAccount}>
+                <Text style={styles.deleteAccountText}>Você realmente deseja excluir sua conta?</Text>
+
+                <View style={styles.separator}></View>
+
+                <ButtonComponent onPress={() => deleteAccount()} isLoading={isLoading}>
+                    <Text style={styles.bottonTextWhite}>Sim</Text>
+                </ButtonComponent>
+                <ButtonComponent onPress={() => setShowDeleteAccount(false)} isLoading={isLoading}>
+                    <Text style={styles.bottonTextWhite}>Não</Text>
+                </ButtonComponent>
+            </CardComponent>
         </SafeAreaView>
     );
 }
@@ -233,5 +249,24 @@ const styles = StyleSheet.create({
     errorText: {
         color: Colors.ERROR_COLOR,
         textAlign: 'center'
+    },
+
+    bottonTextWhite: {
+        fontSize: 20,
+        color: Colors.WHITE_SAFE_COLOR
+    },
+
+    deleteAccountText: {
+        fontSize: 22,
+        color: Colors.TEXT_COLOR,
+        textAlign: 'center',
+        marginBottom: 10
+    },
+
+    separator: {
+        marginBottom: 10,
+        borderWidth: .2,
+        borderColor: Colors.LIGHT_GRAY,
+        width: '100%'
     }
 })

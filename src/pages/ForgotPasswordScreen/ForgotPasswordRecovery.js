@@ -73,10 +73,10 @@ export default function ForgotPasswordRecovery({navigation}) {
                     <Text style={styles.descriptionRecovery}>Informe sua nova senha:</Text>
 
                     <InputTextComponent
+                        secure={true}
                         value={password}
                         placeholder= "Senha"
                         onChangeText= {setPassword}
-                        secureTextEntry={true}
                         icon='lock'
                     >
                         {
@@ -91,10 +91,10 @@ export default function ForgotPasswordRecovery({navigation}) {
                     </View>
 
                     <InputTextComponent
+                        secure={true}
                         value={confirmPassword}
                         placeholder= "Confirme a senha"
                         onChangeText= {setConfirmPassword}
-                        secureTextEntry={true}
                         icon='lock'
                     >
                         {
